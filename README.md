@@ -1,5 +1,6 @@
 # ProjectWork2021
 
-francesco
-cristian
+Francesco
+Coach
 Jacopo
+Andrea
