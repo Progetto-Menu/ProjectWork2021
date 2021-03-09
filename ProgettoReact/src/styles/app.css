@@ -1,0 +1,30 @@
+body{
+    padding-top: 61px;
+}
+
+.box{
+    margin: 20px;
+    background: #efefef;
+    border: 1px solid #Ccc;
+    border-radius: 5px;
+}
+
+.contenuto{
+    margin: 20px;
+    background: black;
+    color: white;
+    border: 1px solid #Ccc;
+    border-radius: 5px;
+}
+
+.header{
+    line-height: 61px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 61px;
+    background: rgb(22, 26, 41);
+    color: white;
+    padding: 0 25px;
+}
