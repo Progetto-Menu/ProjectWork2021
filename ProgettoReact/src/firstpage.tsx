@@ -12,12 +12,14 @@ const FirstPage: React.FunctionComponent = () => {
         <div>
              <div className="py-3 my-1 text-center col-6 bg-primary text-white mx-auto">Ciao, sei un Traduttore o un Ristoratore? </div>
         </div>
-        <div>
             <Link style={firststyle} to="/Login">
-                <div className=" my-5 text-center">  <button type="button"> Traduttore </button> 
-                     <div className="d-inline text-center"> <button type="button"> Ristoratore </button></div>
-                </div></Link>            
-        </div>
+            <div className="text-center my-5 py-5 "> 
+                         <button className=" btn-outline-danger btn-dark btn-lg col-3 mx-5" type="button"> Traduttore </button>
+                         <button className=" btn-outline-danger btn-dark btn-lg col-3 mx-5" type="button"> Ristoratore </button>                         
+            </div></Link>
+           
+                   
+        
 
     </>
 }
