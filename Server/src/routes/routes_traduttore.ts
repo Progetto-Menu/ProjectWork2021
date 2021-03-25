@@ -14,13 +14,13 @@ const tokenExpSec = 60 * 60;
 router.post("/login", async (req: any, res: any) => {
     const json = req.body;
 
-    const email = JSONUtils.getProperty(json, "email", null);
-    const password = JSONUtils.getProperty(json, "password", null);
-    const clientToken = JSONUtils.getProperty(json, "token", null);
+    const email = JSONUtils.getProperty(json, "email", "");
+    const password = JSONUtils.getProperty(json, "password", "");
+    const clientToken = JSONUtils.getProperty(json, "token", "");
 
-    if (email == null || email == "" || password == null || password == "") return res.send({ "error": "Inserire email e password" });
+    if (email == "" || password == "") return res.send({ "error": "Errore" });
 
-    if (clientToken == null || clientToken == "") {
+    if (clientToken == "") {
         return Promise.resolve(traduttoreController.login(email, password))
             .then((result: Traduttore) => {
                 const token = jwt.sign({
@@ -45,10 +45,6 @@ router.post("/login", async (req: any, res: any) => {
                 }).catch((error) => {
                     return res.send({ "token": null });
                 });
-
-
-
-
         });
     }
 
@@ -60,14 +56,23 @@ router.post("/register", async (req: any, res: any) => {
 
     const json = req.body;
 
+    const nome = JSONUtils.getProperty(json, "nome", "");
+    const cognome = JSONUtils.getProperty(json, "cognome", "");
+    const email = JSONUtils.getProperty(json, "email", "");
+    const password = JSONUtils.getProperty(json, "password", "");
+    const revisore = JSONUtils.getProperty(json, "revisore", false);
+    const numero_token = JSONUtils.getProperty(json, "numero_token", 0);
+
+    if(nome == "" || cognome == "" || email == "" || password == "" ) return res.send({"error": "Errore"});
+
     const traduttore: Traduttore = {
         id: 0,
-        nome: JSONUtils.getProperty(json, "nome", "X"),
-        cognome: JSONUtils.getProperty(json, "cognome", "Y"),
-        email: JSONUtils.getProperty(json, "email", "Y"),
-        password: JSONUtils.getProperty(json, "password", "Y"),
-        revisore: JSONUtils.getProperty(json, "revisore", false),
-        numero_token: JSONUtils.getProperty(json, "numero_token", 0),
+        nome: nome,
+        cognome: cognome,
+        email: email,
+        password: password,
+        revisore: revisore,
+        numero_token: numero_token,
     }
 
     return Promise.resolve(traduttoreController.create(traduttore))
