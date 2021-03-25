@@ -23,7 +23,7 @@ return <>
     <div className="my-5 col-5 mx-auto"> <input className="w-75" type="password" placeholder="Conferma Password"/> </div>
     <div className="my-3 p-1 text-white mx-auto  "> <input type="checkbox"/> Accetto 
          <a href="#" className="link-primary m-4" > Link per il contratto </a>
-    <button className="btn-danger"type="button"> Registrati </button>
+    <Link to="Login"><button className="btn-danger"type="button"> Registrati </button></Link>
     </div>
     </div>
     

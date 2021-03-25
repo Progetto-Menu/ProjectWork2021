@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 export {FirstPage};
 
 
@@ -16,6 +17,13 @@ const FirstPage: React.FunctionComponent = () => {
             <div className="text-center my-5 py-5 "> 
             <Link style={firststyle} to="/Login">  <button className=" btn-outline-danger btn-dark btn-lg col-3 mx-5" type="button"> Traduttore </button> </Link>
             <Link style={firststyle} to="/loginRest"> <button className=" btn-outline-danger btn-dark btn-lg col-3 mx-5" type="button"> Ristoratore </button> </Link>
+            </div>
+
+            <div>
+            <FontAwesomeIcon icon="coffee" />
+            <FontAwesomeIcon icon={['fas', 'coffee']} />
+            <FontAwesomeIcon icon={['far', 'coffee']} />
+            
             </div>
     </>
 }

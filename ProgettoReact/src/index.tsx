@@ -14,13 +14,13 @@ import { Post_Traduttori } from "./postTraduttori";
 const App: React.FunctionComponent = () => {
 return <>
 <Router>
-    <div>   <Route path="/" exact component={FirstPage} />;            
-            <Route path="/Login" component={Header} />;       
-            <Route path="/registertranslator" component={Reg_Translator} />;     
-            <Route path="/loginRest" component={LoginRest}/>;
-            <Route path="/registerrestaurant" component={Reg_Restaurateur} />;
-            <Route path="/home" component={Home}/>;
-            <Route path="/postRevisore" component={Post_Traduttori} />;
+    <div>   <Route path="/" exact component={FirstPage} />            
+            <Route path="/Login" component={Header} />       
+            <Route path="/registertranslator" component={Reg_Translator} />     
+            <Route path="/loginRest" component={LoginRest}/>
+            <Route path="/registerrestaurant" component={Reg_Restaurateur} />
+            <Route path="/home" component={Home}/>
+            <Route path="/postRevisore" component={Post_Traduttori} />
     </div> 
 </Router>    
       </>
