@@ -1,5 +1,6 @@
 import { Console } from "console";
 import React, { useState } from "react";
+import {FaGithub} from "react-icons/fa";
 import ReactDOM from "react-dom";
 import {Header} from './Traduttore/Login';
 import "./styles/app.css";

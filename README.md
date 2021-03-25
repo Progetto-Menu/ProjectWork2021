@@ -17,6 +17,9 @@ Verificare che sia installato Node.js nel computer di test
 
 
 # Installare FontAwesome
--  npm i --save @fortawesome/fontawesome-svg-core
--  npm install --save @fortawesome/free-solid-svg-icons
--  npm install --save @fortawesome/react-fontawesome
+npm install react-icons
+
+import {quello che vuoi} from "react-icons/fa( oppure: md)";
+
+sintassi:
+<FaGithub /> e viene fuori l'immagine di github
