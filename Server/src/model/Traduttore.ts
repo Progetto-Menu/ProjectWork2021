@@ -103,4 +103,91 @@ export class Traduttore {
         });
     }
 
+    static async getTraduttoreById(id: number){
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(Traduttore.db_id, id)
+                    .query(`SELECT * FROM ${Traduttore.db_table_name} WHERE ${Traduttore.db_id} = @${Traduttore.db_id};`,
+                        (err: any, result: any) => {
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        let resultTraduttore: Traduttore | null;
+                                        if(result.recordset[0]){
+                                            resultTraduttore = {
+                                                id: result.recordset[0][Traduttore.db_id],
+                                                nome: result.recordset[0][Traduttore.db_nome],
+                                                cognome: result.recordset[0][Traduttore.db_cognome],
+                                                email: result.recordset[0][Traduttore.db_email],
+                                                password: result.recordset[0][Traduttore.db_password],
+                                                revisore: result.recordset[0][Traduttore.db_revisore],
+                                                numero_token: result.recordset[0][Traduttore.db_numero_token],
+                                                creato_il: result.recordset[0][Traduttore.db_creato_il],
+                                                modificato_il: result.recordset[0][Traduttore.db_modificato_il],
+                                                cancellato_il: result.recordset[0][Traduttore.db_cancellato_il]
+                                            }
+                                        }
+                                        else{
+                                            resultTraduttore = null;
+                                        }
+                                        resolve(resultTraduttore);
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+
+    static async getTraduttoreByEmail(email: string) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(Traduttore.db_email, email)
+                    .query(`SELECT * FROM ${Traduttore.db_table_name} WHERE ${Traduttore.db_email} = @${Traduttore.db_email};`,
+                        (err: any, result: any) => {
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        let resultTraduttore: Traduttore | null;
+                                        if(result.recordset[0]){
+                                            resultTraduttore = {
+                                                id: result.recordset[0][Traduttore.db_id],
+                                                nome: result.recordset[0][Traduttore.db_nome],
+                                                cognome: result.recordset[0][Traduttore.db_cognome],
+                                                email: result.recordset[0][Traduttore.db_email],
+                                                password: result.recordset[0][Traduttore.db_password],
+                                                revisore: result.recordset[0][Traduttore.db_revisore],
+                                                numero_token: result.recordset[0][Traduttore.db_numero_token],
+                                                creato_il: result.recordset[0][Traduttore.db_creato_il],
+                                                modificato_il: result.recordset[0][Traduttore.db_modificato_il],
+                                                cancellato_il: result.recordset[0][Traduttore.db_cancellato_il]
+                                            }
+                                        }
+                                        else{
+                                            resultTraduttore = null;
+                                        }
+                                        resolve(resultTraduttore);
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
 }

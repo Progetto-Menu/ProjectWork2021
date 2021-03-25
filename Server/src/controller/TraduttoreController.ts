@@ -12,10 +12,19 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
         throw new Error("Method not implemented.");
     }
     async get(id: number): Promise<Traduttore> {
-        throw new Error("Method not implemented.");
+        return await Traduttore.getTraduttoreById(id);
     }
     async getAll(): Promise<Traduttore[]> {
         throw new Error("Method not implemented.");
+    }
+
+    async login(email:string, password:string): Promise<any>{
+        const hash = require("crypto").createHash("sha256");
+        const traduttore : Traduttore | null = await Traduttore.getTraduttoreByEmail(email);
+        if(traduttore == null || traduttore.password != hash.update(password).digest("hex")) throw new Error("Credenziali Sbagliate");
+        return traduttore;
+        //return SHA256(password)
+        //if(traduttore.password.toUpperCase() != SHA256(password).)
     }
     
 }
