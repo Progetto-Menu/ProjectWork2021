@@ -15,7 +15,7 @@ const Header: React.FunctionComponent = () => {
                  <div className="my-3 text-center col-6 mx-auto"> <input type="password" placeholder="password"/> </div>
                  <div className="my-3 p-1 text-center mx-auto"> <input type="checkbox"/> Hai scordato la password? </div>
                  <div className="text-center my-5 "> 
-                         <button className=" btn-sm col-3 mx-5" type="submit"> Submit </button>
+                       <Link to="home"><button className=" btn-sm col-3 mx-5" type="submit"> Login </button></Link>
                          <Link to="/registertranslator"><button className=" btn-sm col-3 mx-5" type="button"> Register </button></Link>
                  </div>
            </div>            

@@ -5,8 +5,11 @@ body{
 .box{
     margin: 20px;
     background: #efefef;
-    border: 1px solid #Ccc;
+    border: 2px solid #Ccc;
     border-radius: 5px;
+    width: 200px;
+    height: 200px;
+    position: absolute;
 }
 
 .contenuto{
