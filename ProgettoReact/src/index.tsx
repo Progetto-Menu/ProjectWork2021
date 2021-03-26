@@ -1,11 +1,9 @@
-import { Console } from "console";
-import React, { useState } from "react";
-import { FaGithub } from "react-icons/fa";
+import React from "react";
 import ReactDOM from "react-dom";
 import { Header } from './components/Traduttore/Login';
 import "./styles/app.css";
 import { FirstPage } from './components/firstpage';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Reg_Translator } from "./components/Traduttore/registertranslator";
 import { LoginRest } from "./components/Ristoratore/loginRest";
 import { Reg_Restaurateur } from "./components/Ristoratore/registerrestaurant";
