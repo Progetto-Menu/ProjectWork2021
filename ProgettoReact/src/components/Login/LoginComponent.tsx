@@ -61,7 +61,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                         <div className="col-6 col-md-3">
                               <button className="btn btn-primary w-100" type="submit" onClick={() => {
                                     if (user === Users.TRADUTTORE) {
-                                          axios.post("http://localhost:8081/traduttori/login", {
+                                          axios.post("https://www.progettomenu.cloud/traduttori/login", {
                                                 "email": email,
                                                 "password": password
                                           }).then(res => {

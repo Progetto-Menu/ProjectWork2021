@@ -5,7 +5,7 @@ export class AuthUtils {
     static async isLoggedIn(token: string | null, user: Users) {
         switch (user) {
             case Users.TRADUTTORE:
-                return await axios.post("http://localhost:8081/traduttori/auth", {
+                return await axios.post("https://www.progettomenu.cloud/traduttori/auth", {
                     "token": token
                 })
             case Users.RISTORATORE:
