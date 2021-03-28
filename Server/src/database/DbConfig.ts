@@ -1,9 +1,9 @@
 export const sql = require('mssql');
 export const config = {
-    user: 'traduzioni',
-    password: '12345678',
-    server: 'localhost',
-    database: 'db_traduzioni',
+    user: process.env.MSSQL_USER,
+    password: process.env.MSSQL_PASSWORD,
+    server: process.env.MSSQL_SERVER,
+    database: process.env.MSSQL_DATABASE,
     options:{
         encrypt: true,
         enableArithAbort: true
@@ -16,6 +16,6 @@ export const config = {
     port: 1730,
     dialect: "mssql",
     dialectOptions: {
-        instanceName: "SQLEXPRESS"
+        instanceName: process.env.MSSQL_INSTANCE_NAME
     }
 }

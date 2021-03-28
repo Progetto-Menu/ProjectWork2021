@@ -8,7 +8,7 @@ module.exports = router;
 
 const traduttoreController: TraduttoreController = new TraduttoreController();
 const jwt = require('jsonwebtoken');
-const secret = "chiave-segreta";
+const secret = require("fs").readFileSync( '/etc/letsencrypt/live/www.progettomenu.cloud/privkey.pem' );
 const tokenExpSec = 60 * 60;
 
 router.post("/login", async (req: any, res: any) => {
@@ -18,7 +18,7 @@ router.post("/login", async (req: any, res: any) => {
     const password = JSONUtils.getProperty(json, "password", "");
     const clientToken = JSONUtils.getProperty(json, "token", "");
 
-    if (email == "" || password == "") return res.send({ "error": "Errore" });
+    if (email == "" || password == "") return res.send({ "token": null });
 
     if (clientToken == "") {
         return Promise.resolve(traduttoreController.login(email, password))
@@ -27,7 +27,7 @@ router.post("/login", async (req: any, res: any) => {
                     sub: result.id,
                     iat: Math.floor(Date.now() / 1000),
                     exp: Math.floor(Date.now() / 1000) + tokenExpSec
-                }, secret/*, { algorithm: 'RS256' }*/);
+                }, secret, { algorithm: 'RS256' });
                 return res.send({ "token": token });
             }).catch((error) => {
                 console.log(error);
@@ -49,6 +49,25 @@ router.post("/login", async (req: any, res: any) => {
     }
 
 
+
+})
+
+router.post("/auth", async (req: any, res: any)=>{
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    jwt.verify(clientToken, secret, function (err: any, decoded: any) {
+        if (err) return res.send({ "token": null });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "token": null });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return result == null ? res.send({ "token": null }) : res.send({ "token": clientToken });
+            }).catch((error) => {
+                return res.send({ "token": null });
+            });
+    });
 
 })
 
