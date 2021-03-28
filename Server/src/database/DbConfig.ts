@@ -13,7 +13,7 @@ export const config = {
         min: 0,
         idleTimeoutMillis: 30000
     },
-    port: process.env.MSSQL_PORT,
+    port: parseInt((process.env.MSSQL_PORT || 1433).toString()),
     dialect: "mssql",
     dialectOptions: {
         instanceName: process.env.MSSQL_INSTANCE_NAME
