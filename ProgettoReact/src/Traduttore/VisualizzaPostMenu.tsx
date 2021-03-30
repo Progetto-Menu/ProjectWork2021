@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Restaurant, Address, Language, MenuProp } from "./Prop/menuProp";
 import { LanguageService, LanguageServiceMode } from "typescript";
-
 export const VisualizzaPostMenu: React.FunctionComponent<MenuProp> = (prop) => {
    
     return <React.Fragment>
@@ -18,5 +17,5 @@ export const VisualizzaPostMenu: React.FunctionComponent<MenuProp> = (prop) => {
                     </React.Fragment>
                 )}     
         </div>   
-    </React.Fragment>
+    </React.Fragment>    
 }

@@ -22,7 +22,8 @@ return <>
             <Route path="/loginRest" component={LoginRest}/>
             <Route path="/registerrestaurant" component={Reg_Restaurateur} />
             <Route path="/home" component={Home}/>
-            <Route path="/postRevisore" component={Post_Traduttori} />
+            <Route path="/postRevisore" component={Post_Traduttori} />            
+            
     </div> 
 </Router>    
       </>

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { MenuProp, Language } from "./Prop/menuProp";
 import {VisualizzaPostMenu} from "./VisualizzaPostMenu";
-export {Post_Traduttori};
+import {BottomNavBar} from "./BottomNavBar";
+export {Post_Traduttori}; 
+
 
 const Post_Traduttori: React.FunctionComponent = () => {
 
@@ -71,6 +73,8 @@ const Post_Traduttori: React.FunctionComponent = () => {
                 <VisualizzaPostMenu title={item.title} restaurant={item.restaurant} languages={item.languages}/>
             </React.Fragment>
         )}
+        
+        <BottomNavBar />
+    </>   
 
-    </>
 }

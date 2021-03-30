@@ -20,11 +20,6 @@ const FirstPage: React.FunctionComponent = () => {
             <Link style={firststyle} to="/Login">  <button className=" btn-outline-danger btn-dark btn-lg col-3 mx-5" type="button"> Traduttore </button> </Link>
             <Link style={firststyle} to="/loginRest"> <button className=" btn-outline-danger btn-dark btn-lg col-3 mx-5" type="button"> Ristoratore </button> </Link>
             </div>
-            <div>
-                <FaGithub size="2em" color="cornflowerblue"/> ciao 
-                <FaEnvelope /> luca 
-                <MdCode /> lorenzo 
-                <FaArrowLeft /> eei
-            </div>
+            
     </>
 }

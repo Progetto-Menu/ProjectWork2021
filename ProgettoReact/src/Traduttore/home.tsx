@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {BottomNavBar} from './BottomNavBar';
 export {Home};
 
 
@@ -12,5 +13,7 @@ const Home: React.FunctionComponent = () => {
         <div className="py-5 my-5 text-center">
          <Link to="postRevisore"> <button className="btn-lg bg-danger" type="button"> Clicca qui </button> </Link>
         </div>
+
+        <BottomNavBar />
     </>
 }
