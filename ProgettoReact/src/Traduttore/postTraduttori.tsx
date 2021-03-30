@@ -11,6 +11,7 @@ const Post_Traduttori: React.FunctionComponent = () => {
     let l4: Language = {sign: "de-DE"}
 
     let menu1: MenuProp = {
+        idMenu: 1,
         title: "Voglia di pizza",
         restaurant: {
             name: "Piziamo",
@@ -24,6 +25,7 @@ const Post_Traduttori: React.FunctionComponent = () => {
     } 
 
     let menu2: MenuProp = {
+        idMenu: 2,
         title: "Menù Carne",
         restaurant: {
             name: "Tramontana",
@@ -37,6 +39,7 @@ const Post_Traduttori: React.FunctionComponent = () => {
     } 
 
     let menu3: MenuProp = {
+        idMenu: 3,
         title: "Menù Primi",
         restaurant: {
             name: "Piziamo",
@@ -50,6 +53,7 @@ const Post_Traduttori: React.FunctionComponent = () => {
     } 
 
     let menu4: MenuProp = {
+        idMenu: 4,
         title: "Menù Pesci",
         restaurant: {
             name: "Sant Colombano",
@@ -68,9 +72,9 @@ const Post_Traduttori: React.FunctionComponent = () => {
    
    {MenuArray.map((item, index) => 
             <React.Fragment key={index}>
-                <VisualizzaPostMenu title={item.title} restaurant={item.restaurant} languages={item.languages}/>
+                <VisualizzaPostMenu idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
             </React.Fragment>
         )}
-
+    
     </>
 }

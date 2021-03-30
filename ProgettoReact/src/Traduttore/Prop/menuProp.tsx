@@ -18,6 +18,7 @@ export interface Language{
 }
 
 export interface MenuProp{
+    idMenu: number;
     title: string;
     restaurant: Restaurant;
     languages: Language[];
