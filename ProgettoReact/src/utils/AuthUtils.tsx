@@ -5,13 +5,17 @@ export class AuthUtils {
     static async isLoggedIn(token: string | null, user: Users) {
         switch (user) {
             case Users.TRADUTTORE:
-                return await axios.post("https://www.progettomenu.cloud/traduttori/auth", {
+                return axios.post("https://www.progettomenu.cloud/traduttori/auth", {
                     "token": token
                 })
             case Users.RISTORATORE:
-                break;
+                return axios.post("https://www.progettomenu.cloud/ristoratori/auth", {
+                    "token": token
+                })
             case Users.AMMINISTRATORE:
-                break;
+                return axios.post("https://www.progettomenu.cloud/amministratori/auth", {
+                    "token": token
+                })
             default: break;
         }
     }
