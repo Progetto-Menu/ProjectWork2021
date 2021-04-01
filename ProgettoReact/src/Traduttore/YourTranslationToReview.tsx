@@ -6,8 +6,8 @@ import { VisualizzaMenuHome } from "./visualizzaMenuHome";
 
 
 export const YourTranslationToReview: React.FunctionComponent<UserProp> = (prop) => {
-    return <div className="bg-info w-50 text-center">
-   Your Translation to review
+    return <div className="bg-white w-50 border border-secondary rounded text-dark text-center mx-auto ">
+   Traduzioni prese in carico
     {prop.reviewTranslations.map((item, index) => 
              <React.Fragment key={index}>
                  <VisualizzaMenuHome idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
