@@ -2,9 +2,8 @@ import { Console } from "console";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import {Link} from "react-router-dom";
-export {Reg_Translator};
 
-const Reg_Translator: React.FunctionComponent = () => {
+export const PageRegister: React.FunctionComponent = () => {
 return <>
 <div>   
     <div className="py-3 my-1 text-center col-6 bg-primary text-white mx-auto">

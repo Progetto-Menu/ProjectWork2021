@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { MenuProp, Language } from "./Prop/menuProp";
-import {VisualizzaPostMenu} from "./VisualizzaPostMenu";
-import {BottomNavBar} from "./BottomNavBar";
-export {Post_Traduttori}; 
+import { MenuToTranslateComponent } from "./Component/menuToTranslateComponent";
+import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
+import { bottomNavBar } from './Prop/bottomNavBarProp';
 
 
-const Post_Traduttori: React.FunctionComponent = () => {
+
+export const PageTranslations: React.FunctionComponent = () => {
 
     let l1: Language = {sign: "en-EN"}
     let l2: Language = {sign: "sp-SP"}
@@ -74,11 +75,11 @@ const Post_Traduttori: React.FunctionComponent = () => {
    
    {MenuArray.map((item, index) => 
             <React.Fragment key={index}>
-                <VisualizzaPostMenu idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
+                <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
             </React.Fragment>
         )}
         
-        <BottomNavBar />
+        <BottomNavBarComponent type={bottomNavBar.translations} />
     </>   
 
 }

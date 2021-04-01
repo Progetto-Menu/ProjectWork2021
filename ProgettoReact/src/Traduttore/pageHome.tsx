@@ -1,16 +1,17 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {BottomNavBar} from './BottomNavBar';
+import { BottomNavBarComponent } from './Component/bottomNavBarComponent';
 import { UserProp } from "./Prop/userProp";
-import { WelcomeBack } from "./welcomeBack";
-import { TranslationTakenOver } from "./translationTakenOver";
-import { YourTranslationToReview } from "./YourTranslationToReview";
+import { WelcomeBackComponent } from "./Component/welcomeBackComponent";
+import { TranslationTakenOverComponent } from "./Component/translationTakenOverComponent";
+import { YourTranslationToReviewComponent } from "./Component/yourTranslationToReviewComponent";
 import { Language } from "./Prop/menuProp";
 import { MenuProp } from "./Prop/menuProp";
+import { bottomNavBarProp, bottomNavBar } from "./Prop/bottomNavBarProp";
 
 
-export const Home: React.FunctionComponent<UserProp> = (prop) => {
+export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
 
     let l1: Language = {sign: "en-EN"}
     let l2: Language = {sign: "sp-SP"}
@@ -80,14 +81,14 @@ export const Home: React.FunctionComponent<UserProp> = (prop) => {
         reviewTranslations: [menu3, menu4]
     }
 
-    return <>
-        <WelcomeBack name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+    return <React.Fragment>
+        <WelcomeBackComponent name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
         <div className="bg-info m-5 text-light" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
-            <TranslationTakenOver name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+            <TranslationTakenOverComponent name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
             <br></br>
-            <YourTranslationToReview name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+            <YourTranslationToReviewComponent name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
         </div>
 
-        <BottomNavBar />
-    </>
+        <BottomNavBarComponent type={bottomNavBar.home} />
+    </React.Fragment>
 }
