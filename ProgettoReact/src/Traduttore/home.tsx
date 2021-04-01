@@ -82,7 +82,7 @@ export const Home: React.FunctionComponent<UserProp> = (prop) => {
 
     return <>
         <WelcomeBack name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
-        <div className="bg-info text-light" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
+        <div className="bg-info m-5 text-light" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
             <TranslationTakenOver name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
             <br></br>
             <YourTranslationToReview name={user.name} surname={user.surname} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
