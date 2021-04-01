@@ -3,7 +3,7 @@ import { MenuProp, Language } from "./Prop/menuProp";
 import { MenuToTranslateComponent } from "./Component/menuToTranslateComponent";
 import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
 import { bottomNavBar } from './Prop/bottomNavBarProp';
-
+import {SearchBar} from "./Component/searchbar";
 
 
 export const PageTranslations: React.FunctionComponent = () => {
@@ -69,10 +69,24 @@ export const PageTranslations: React.FunctionComponent = () => {
         languages: [l1, l3]
     } 
 
-    let MenuArray : MenuProp[] = [menu1, menu2, menu3, menu4];
+    let menu5: MenuProp = {
+        idMenu: 5,
+        title: "Menù Pesci",
+        restaurant: {
+            name: "Santo Domingo",
+            address: {
+                state: "Italy",
+                city: "Urbino",
+                address: "Via Marcello, 30"
+            }
+        },
+        languages: [l1, l3]
+    } 
+
+    let MenuArray : MenuProp[] = [menu1, menu2, menu3, menu4, menu5];
 
     return <>
-   
+   <SearchBar/>
    {MenuArray.map((item, index) => 
             <React.Fragment key={index}>
                 <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
