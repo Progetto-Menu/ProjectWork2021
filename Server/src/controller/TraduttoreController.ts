@@ -1,3 +1,4 @@
+import { OtpTraduttore } from "../model/OtpTraduttore";
 import { Traduttore } from "../model/Traduttore";
 import { BasePresenter } from "./BaseController";
 
@@ -25,6 +26,26 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
         return traduttore;
         //return SHA256(password)
         //if(traduttore.password.toUpperCase() != SHA256(password).)
+    }
+
+    async saveOtp(otp:OtpTraduttore){
+        return await Traduttore.saveOtp(otp);
+    }
+
+    async checkOtp(value: string, id_traduttore: number){
+        return await Traduttore.checkOtp(value, id_traduttore);
+    }
+
+    async invalidateAllOtp(id_traduttore: number){
+        return await Traduttore.invalidateAllOtp(id_traduttore);
+    }
+
+    async setValidated(id: number){
+        return await Traduttore.setValidated(id);
+    }
+
+    async changeEmail(emailVecchia: string, emailNuova: string){
+        return await Traduttore.changeEmail(emailVecchia, emailNuova);
     }
     
 }

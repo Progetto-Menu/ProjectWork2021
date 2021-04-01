@@ -1,8 +1,11 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Redirect, Route, RouteProps } from 'react-router';
+import { RoutesRistoratore } from '../routes/Ristoratore';
+import { RoutesTraduttore } from '../routes/Traduttore';
 import { AuthUtils } from './AuthUtils';
 import { JSONUtils } from './JSONUtils';
-import { TokenUtils } from './TokenUtils';
+import { StorageUtils } from './StorageUtils';
 import { Users } from './Users';
 
 export type PrivateRouteProps = {
@@ -11,25 +14,35 @@ export type PrivateRouteProps = {
 
 
 export const PrivateRoute = ({ user, ...routeProps }: PrivateRouteProps) => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [isLoaded, setIsloaded] = useState<boolean>(false);
+    const [tk, setTk] = useState<string | null>("");
 
     useEffect(() => {
-        const isLoggedIn = async (token: string | null, user: Users) => {
-            const result = await AuthUtils.isLoggedIn(token, user);
-            if (result != null) {
-                const tokenResult = JSONUtils.getProperty(result.data, "token", null);
-                setIsAuthenticated(tokenResult != null);
-            }
-            setIsloaded(true);
+        const isLoggedIn = async (user: Users) => {
+
+            AuthUtils.isLoggedIn(StorageUtils.get(StorageUtils.token_key), user).then((result) => {
+                if (result != null) {
+                    const tokenResult = JSONUtils.getProperty(result.data, "token", null);
+                    console.log(tokenResult);
+                    setTk(tokenResult);
+                }
+                else {
+                    setTk(null);
+                }
+            }).catch((error) => {
+                setTk(null);
+            })
+
 
         }
+        if (tk === "") {
+            isLoggedIn(user)
+        }
 
-        isLoggedIn(TokenUtils.getToken(), user)
-    })
+    }, [tk, user])
 
-    if (isLoaded) {
-        if (isAuthenticated) {
+
+    if (tk === "") {
+        if (tk != null) {
             return <Route {...routeProps} />;
         } else {
             return <Redirect to={{ pathname: "/" }} />;
@@ -40,3 +53,22 @@ export const PrivateRoute = ({ user, ...routeProps }: PrivateRouteProps) => {
 
 
 };
+
+export class RouterUtils {
+    static getUserByRoute(url: string) {
+        switch (url) {
+            case RoutesTraduttore.HOME:
+            case RoutesTraduttore.LOGIN:
+            case RoutesTraduttore.REGISTER:
+            case RoutesTraduttore.OTP:
+                return Users.TRADUTTORE;
+            case RoutesRistoratore.HOME:
+            case RoutesRistoratore.LOGIN:
+            case RoutesRistoratore.REGISTER:
+            case RoutesRistoratore.OTP:
+                return Users.RISTORATORE;
+            default:
+                return Users.NON_IMPOSTATO;
+        }
+    }
+}
