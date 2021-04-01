@@ -17,7 +17,7 @@ export const BottomNavBarComponent: React.FunctionComponent<bottomNavBarProp> = 
                         </button>
                   } 
            </Link>
-           <Link to="Translations">
+           <Link to="translations">
                   {prop.type == bottomNavBar.translations ? 
                         <button style={{background: "green", width: "20%" }} className="py-3 my-1 text-center col-6 mx-auto rounded border-secondary text-dark "> 
                               Translations 
@@ -28,7 +28,7 @@ export const BottomNavBarComponent: React.FunctionComponent<bottomNavBarProp> = 
                         </button>
                   } 
            </Link> 
-           <Link to="Profile">
+           <Link to="profile">
                   {prop.type == bottomNavBar.profile ? 
                         <button style={{background: "green", width: "20%" }} className="py-3 my-1 text-center col-6 mx-auto rounded border-secondary text-dark "> 
                               Profile 

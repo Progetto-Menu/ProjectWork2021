@@ -10,12 +10,14 @@ import { LoginRest } from "./Ristoratore/loginRest";
 import { Reg_Restaurateur } from "./Ristoratore/registerrestaurant";
 import { PageHome } from "./Traduttore/pageHome";
 import { PageTranslations } from "./Traduttore/pageTranslations";
+import { PageProfile } from "./Traduttore/pageProfile";
 import "./styles/app.css";
+
+
 
 const App: React.FunctionComponent = () => {
 
-return <>
-<Router>
+return <Router>
     <div>   <Route path="/" exact component={ FirstPage } />            
             <Route path="/login" component={ PageLogin } />       
             <Route path="/registertranslator" component={ PageRegister } />     
@@ -23,10 +25,10 @@ return <>
             <Route path="/registerrestaurant" component={ Reg_Restaurateur } />
             <Route path="/home" component={ PageHome }/>
             <Route path="/translations" component={ PageTranslations }/>          
-            
+            <Route path="/profile" component={ PageProfile }/> 
     </div> 
 </Router>    
-      </>
+
 }
 
 ReactDOM.render(<App/>, document.getElementById('root'))

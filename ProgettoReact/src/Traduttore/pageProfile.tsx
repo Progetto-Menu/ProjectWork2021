@@ -1,17 +1,17 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { BottomNavBarComponent } from './Component/bottomNavBarComponent';
+import Logo from '../img/logo_menu.png';
 import { UserProp } from "./Prop/userProp";
-import { WelcomeBackComponent } from "./Component/welcomeBackComponent";
-import { TranslationTakenOverComponent } from "./Component/translationTakenOverComponent";
-import { YourTranslationToReviewComponent } from "./Component/yourTranslationToReviewComponent";
-import { Language } from "./Prop/menuProp";
-import { MenuProp } from "./Prop/menuProp";
-import { bottomNavBarProp, bottomNavBar } from "./Prop/bottomNavBarProp";
+import { MenuProp, Language } from "./Prop/menuProp";
+import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
+import { bottomNavBar } from "./Prop/bottomNavBarProp";
+import { UserBarComponent } from "./Component/userBarComponent";
+import { MyTranslationsComponent } from "./Component/myTranslationsComponent";
+import { YourLanguagesComponent } from "./Component/yourLanguagesComponent";
+import { ChangePersonalDataComponent } from "./Component/changePersonalDataComponent";
 
-
-export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
+export const PageProfile: React.FunctionComponent = () => {
 
     let l1: Language = {sign: "en-EN"}
     let l2: Language = {sign: "sp-SP"}
@@ -83,13 +83,18 @@ export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
     }
 
     return <React.Fragment>
-        <WelcomeBackComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
-        <div className="bg-info m-5 text-light" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
-            <TranslationTakenOverComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+        <image></image>
+        <div className="bg-info m-5 text-light text-center" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
+            <UserBarComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
             <br></br>
-            <YourTranslationToReviewComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+            <MyTranslationsComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+            <br></br>
+            <YourLanguagesComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+            <br></br>
+            <ChangePersonalDataComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+            <br></br>
+            <button>Logout</button>
         </div>
-
-        <BottomNavBarComponent type={bottomNavBar.home} />
+        <BottomNavBarComponent type={bottomNavBar.profile} />
     </React.Fragment>
 }
