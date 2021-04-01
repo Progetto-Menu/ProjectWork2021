@@ -6,6 +6,7 @@ import { MenuProp } from "./menuProp";
 export interface UserProp{
     name: string;
     surname: string;
+    nToken: number;
     takenTranslations: MenuProp[];
     reviewTranslations: MenuProp[];
 }
