@@ -89,7 +89,6 @@ export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
             <br></br>
             <YourTranslationToReviewComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
         </div>
-
         <BottomNavBarComponent type={bottomNavBar.home} />
     </React.Fragment>
 }

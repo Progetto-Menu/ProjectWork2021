@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { MenuProp, Language } from "./Prop/menuProp";
+import React, { Component, useState } from 'react';
+import { MenuProp, Language, CreateMenuCallBack } from "./Prop/menuProp";
 import { MenuToTranslateComponent } from "./Component/menuToTranslateComponent";
 import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
 import { bottomNavBar } from './Prop/bottomNavBarProp';
-
+import { SearchBar } from "./Component/searchbar";
 
 
 export const PageTranslations: React.FunctionComponent = () => {
@@ -71,15 +71,24 @@ export const PageTranslations: React.FunctionComponent = () => {
 
     let MenuArray : MenuProp[] = [menu1, menu2, menu3, menu4];
 
-    return <>
-   
-   {MenuArray.map((item, index) => 
+    let [menuArray, setMenuArray] = useState<MenuProp[]>([]);
+
+    let callbackCreate : CreateMenuCallBack = (newMenu) => {
+        let nuovalista = menuArray.concat(newMenu);
+        console.log(menuArray);
+        setMenuArray(nuovalista);
+    }
+    
+
+    return <React.Fragment>
+        <SearchBar/>
+        <CreateMenuButtonComponent callback={callbackCreate} />
+        {MenuArray.map((item, index) => 
             <React.Fragment key={index}>
                 <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
             </React.Fragment>
         )}
-        
         <BottomNavBarComponent type={bottomNavBar.translations} />
-    </>   
+    </React.Fragment>   
 
 }
