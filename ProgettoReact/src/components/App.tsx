@@ -10,6 +10,7 @@ import { SwitchLoginComponent } from './Login/SwitchLoginComponent';
 import { HomeTraduttore } from './Traduttore/HomeTraduttore';
 import { HomeRistoratore } from './Ristoratore/HomeRistoratore';
 import { StorageUtils } from '../utils/StorageUtils';
+import { PrivateRoute } from '../utils/RouterUtils';
 
 export interface AppRequest {
     token: string | null,
@@ -21,11 +22,21 @@ export const App: React.FunctionComponent = () => {
     const [user, setUser] = useState<Users>(Users.NON_IMPOSTATO);
     const history = useHistory();
 
+    useEffect(() => {
+        try {
+            const userType = parseInt(StorageUtils.get(StorageUtils.user_type) ?? Users.NON_IMPOSTATO.toString());
+            setUser(userType);
+        } catch {
+            setUser(Users.NON_IMPOSTATO);
+        }
+
+    }, [history.location.pathname])
+
     if (user === Users.NON_IMPOSTATO) {
-        console.log(user);
         return <Switch>
             <Route path="/" exact>
                 <SwitchLoginComponent selectedUserCallback={(u) => {
+                    StorageUtils.set(StorageUtils.user_type, u.toString());
                     setUser(u);
                 }} />
             </Route>
@@ -34,43 +45,47 @@ export const App: React.FunctionComponent = () => {
     else if (user === Users.TRADUTTORE) {
         return <Switch>
             <Route path="/" exact>
-                <SwitchLoginComponent selectedUserCallback={(u) => {
-                    setUser(u);
-                }} />
+                <Redirect to={RoutesTraduttore.HOME} />
             </Route>
             <Route path={RoutesTraduttore.LOGIN} exact>
-                <LoginComponent user={user} />
+                <LoginComponent user={user} onClickBack={() => {
+                    StorageUtils.remove(StorageUtils.user_type);
+                    setUser(Users.NON_IMPOSTATO)
+                    history.replace("/")
+                }} />
             </Route>
             <Route path={RoutesTraduttore.REGISTER} exact>
                 <RegisterComponent user={user} />
             </Route>
             <Route path={RoutesTraduttore.OTP} exact>
-               <OTPComponent user={user} />
+                <OTPComponent user={user} />
             </Route>
-            <Route path={RoutesTraduttore.HOME} exact>
+            <PrivateRoute path={RoutesTraduttore.HOME} exact>
                 <HomeTraduttore />
-            </Route>
+            </PrivateRoute>
         </Switch>
     }
     else if (user === Users.RISTORATORE) {
         return <Switch>
             <Route path="/" exact>
-                <SwitchLoginComponent selectedUserCallback={(u) => {
-                    setUser(u);
-                }} />
+                <Redirect to={RoutesRistoratore.HOME} />
             </Route>
             <Route path={RoutesRistoratore.LOGIN} exact>
-                <LoginComponent user={user} />
+                <LoginComponent user={user} onClickBack={() => {
+                    StorageUtils.remove(StorageUtils.user_type);
+                    setUser(Users.NON_IMPOSTATO)
+                    history.replace("/")
+                }} />
             </Route>
             <Route path={RoutesRistoratore.REGISTER} exact>
                 <RegisterComponent user={user} />
             </Route>
             <Route path={RoutesRistoratore.OTP} exact>
-               <OTPComponent user={user} />
+                <OTPComponent user={user} />
             </Route>
-            <Route path={RoutesRistoratore.HOME} exact>
+            <PrivateRoute path={RoutesRistoratore.HOME} exact>
                 <HomeRistoratore />
-            </Route>
+            </PrivateRoute>
         </Switch>
     } else return <></>
 

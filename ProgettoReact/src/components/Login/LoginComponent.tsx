@@ -16,6 +16,11 @@ import { RoutesRistoratore } from '../../routes/Ristoratore';
 
 interface LoginProps {
       user: Users;
+      onClickBack: OnClickBack
+}
+
+interface OnClickBack{
+      (): void;
 }
 
 
@@ -78,11 +83,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                               </div>
                               <div className="row no-gutters my-5 ">
                                     <div className="col-12 text-right">
-                                          <button className="btn btn-secondary mr-2" onClick={
-                                                () => { 
-                                                      history.replace("/") 
-                                                }
-                                          }>Indietro</button>
+                                          <button className="btn btn-secondary mr-2" onClick={() => props.onClickBack()}>Indietro</button>
                                           <button className="btn btn-primary mr-2" type="submit" onClick={() => {
                                                 if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
                                                 let url = "";

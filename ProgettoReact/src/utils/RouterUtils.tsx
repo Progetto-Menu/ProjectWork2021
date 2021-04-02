@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Redirect, Route, RouteProps } from 'react-router';
+import { Redirect, Route, RouteProps, useHistory } from 'react-router';
+import { AppRequest } from '../components/App';
 import { RoutesRistoratore } from '../routes/Ristoratore';
 import { RoutesTraduttore } from '../routes/Traduttore';
 import { AuthUtils } from './AuthUtils';
@@ -9,47 +10,63 @@ import { StorageUtils } from './StorageUtils';
 import { Users } from './Users';
 
 export type PrivateRouteProps = {
-    user: Users;
 } & RouteProps;
 
 
-export const PrivateRoute = ({ user, ...routeProps }: PrivateRouteProps) => {
-    const [tk, setTk] = useState<string | null>("");
+export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
+    const [request, setRequest] = useState<AppRequest>({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: false })
+    const history = useHistory();
 
     useEffect(() => {
-        const isLoggedIn = async (user: Users) => {
-
-            AuthUtils.isLoggedIn(StorageUtils.get(StorageUtils.token_key), user).then((result) => {
+        const checkToken = () => {
+            setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: false })
+            AuthUtils.isLoggedIn(StorageUtils.get(StorageUtils.token_key), RouterUtils.getUserByRoute(history.location.pathname)).then((result) => {
+                let isUserValid = false;
                 if (result != null) {
                     const tokenResult = JSONUtils.getProperty(result.data, "token", null);
-                    console.log(tokenResult);
-                    setTk(tokenResult);
+                    isUserValid = JSONUtils.getProperty(result.data, "uservalid", false);
+                    StorageUtils.set(StorageUtils.token_key, tokenResult);
                 }
                 else {
-                    setTk(null);
+                    StorageUtils.set(StorageUtils.token_key, null);
                 }
-            }).catch((error) => {
-                setTk(null);
+                setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: true, isUserValid: isUserValid });
+
+            }).catch(() => {
+                StorageUtils.set(StorageUtils.token_key, null)
+                setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: true, isUserValid: false });
             })
-
-
         }
-        if (tk === "") {
-            isLoggedIn(user)
+        checkToken();
+
+    }, [history.location.pathname])
+
+    if (request.isLoaded && request.token == null) {
+        const user: Users = RouterUtils.getUserByRoute(history.location.pathname)
+        if (user === Users.TRADUTTORE) {
+            return <Redirect to={RoutesTraduttore.LOGIN} />
+        }
+        else {
+            return <Redirect to={RoutesRistoratore.LOGIN} />
+        }
+    }
+    else if (request.isLoaded && request.token != null && request.isUserValid === false) {
+        const user: Users = RouterUtils.getUserByRoute(history.location.pathname)
+        if (user === Users.TRADUTTORE) {
+            return <Redirect to={RoutesTraduttore.OTP} />
+        }
+        else {
+            return <Redirect to={RoutesRistoratore.OTP} />
         }
 
-    }, [tk, user])
-
-
-    if (tk === "") {
-        if (tk != null) {
-            return <Route {...routeProps} />;
-        } else {
-            return <Redirect to={{ pathname: "/" }} />;
-        }
-    } else {
+    }
+    else if (request.isLoaded && request.token != null && request.isUserValid === true) {
+        return <Route {...routeProps} />;
+    }
+    else {
         return <></>
     }
+
 
 
 };
