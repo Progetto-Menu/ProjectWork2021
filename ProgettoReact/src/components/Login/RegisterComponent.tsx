@@ -100,10 +100,10 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
                             if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
                             let url = "";
                             if (props.user === Users.TRADUTTORE) {
-                                url = "https://www.progettomenu.cloud/traduttori/register";
+                                url = "https://api.progettomenu.cloud/traduttori/register";
                             }
                             else {
-                                url = "https://www.progettomenu.cloud/ristoratori/register";
+                                url = "https://api.progettomenu.cloud/ristoratori/register";
                             }
                             axios.post(url, {
                                 "email": email,

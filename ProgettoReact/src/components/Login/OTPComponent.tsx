@@ -35,10 +35,10 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                   setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: false })
                   let url = "";
                   if (user === Users.TRADUTTORE) {
-                        url = "https://www.progettomenu.cloud/traduttori/emailbytoken"
+                        url = "https://api.progettomenu.cloud/traduttori/emailbytoken"
                   }
                   else {
-                        url = "https://www.progettomenu.cloud/ristoratori/emailbytoken"
+                        url = "https://api.progettomenu.cloud/ristoratori/emailbytoken"
                   }
                   axios.post(url, {
                         token: StorageUtils.get(StorageUtils.token_key)
@@ -92,10 +92,10 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                                           if (!isReadOnly) {
                                                 let url = "";
                                                 if (props.user === Users.TRADUTTORE) {
-                                                      url = "https://www.progettomenu.cloud/traduttori/change-email";
+                                                      url = "https://api.progettomenu.cloud/traduttori/change-email";
                                                 }
                                                 else {
-                                                      url = "https://www.progettomenu.cloud/ristoratori/change-email";
+                                                      url = "https://api.progettomenu.cloud/ristoratori/change-email";
                                                 }
 
                                                 axios.post(url, {
@@ -138,10 +138,10 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                                                             <button className="btn btn-primary mr-2" type="button" onClick={() => {
                                                                   let url = "";
                                                                   if (props.user === Users.TRADUTTORE) {
-                                                                        url = "https://www.progettomenu.cloud/traduttori/verify-email";
+                                                                        url = "https://api.progettomenu.cloud/traduttori/verify-email";
                                                                   }
                                                                   else {
-                                                                        url = "https://www.progettomenu.cloud/ristoratori/verify-email";
+                                                                        url = "https://api.progettomenu.cloud/ristoratori/verify-email";
                                                                   }
 
                                                                   axios.post(url, {
@@ -169,10 +169,10 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                                                             <button className="btn btn-primary" type="button" onClick={() => {
                                                                   let url = "";
                                                                   if (props.user === Users.TRADUTTORE) {
-                                                                        url = "https://www.progettomenu.cloud/traduttori/validate-email";
+                                                                        url = "https://api.progettomenu.cloud/traduttori/validate-email";
                                                                   }
                                                                   else {
-                                                                        url = "https://www.progettomenu.cloud/ristoratori/validate-email";
+                                                                        url = "https://api.progettomenu.cloud/ristoratori/validate-email";
                                                                   }
 
                                                                   axios.post(url, {

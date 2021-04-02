@@ -87,10 +87,10 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                                                 if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
                                                 let url = "";
                                                 if (props.user === Users.TRADUTTORE) {
-                                                      url = "https://www.progettomenu.cloud/traduttori/login";
+                                                      url = "https://api.progettomenu.cloud/traduttori/login";
                                                 }
                                                 else {
-                                                      url = "https://www.progettomenu.cloud/ristoratori/login";
+                                                      url = "https://api.progettomenu.cloud/ristoratori/login";
                                                 }
                                                 axios.post(url, {
                                                       "email": email,
