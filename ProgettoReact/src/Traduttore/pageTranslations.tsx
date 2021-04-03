@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { MenuProp, Language } from "./Prop/menuProp";
+import React, { Component, useState } from 'react';
+import { MenuProp, Language, CreateMenuCallBack } from "./Prop/menuProp";
 import { MenuToTranslateComponent } from "./Component/menuToTranslateComponent";
 import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
 import { bottomNavBar } from './Prop/bottomNavBarProp';
 import {SearchBar} from "./Component/searchbar";
+import { CreateMenuButtonComponent } from './Component/createMenuButtonComponent';
 
 
 export const PageTranslations: React.FunctionComponent = () => {
@@ -24,6 +25,8 @@ export const PageTranslations: React.FunctionComponent = () => {
                 address: "Via Aldo Moro, 23"
             }
         },
+        sections:[],
+        mainLanguage: {sign:"it-IT"},
         languages: [l1, l3, l4]
     } 
 
@@ -38,6 +41,8 @@ export const PageTranslations: React.FunctionComponent = () => {
                 address: "Via Unità, 142"
             }
         },
+        sections:[],
+        mainLanguage: {sign:"it-IT"},
         languages: [l1, l2, l4]
     } 
 
@@ -52,6 +57,8 @@ export const PageTranslations: React.FunctionComponent = () => {
                 address: "Via Giovecca, 13"
             }
         },
+        sections:[],
+        mainLanguage: {sign:"it-IT"},
         languages: [l1, l2]
     } 
 
@@ -66,6 +73,8 @@ export const PageTranslations: React.FunctionComponent = () => {
                 address: "Via Vicenza, 30"
             }
         },
+        sections:[],
+        mainLanguage: {sign:"it-IT"},
         languages: [l1, l3]
     } 
 
@@ -80,20 +89,31 @@ export const PageTranslations: React.FunctionComponent = () => {
                 address: "Via Marcello, 30"
             }
         },
+        sections:[],
+        mainLanguage: {sign:"it-IT"},
         languages: [l1, l3]
     } 
 
     let MenuArray : MenuProp[] = [menu1, menu2, menu3, menu4, menu5];
 
-    return <>
-   <SearchBar/>
-   {MenuArray.map((item, index) => 
+    let [menuArray, setMenuArray] = useState<MenuProp[]>([]);
+
+    let callbackCreate : CreateMenuCallBack = (newMenu) => {
+        let nuovalista = menuArray.concat(newMenu);
+        console.log(menuArray);
+        setMenuArray(nuovalista);
+    }
+    
+
+    return <React.Fragment>
+        <SearchBar/>
+        <CreateMenuButtonComponent callback={callbackCreate} />
+        {MenuArray.map((item, index) => 
             <React.Fragment key={index}>
-                <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
+                <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages} mainLanguage={item.mainLanguage} sections={item.sections}/>
             </React.Fragment>
         )}
-        
         <BottomNavBarComponent type={bottomNavBar.translations} />
-    </>   
+    </React.Fragment>   
 
 }
