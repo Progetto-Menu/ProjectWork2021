@@ -18,6 +18,8 @@ export interface Restaurant{
 }
 
 export interface Language{
+    id: number;
+    name: string;
     sign: string;
 }
 
