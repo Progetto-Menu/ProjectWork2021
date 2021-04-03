@@ -64,7 +64,7 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
         return <Route {...routeProps} />;
     }
     else {
-        return <></>
+        return <Route {...routeProps} />;
     }
 
 
