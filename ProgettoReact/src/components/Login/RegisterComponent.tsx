@@ -26,7 +26,7 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
     const history = useHistory();
 
     return <>
-        <div className="container mb-3">
+        <div className="container py-5">
             <TopBar text="Registrati"/>
 
             <div className="row">

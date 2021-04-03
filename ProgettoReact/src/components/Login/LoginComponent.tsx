@@ -63,8 +63,9 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
       }
 
       return <>
-            <div className="container">
-                  <TopBar text="Login"/>
+            <TopBar text="Login"/>
+            <div className="container py-5">
+                 
 
                   <div className="row">
                         <div className="col-12 py-3 my-5 text-center mx-auto"> <img className="" src={Logo} alt="Logo" /> </div>

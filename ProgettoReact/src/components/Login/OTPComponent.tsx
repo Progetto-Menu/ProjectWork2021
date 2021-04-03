@@ -68,7 +68,7 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
             else return <Redirect to={RoutesRistoratore.LOGIN} />
       }
       else if (request.isLoaded && request.email != null) {
-            return <div className="container">
+            return <div className="container py-5">
                   <TopBar text="Verifica OTP"/>
                   <div className="row mt-3">
 
