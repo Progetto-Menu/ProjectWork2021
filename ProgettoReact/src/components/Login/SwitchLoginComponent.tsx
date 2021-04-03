@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { RoutesRistoratore } from '../../routes/Ristoratore';
 import { RoutesTraduttore } from '../../routes/Traduttore';
 import { Users } from '../../utils/Users';
+import { TopBar } from '../shared/TopBar';
 import { OTPComponent } from './OTPComponent';
 
 interface SwitchLoginProps{
@@ -17,9 +18,7 @@ interface SelectedUserCallback{
 export const SwitchLoginComponent: React.FunctionComponent<SwitchLoginProps> = (props) => {
     return <>
         <div className="container">
-            <div className="row position-sticky sticky-top">
-                <div className="col-12 py-3 mb-1 text-center bg-primary text-white mx-auto">Ciao, sei un Traduttore o un Ristoratore? </div>
-            </div>
+            <TopBar text="Ciao, sei un Traduttore o un Ristoratore?"/>
 
             <div className="row my-5">
                 <div className="col-0 col-md-3"></div>

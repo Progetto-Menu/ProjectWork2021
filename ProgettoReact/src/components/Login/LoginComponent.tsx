@@ -10,6 +10,7 @@ import { AuthUtils } from '../../utils/AuthUtils';
 import { AppRequest } from '../App';
 import { RoutesTraduttore } from '../../routes/Traduttore';
 import { RoutesRistoratore } from '../../routes/Ristoratore';
+import { TopBar } from '../shared/TopBar';
 
 
 
@@ -63,9 +64,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
 
       return <>
             <div className="container">
-                  <div className="row position-sticky sticky-top">
-                        <div className="col-12 py-3 mb-1 text-center bg-primary text-white mx-auto">Login</div>
-                  </div>
+                  <TopBar text="Login"/>
 
                   <div className="row">
                         <div className="col-12 py-3 my-5 text-center mx-auto"> <img className="" src={Logo} alt="Logo" /> </div>

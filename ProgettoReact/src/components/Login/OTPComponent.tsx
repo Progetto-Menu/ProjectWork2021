@@ -13,6 +13,7 @@ import { RoutesRistoratore } from '../../routes/Ristoratore';
 import { RoutesTraduttore } from '../../routes/Traduttore';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { RouterUtils } from '../../utils/RouterUtils';
+import { TopBar } from '../shared/TopBar';
 
 interface OtpProps {
       user: Users
@@ -68,9 +69,7 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
       }
       else if (request.isLoaded && request.email != null) {
             return <div className="container">
-                  <div className="row position-sticky sticky-top">
-                        <div className="col-12 py-3 mb-1 text-center bg-primary text-white mx-auto">Verifica OTP</div>
-                  </div>
+                  <TopBar text="Verifica OTP"/>
                   <div className="row mt-3">
 
                         <div className="col-0 col-md-3" />

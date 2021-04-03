@@ -7,6 +7,7 @@ import { useHistory } from "react-router";
 import { RoutesTraduttore } from "../../routes/Traduttore";
 import { RoutesRistoratore } from "../../routes/Ristoratore";
 import { StorageUtils } from "../../utils/StorageUtils";
+import { TopBar } from "../shared/TopBar";
 
 interface RegisterProps {
     user: Users
@@ -26,11 +27,7 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
 
     return <>
         <div className="container mb-3">
-            <div className="row position-sticky sticky-top">
-                <div className="col-12 py-3 mb-3 text-center bg-primary text-white mx-auto">
-                    Registrati
-                </div>
-            </div>
+            <TopBar text="Registrati"/>
 
             <div className="row">
                 <div className="col-12 my-3 mx-auto text-center h5 col-10">
