@@ -1,44 +1,87 @@
-import React, { Component, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import axios from 'axios';
+import React, { Component, useEffect, useState } from 'react';
+import { Card, Form } from 'react-bootstrap';
+import { JSONUtils } from '../../../utils/JSONUtils';
 import { UserProp } from '../Prop/userProp';
 
-export const UserBarComponent: React.FunctionComponent<UserProp> = (prop) => {
+interface UserBarComponentProps {
+    user: UserProp
+}
 
-    const [nome, setNome] = useState(prop.name);
-    const [cognome, setCognome] = useState(prop.surname);
-    const [token, setToken] = useState(prop.nToken);
+export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = (prop) => {
+
+    const [nome, setNome] = useState(prop.user.name);
+    const [cognome, setCognome] = useState(prop.user.surname);
+    const [email, setEmail] = useState(prop.user.email);
+    const [token, setToken] = useState(prop.user.nToken);
     const [isEditing, setIsEditing] = useState(true);
 
+    useEffect(() => {
+        setNome(prop.user.name);
+        setCognome(prop.user.surname);
+        setEmail(prop.user.email);
+        setToken(prop.user.nToken);
+    }, [prop.user])
+
     return <React.Fragment>
-        <div className="rounded border border-secondary p-5">
-            <h3 className="text-center mb-3">I tuoi dati</h3>
-            <Form.Group className="col-12">
-                <Form.Label>Nome</Form.Label>
-                <Form.Control type="text" placeholder="Nome" readOnly={isEditing} value={nome} onChange={(e) => {
-                    setNome(e.target.value);
-                }} />
-            </Form.Group>
 
-            <Form.Group className="col-12">
-                <Form.Label>Cognome</Form.Label>
-                <Form.Control type="text" placeholder="Nome" readOnly={isEditing} value={cognome} onChange={(e) => {
-                    setCognome(e.target.value);
-                }} />
-            </Form.Group>
+        <Card>
+            <Card.Header>
+                I tuoi dati
+            </Card.Header>
+            <Card.Body>
+                <Form.Group className="col-12">
+                    <Form.Label>Nome</Form.Label>
+                    <Form.Control type="text" placeholder="Nome" readOnly={isEditing} value={nome} onChange={(e) => {
+                        setNome(e.target.value);
+                    }} />
+                </Form.Group>
 
-            <Form.Group className="col-12">
-                <Form.Label>N. Token</Form.Label>
-                <Form.Control type="text" placeholder="Nome" readOnly value={token} />
-            </Form.Group>
+                <Form.Group className="col-12">
+                    <Form.Label>Cognome</Form.Label>
+                    <Form.Control type="text" placeholder="Cognome" readOnly={isEditing} value={cognome} onChange={(e) => {
+                        setCognome(e.target.value);
+                    }} />
+                </Form.Group>
 
-            <div className="col-12 text-right">
-                <button className="btn btn-primary" type="submit" onClick={() => {
-                    setIsEditing(!isEditing)
-                }}> {!isEditing ? <>Salva</> : <>Modifica</>}  </button>
+                <Form.Group className="col-12">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="text" placeholder="Email" readOnly value={email} />
+                </Form.Group>
 
-            </div>
+                <Form.Group className="col-12">
+                    <Form.Label>N. Token</Form.Label>
+                    <Form.Control type="text" placeholder="Nome" readOnly value={token} />
+                </Form.Group>
 
+                <div className="col-12 text-right">
+                    <button className="btn btn-primary" type="submit" onClick={() => {
+                        if (isEditing) {
+                            axios.post("https://api.progettomenu.cloud/traduttori/profile/update", {
+                                nome: nome,
+                                cognome: cognome
+                            }).then((result) => {
+                                const resultRequest = JSONUtils.getProperty(result.data, "result", "error");
+                                if (resultRequest === "OK") {
 
-        </div>
+                                }
+                                else {
+
+                                }
+                            }).catch(() => {
+
+                            }).finally(() => {
+                                setIsEditing(false);
+                            })
+                        }
+                        else{
+                            setIsEditing(true);
+                        }
+                    }}> {!isEditing ? <>Salva</> : <>Modifica</>}  </button>
+
+                </div>
+            </Card.Body>
+
+        </Card>
     </React.Fragment>
 }
