@@ -12,6 +12,7 @@ import { BottomNavBarComponent, BottomNavBarProps } from "../shared/BottomNavBar
 import { bottomNavBar } from "./Prop/bottomNavBarProp";
 import { RoutesTraduttore } from "../../routes/Traduttore";
 import { TopBar } from "../shared/TopBar";
+import defaultProfile from "../../img/defaultProfile.jpg";
 
 export const PageProfile: React.FunctionComponent = () => {
 
@@ -122,13 +123,37 @@ export const PageProfile: React.FunctionComponent = () => {
         <TopBar text="Profile" />
         <div className="container py-5">
 
-            <div className="bg-info m-5 text-light text-center" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
-                <UserBarComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
-                <MyTranslationsComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
-                <YourLanguagesComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
-                <ChangePersonalDataComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
-                <button className="btn btn-primary">Logout</button>
+            <div className="row mt-5">
+                <div className="col-12">
+                    <UserBarComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+                </div>
             </div>
+
+            <div className="row mt-5">
+                <div className="col-12">
+                <MyTranslationsComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+                </div>
+            </div>
+
+            <div className="row mt-5">
+                <div className="col-12">
+                <YourLanguagesComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+                </div>
+            </div>
+
+
+            <div className="row mt-5">
+                <div className="col-12">
+                <ChangePersonalDataComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+                </div>
+            </div>
+
+            <div className="row mt-5">
+                <div className="col-12">
+                <button className="btn btn-primary">Logout</button>
+                </div>
+            </div>
+
             <BottomNavBarComponent actions={bottombarprops.actions} />
         </div>
     </>
