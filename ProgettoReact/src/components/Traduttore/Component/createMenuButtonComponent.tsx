@@ -88,6 +88,8 @@ export const CreateMenuButtonComponent: React.FunctionComponent<CreateMenuButton
                 },
                 sections: sectiontValue,
                 mainLanguage: {
+                    id:1,
+                    name: "Italiano",
                     sign: mainLanguageValue
                 },
                 languages: languagesValue
