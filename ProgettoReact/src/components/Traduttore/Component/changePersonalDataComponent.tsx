@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { UserProp } from "../Prop/userProp";
+import { UserProp } from '../Prop/userProp';
 
 export const ChangePersonalDataComponent: React.FunctionComponent<UserProp> = (prop) => {
 

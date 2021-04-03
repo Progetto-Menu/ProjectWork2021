@@ -1,6 +1,5 @@
 import React, { Component, useState } from 'react';
 import { CreateMenuCallBack, MenuProp, Restaurant, Section, Language } from '../Prop/menuProp';
-import { UserProp } from "../Prop/userProp";
 import { NewSectionComponent } from "./newSectionComponent";
 
 interface CreateMenuButtonProps{

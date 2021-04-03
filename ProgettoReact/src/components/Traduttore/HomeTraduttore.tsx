@@ -1,17 +1,21 @@
-import ReactDOM from "react-dom";
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, Redirect, useHistory } from 'react-router-dom';
+import { RoutesTraduttore } from '../../routes/Traduttore';
+import { AuthUtils } from '../../utils/AuthUtils';
+import { JSONUtils } from '../../utils/JSONUtils';
+import { StorageUtils } from '../../utils/StorageUtils';
+import { Users } from '../../utils/Users';
+import { AppRequest } from '../App';
 import { BottomNavBarComponent } from './Component/bottomNavBarComponent';
-import { UserProp } from "./Prop/userProp";
-import { WelcomeBackComponent } from "./Component/welcomeBackComponent";
-import { TranslationTakenOverComponent } from "./Component/translationTakenOverComponent";
-import { YourTranslationToReviewComponent } from "./Component/yourTranslationToReviewComponent";
-import { Language } from "./Prop/menuProp";
-import { MenuProp } from "./Prop/menuProp";
-import { bottomNavBarProp, bottomNavBar } from "./Prop/bottomNavBarProp";
+import { TranslationTakenOverComponent } from './Component/translationTakenOverComponent';
+import { WelcomeBackComponent } from './Component/welcomeBackComponent';
+import { YourTranslationToReviewComponent } from './Component/yourTranslationToReviewComponent';
+import { bottomNavBar } from './Prop/bottomNavBarProp';
+import { Language, MenuProp } from './Prop/menuProp';
+import { UserProp } from './Prop/userProp';
 
 
-export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
+export const HomeTraduttore: React.FunctionComponent = () => {
 
     let l1: Language = {sign: "en-EN"}
     let l2: Language = {sign: "sp-SP"}
@@ -29,6 +33,8 @@ export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
                 address: "Via Aldo Moro, 23 "
             }
         },
+        sections:[],
+        mainLanguage: {sign: "it-IT"},
         languages: [l1, l3, l4]
     } 
 
@@ -43,6 +49,8 @@ export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
                 address: "Via Unità, 142 "
             }
         },
+        sections:[],
+        mainLanguage: {sign: "it-IT"},
         languages: [l1, l2, l4]
     } 
 
@@ -57,6 +65,8 @@ export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
                 address: "Via Giovecca, 13 "
             }
         },
+        sections:[],
+        mainLanguage: {sign: "it-IT"},
         languages: [l1, l2]
     } 
 
@@ -71,6 +81,8 @@ export const PageHome: React.FunctionComponent<UserProp> = (prop) => {
                 address: "Via Vicenza, 30"
             }
         },
+        sections:[],
+        mainLanguage: {sign: "it-IT"},
         languages: [l1, l3]
     } 
 

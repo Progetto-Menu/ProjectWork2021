@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { UserProp } from "../Prop/userProp";
+import { UserProp } from '../Prop/userProp';
 
-export const YourLanguagesComponent: React.FunctionComponent<UserProp> = (prop) => {
+export const MyTranslationsComponent: React.FunctionComponent<UserProp> = (prop) => {
 
     return <React.Fragment>
         <button className="bg-white w-50 mx-auto rounded border border-secondary text-warning">
-            Your Languages
-        </button>
+        My Translations
+     </button>
     </React.Fragment>
 }

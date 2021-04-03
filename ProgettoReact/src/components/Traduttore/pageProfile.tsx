@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import Logo from '../img/logo_menu.png';
 import { UserProp } from "./Prop/userProp";
 import { MenuProp, Language } from "./Prop/menuProp";
-import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
-import { bottomNavBar } from "./Prop/bottomNavBarProp";
 import { UserBarComponent } from "./Component/userBarComponent";
 import { MyTranslationsComponent } from "./Component/myTranslationsComponent";
 import { YourLanguagesComponent } from "./Component/yourLanguagesComponent";
 import { ChangePersonalDataComponent } from "./Component/changePersonalDataComponent";
+import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
+import { bottomNavBar } from "./Prop/bottomNavBarProp";
 
 export const PageProfile: React.FunctionComponent = () => {
 
@@ -29,6 +29,8 @@ export const PageProfile: React.FunctionComponent = () => {
                 address: "Via Aldo Moro, 23 "
             }
         },
+        sections: [],
+        mainLanguage:{sign:"it-IT"},
         languages: [l1, l3, l4]
     } 
 
@@ -43,6 +45,8 @@ export const PageProfile: React.FunctionComponent = () => {
                 address: "Via Unità, 142 "
             }
         },
+        sections: [],
+        mainLanguage:{sign:"it-IT"},
         languages: [l1, l2, l4]
     } 
 
@@ -57,6 +61,8 @@ export const PageProfile: React.FunctionComponent = () => {
                 address: "Via Giovecca, 13 "
             }
         },
+        sections: [],
+        mainLanguage:{sign:"it-IT"},
         languages: [l1, l2]
     } 
 
@@ -71,6 +77,8 @@ export const PageProfile: React.FunctionComponent = () => {
                 address: "Via Vicenza, 30"
             }
         },
+        sections: [],
+        mainLanguage:{sign:"it-IT"},
         languages: [l1, l3]
     } 
 

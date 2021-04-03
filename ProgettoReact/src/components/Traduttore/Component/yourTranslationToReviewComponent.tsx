@@ -1,8 +1,8 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { UserProp } from "../Prop/userProp";
 import { MenuToReviewHomeComponent } from "./menuToReviewHomeComponent";
+import { UserProp } from "../Prop/userProp";
 
 
 export const YourTranslationToReviewComponent: React.FunctionComponent<UserProp> = (prop) => {
@@ -10,7 +10,7 @@ export const YourTranslationToReviewComponent: React.FunctionComponent<UserProp>
    Your translation to review
     {prop.reviewTranslations.map((item, index) => 
              <React.Fragment key={index}>
-                 <MenuToReviewHomeComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
+                 <MenuToReviewHomeComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages} mainLanguage={item.mainLanguage} sections={item.sections}/>
              </React.Fragment>
          )}
  

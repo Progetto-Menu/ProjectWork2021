@@ -1,10 +1,10 @@
 import React, { Component, useState } from 'react';
-import { MenuProp, Language, CreateMenuCallBack } from "./Prop/menuProp";
-import { MenuToTranslateComponent } from "./Component/menuToTranslateComponent";
-import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
-import { bottomNavBar } from './Prop/bottomNavBarProp';
-import {SearchBar} from "./Component/searchbar";
+import { BottomNavBarComponent } from './Component/bottomNavBarComponent';
 import { CreateMenuButtonComponent } from './Component/createMenuButtonComponent';
+import { MenuToTranslateComponent } from './Component/menuToTranslateComponent';
+import { SearchBar } from './Component/searchbar';
+import { bottomNavBar } from './Prop/bottomNavBarProp';
+import { MenuProp, Language, CreateMenuCallBack } from "./Prop/menuProp";
 
 
 export const PageTranslations: React.FunctionComponent = () => {

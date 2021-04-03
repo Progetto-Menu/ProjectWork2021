@@ -1,8 +1,8 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { UserProp } from "../Prop/userProp"
 import { MenuToTranslateHomeComponent } from "./menuToTranslateHomeComponent";
+import { UserProp } from "../Prop/userProp";
 
 
 export const TranslationTakenOverComponent: React.FunctionComponent<UserProp> = (prop) => {
@@ -10,7 +10,7 @@ export const TranslationTakenOverComponent: React.FunctionComponent<UserProp> = 
     Translation taken over
      {prop.takenTranslations.map((item, index) => 
               <React.Fragment key={index}>
-                  <MenuToTranslateHomeComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
+                  <MenuToTranslateHomeComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages} sections={item.sections} mainLanguage={item.mainLanguage}/>
               </React.Fragment>
           )}
   

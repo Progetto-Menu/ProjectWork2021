@@ -2,11 +2,12 @@ import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { bottomNavBarProp, bottomNavBar } from "../Prop/bottomNavBarProp";
+import { RoutesTraduttore } from "../../../routes/Traduttore";
 
 export const BottomNavBarComponent: React.FunctionComponent<bottomNavBarProp> = (prop) => {
 
     return <div className="text-center ">        
-            <Link to="home">
+            <Link to={RoutesTraduttore.HOME}>
                   {prop.type == bottomNavBar.home ? 
                         <button style={{background: "green", width: "20%" }} className="py-3 my-1 text-center col-6 mx-auto rounded border-secondary text-dark "> 
                               Home 
@@ -17,7 +18,7 @@ export const BottomNavBarComponent: React.FunctionComponent<bottomNavBarProp> = 
                         </button>
                   } 
            </Link>
-           <Link to="translations">
+           <Link to={RoutesTraduttore.TRANSLATIONS}>
                   {prop.type == bottomNavBar.translations ? 
                         <button style={{background: "green", width: "20%" }} className="py-3 my-1 text-center col-6 mx-auto rounded border-secondary text-dark "> 
                               Translations 
@@ -28,7 +29,7 @@ export const BottomNavBarComponent: React.FunctionComponent<bottomNavBarProp> = 
                         </button>
                   } 
            </Link> 
-           <Link to="profile">
+           <Link to={RoutesTraduttore.PROFILE}>
                   {prop.type == bottomNavBar.profile ? 
                         <button style={{background: "green", width: "20%" }} className="py-3 my-1 text-center col-6 mx-auto rounded border-secondary text-dark "> 
                               Profile 
