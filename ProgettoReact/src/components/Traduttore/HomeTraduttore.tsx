@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { RoutesTraduttore } from '../../routes/Traduttore';
@@ -6,14 +7,14 @@ import { JSONUtils } from '../../utils/JSONUtils';
 import { StorageUtils } from '../../utils/StorageUtils';
 import { Users } from '../../utils/Users';
 import { AppRequest } from '../App';
-import { BottomNavBarComponent } from './Component/bottomNavBarComponent';
+import { TopBar } from '../shared/TopBar';
 import { TranslationTakenOverComponent } from './Component/translationTakenOverComponent';
 import { WelcomeBackComponent } from './Component/welcomeBackComponent';
 import { YourTranslationToReviewComponent } from './Component/yourTranslationToReviewComponent';
-import { bottomNavBar } from './Prop/bottomNavBarProp';
 import { Language, MenuProp } from './Prop/menuProp';
 import { UserProp } from './Prop/userProp';
-
+import { BottomNavBarComponent, BottomNavBarProps } from "../shared/BottomNavBarComponent"
+ 
 
 export const HomeTraduttore: React.FunctionComponent = () => {
 
@@ -21,6 +22,21 @@ export const HomeTraduttore: React.FunctionComponent = () => {
     let l2: Language = {sign: "sp-SP"}
     let l3: Language = {sign: "fr-FR"}
     let l4: Language = {sign: "de-DE"}
+
+    const [topBarText, setTopBarText] = useState<string>("Bentornato");
+    const history = useHistory();
+
+    useEffect(()=>{
+        axios.post("https://api.progettomenu.cloud/traduttori/get-user-by-token",
+        {
+            token: StorageUtils.get(StorageUtils.token_key)
+        }).then((result)=>{
+            const nome: string = JSONUtils.getProperty(result.data, "nome", "");
+            const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
+
+            setTopBarText("Bentornato " + nome + " " + cognome)
+        })
+    }, [])
 
     let menu1: MenuProp = {
         idMenu: 1,
@@ -94,13 +110,39 @@ export const HomeTraduttore: React.FunctionComponent = () => {
         reviewTranslations: [menu3, menu4]
     }
 
-    return <React.Fragment>
-        <WelcomeBackComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+    const bottombarprops: BottomNavBarProps = {
+        actions: [
+            {
+                label: "Home",
+                selected: true,
+                onClick: ()=>{
+                    history.replace(RoutesTraduttore.HOME);
+                }
+            }, {
+                label: "Translations",
+                selected: false,
+                onClick: ()=>{
+                    history.replace(RoutesTraduttore.TRANSLATIONS);
+                }
+            }, {
+                label: "Profile",
+                selected: false,
+                onClick: ()=>{
+                    history.replace(RoutesTraduttore.PROFILE);
+                }
+            },
+        ]
+    }
+
+    return <>
+    <TopBar text={topBarText} />
+    <div className="container py-5">
+        
         <div className="bg-info m-5 text-light" /**Questo è il container azzuro che racchiude TakenTranslation e TranslationToReview */>
             <TranslationTakenOverComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
             <br></br>
             <YourTranslationToReviewComponent name={user.name} surname={user.surname} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
         </div>
-        <BottomNavBarComponent type={bottomNavBar.home} />
-    </React.Fragment>
+        <BottomNavBarComponent actions={bottombarprops.actions} />
+    </div></>
 }

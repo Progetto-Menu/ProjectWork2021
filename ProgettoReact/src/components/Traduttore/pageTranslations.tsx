@@ -1,5 +1,7 @@
 import React, { Component, useState } from 'react';
-import { BottomNavBarComponent } from './Component/bottomNavBarComponent';
+import { useHistory } from 'react-router';
+import { RoutesTraduttore } from '../../routes/Traduttore';
+import { BottomNavBarComponent, BottomNavBarProps } from '../shared/BottomNavBarComponent';
 import { CreateMenuButtonComponent } from './Component/createMenuButtonComponent';
 import { MenuToTranslateComponent } from './Component/menuToTranslateComponent';
 import { SearchBar } from './Component/searchbar';
@@ -13,6 +15,8 @@ export const PageTranslations: React.FunctionComponent = () => {
     let l2: Language = {sign: "sp-SP"}
     let l3: Language = {sign: "fr-FR"}
     let l4: Language = {sign: "de-DE"}
+
+    const history = useHistory();
 
     let menu1: MenuProp = {
         idMenu: 1,
@@ -104,8 +108,31 @@ export const PageTranslations: React.FunctionComponent = () => {
         setMenuArray(nuovalista);
     }
     
+    const bottombarprops: BottomNavBarProps = {
+        actions: [
+            {
+                label: "Home",
+                selected: false,
+                onClick: ()=>{
+                    history.replace(RoutesTraduttore.HOME);
+                }
+            }, {
+                label: "Translations",
+                selected: true,
+                onClick: ()=>{
+                    history.replace(RoutesTraduttore.TRANSLATIONS);
+                }
+            }, {
+                label: "Profile",
+                selected: false,
+                onClick: ()=>{
+                    history.replace(RoutesTraduttore.PROFILE);
+                }
+            },
+        ]
+    }
 
-    return <React.Fragment>
+    return <div className="container py-5">
         <SearchBar/>
         <CreateMenuButtonComponent callback={callbackCreate} />
         {MenuArray.map((item, index) => 
@@ -113,7 +140,7 @@ export const PageTranslations: React.FunctionComponent = () => {
                 <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages} mainLanguage={item.mainLanguage} sections={item.sections}/>
             </React.Fragment>
         )}
-        <BottomNavBarComponent type={bottomNavBar.translations} />
-    </React.Fragment>   
+        <BottomNavBarComponent actions={bottombarprops.actions} />
+    </div>   
 
 }
