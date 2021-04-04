@@ -60,9 +60,9 @@ export const App: React.FunctionComponent = () => {
             <Route path={RoutesTraduttore.REGISTER} exact>
                 <RegisterComponent user={user} />
             </Route>
-            <PrivateRoute path={RoutesTraduttore.OTP} exact>
+            <Route path={RoutesTraduttore.OTP} exact>
                 <OTPComponent user={user} />
-            </PrivateRoute>
+            </Route>
             <PrivateRoute path={RoutesTraduttore.HOME} exact>
                 <HomeTraduttore />
             </PrivateRoute>
@@ -89,9 +89,9 @@ export const App: React.FunctionComponent = () => {
             <Route path={RoutesRistoratore.REGISTER} exact>
                 <RegisterComponent user={user} />
             </Route>
-            <PrivateRoute path={RoutesRistoratore.OTP} exact>
+            <Route path={RoutesRistoratore.OTP} exact>
                 <OTPComponent user={user} />
-            </PrivateRoute>
+            </Route>
             <PrivateRoute path={RoutesRistoratore.HOME} exact>
                 <HomeRistoratore />
             </PrivateRoute>
