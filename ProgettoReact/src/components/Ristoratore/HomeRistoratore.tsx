@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Redirect, useHistory } from "react-router";
 import { RoutesRistoratore } from "../../routes/Ristoratore";
-import { AuthUtils } from "../../utils/AuthUtils";
+import { AjaxUtils } from "../../utils/AjaxUtils";
 import { JSONUtils } from "../../utils/JSONUtils";
 import { StorageUtils } from "../../utils/StorageUtils";
 import { Users } from "../../utils/Users";

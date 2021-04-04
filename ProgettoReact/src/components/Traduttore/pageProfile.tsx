@@ -16,6 +16,8 @@ import defaultProfile from "../../img/defaultProfile.jpg";
 import { StorageUtils } from "../../utils/StorageUtils";
 import axios from "axios";
 import { JSONUtils } from "../../utils/JSONUtils";
+import { AjaxUtils } from "../../utils/AjaxUtils";
+import { Users } from "../../utils/Users";
 
 export const PageProfile: React.FunctionComponent = () => {
 
@@ -34,10 +36,7 @@ export const PageProfile: React.FunctionComponent = () => {
     const history = useHistory();
 
     useEffect(() => {
-        axios.post("https://api.progettomenu.cloud/traduttori/profile",
-            {
-                token: StorageUtils.get(StorageUtils.token_key)
-            }).then((result) => {
+        AjaxUtils.getUser(Users.TRADUTTORE).then((result) => {
                 const nome: string = JSONUtils.getProperty(result.data, "nome", "");
                 const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
                 const email: string = JSONUtils.getProperty(result.data, "email", "");
@@ -55,10 +54,7 @@ export const PageProfile: React.FunctionComponent = () => {
                 setUser(u)
             })
 
-        axios.post("https://api.progettomenu.cloud/traduttori/profile/all-languages",
-        {
-            token: StorageUtils.get(StorageUtils.token_key)
-        }).then((result)=>{
+        AjaxUtils.getAllLanguages().then((result)=>{
             const langs : Language[] = [];
 
             for(let x of result.data){

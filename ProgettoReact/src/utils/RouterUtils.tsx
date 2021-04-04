@@ -4,7 +4,7 @@ import { Redirect, Route, RouteProps, useHistory } from 'react-router';
 import { AppRequest } from '../components/App';
 import { RoutesRistoratore } from '../routes/Ristoratore';
 import { RoutesTraduttore } from '../routes/Traduttore';
-import { AuthUtils } from './AuthUtils';
+import { AjaxUtils } from './AjaxUtils';
 import { JSONUtils } from './JSONUtils';
 import { StorageUtils } from './StorageUtils';
 import { Users } from './Users';
@@ -20,7 +20,7 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
     useEffect(() => {
         const checkToken = () => {
             setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: false })
-            AuthUtils.isLoggedIn(StorageUtils.get(StorageUtils.token_key), RouterUtils.getUserByRoute(history.location.pathname)).then((result) => {
+            AjaxUtils.isLoggedIn(RouterUtils.getUserByRoute(history.location.pathname)).then((result) => {
                 let isUserValid = false;
                 if (result != null) {
                     const tokenResult = JSONUtils.getProperty(result.data, "token", null);
@@ -72,6 +72,7 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
 };
 
 export class RouterUtils {
+    
     static getUserByRoute(url: string) {
         switch (url) {
             case RoutesTraduttore.HOME:

@@ -27,7 +27,8 @@ export const App: React.FunctionComponent = () => {
     useEffect(() => {
         try {
             const userType = parseInt(StorageUtils.get(StorageUtils.user_type) ?? Users.NON_IMPOSTATO.toString());
-            setUser(userType);
+            if (userType >= 0 && userType <= 3) setUser(userType);
+            else setUser(Users.NON_IMPOSTATO);
         } catch {
             setUser(Users.NON_IMPOSTATO);
         }
@@ -59,9 +60,9 @@ export const App: React.FunctionComponent = () => {
             <Route path={RoutesTraduttore.REGISTER} exact>
                 <RegisterComponent user={user} />
             </Route>
-            <Route path={RoutesTraduttore.OTP} exact>
+            <PrivateRoute path={RoutesTraduttore.OTP} exact>
                 <OTPComponent user={user} />
-            </Route>
+            </PrivateRoute>
             <PrivateRoute path={RoutesTraduttore.HOME} exact>
                 <HomeTraduttore />
             </PrivateRoute>
@@ -88,9 +89,9 @@ export const App: React.FunctionComponent = () => {
             <Route path={RoutesRistoratore.REGISTER} exact>
                 <RegisterComponent user={user} />
             </Route>
-            <Route path={RoutesRistoratore.OTP} exact>
+            <PrivateRoute path={RoutesRistoratore.OTP} exact>
                 <OTPComponent user={user} />
-            </Route>
+            </PrivateRoute>
             <PrivateRoute path={RoutesRistoratore.HOME} exact>
                 <HomeRistoratore />
             </PrivateRoute>

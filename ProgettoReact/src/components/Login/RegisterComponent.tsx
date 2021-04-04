@@ -8,6 +8,7 @@ import { RoutesTraduttore } from "../../routes/Traduttore";
 import { RoutesRistoratore } from "../../routes/Ristoratore";
 import { StorageUtils } from "../../utils/StorageUtils";
 import { TopBar } from "../shared/TopBar";
+import { AjaxUtils } from "../../utils/AjaxUtils";
 
 interface RegisterProps {
     user: Users
@@ -95,19 +96,7 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
                                 return;
                             }
                             if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
-                            let url = "";
-                            if (props.user === Users.TRADUTTORE) {
-                                url = "https://api.progettomenu.cloud/traduttori/register";
-                            }
-                            else {
-                                url = "https://api.progettomenu.cloud/ristoratori/register";
-                            }
-                            axios.post(url, {
-                                "email": email,
-                                "password": password,
-                                "nome": nome,
-                                "cognome": cognome
-                            }).then(res => {
+                            AjaxUtils.register(props.user, email, password, nome, cognome).then(res => {
                                 const token = JSONUtils.getProperty(res.data, "token", null)
                                 if (token != null) {
                                     StorageUtils.set(StorageUtils.token_key,token);

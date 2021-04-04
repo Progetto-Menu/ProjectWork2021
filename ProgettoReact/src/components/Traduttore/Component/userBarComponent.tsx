@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { Component, useEffect, useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
+import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
+import { Users } from '../../../utils/Users';
 import { UserProp } from '../Prop/userProp';
 
 interface UserBarComponentProps {
@@ -57,10 +59,7 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
                 <div className="col-12 text-right">
                     <button className="btn btn-primary" type="submit" onClick={() => {
                         if (isEditing) {
-                            axios.post("https://api.progettomenu.cloud/traduttori/profile/update", {
-                                nome: nome,
-                                cognome: cognome
-                            }).then((result) => {
+                            AjaxUtils.updateUser(Users.TRADUTTORE, nome, cognome).then((result) => {
                                 const resultRequest = JSONUtils.getProperty(result.data, "result", "error");
                                 if (resultRequest === "OK") {
 

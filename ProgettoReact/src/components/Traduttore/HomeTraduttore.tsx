@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { RoutesTraduttore } from '../../routes/Traduttore';
-import { AuthUtils } from '../../utils/AuthUtils';
+import { AjaxUtils } from '../../utils/AjaxUtils';
 import { JSONUtils } from '../../utils/JSONUtils';
 import { StorageUtils } from '../../utils/StorageUtils';
 import { Users } from '../../utils/Users';
@@ -27,10 +27,7 @@ export const HomeTraduttore: React.FunctionComponent = () => {
     const history = useHistory();
 
     useEffect(()=>{
-        axios.post("https://api.progettomenu.cloud/traduttori/profile",
-        {
-            token: StorageUtils.get(StorageUtils.token_key)
-        }).then((result)=>{
+        AjaxUtils.getUser(Users.TRADUTTORE).then((result)=>{
             const nome: string = JSONUtils.getProperty(result.data, "nome", "");
             const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
 

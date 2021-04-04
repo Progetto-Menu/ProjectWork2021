@@ -6,7 +6,7 @@ import axios from 'axios';
 import { JSONUtils } from '../../utils/JSONUtils';
 import { StorageUtils } from '../../utils/StorageUtils';
 import { Alert, FormControl } from 'react-bootstrap';
-import { AuthUtils } from '../../utils/AuthUtils';
+import { AjaxUtils } from '../../utils/AjaxUtils';
 import { AppRequest } from '../App';
 import { RoutesTraduttore } from '../../routes/Traduttore';
 import { RoutesRistoratore } from '../../routes/Ristoratore';
@@ -37,7 +37,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
       useEffect(() => {
             const checkToken = () => {
                   setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: false })
-                  AuthUtils.isLoggedIn(StorageUtils.get(StorageUtils.token_key), props.user).then((result) => {
+                  AjaxUtils.isLoggedIn(props.user).then((result) => {
                         if (result != null) {
                               const tokenResult = JSONUtils.getProperty(result.data, "token", null);
                               StorageUtils.set(StorageUtils.token_key, tokenResult);
@@ -86,17 +86,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                                           <button className="btn btn-secondary mr-2" onClick={() => props.onClickBack()}>Indietro</button>
                                           <button className="btn btn-primary mr-2" type="submit" onClick={() => {
                                                 if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
-                                                let url = "";
-                                                if (props.user === Users.TRADUTTORE) {
-                                                      url = "https://api.progettomenu.cloud/traduttori/login";
-                                                }
-                                                else {
-                                                      url = "https://api.progettomenu.cloud/ristoratori/login";
-                                                }
-                                                axios.post(url, {
-                                                      "email": email,
-                                                      "password": password
-                                                }).then(res => {
+                                                AjaxUtils.login(props.user, email, password).then(res => {
                                                       const token = JSONUtils.getProperty(res.data, "token", null)
                                                       if (token != null) {
                                                             StorageUtils.set(StorageUtils.token_key, token);
