@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const bodyParser = require("body-parser");
@@ -16,13 +17,17 @@ app.use("/amministratori", routes_amministratore);
 app.use("/traduttori", routes_traduttore);
 app.use("/ristoratori", routes_ristoratori);
 
-
-const privateKey = fs.readFileSync(process.env.LETSENCRYPT_PRIVKEY);
-const certificate = fs.readFileSync(process.env.LETSENCRYPT_CERT);
-const ca = fs.readFileSync(process.env.LETSENCRYPT_CHAIN);
-
-https.createServer({
-    key: privateKey,
-    cert: certificate,
-    ca: ca
-}, app).listen(443);
+if(process.env.ENV === "production"){
+    const privateKey = fs.readFileSync(process.env.LETSENCRYPT_PRIVKEY);
+    const certificate = fs.readFileSync(process.env.LETSENCRYPT_CERT);
+    const ca = fs.readFileSync(process.env.LETSENCRYPT_CHAIN);
+    
+    https.createServer({
+        key: privateKey,
+        cert: certificate,
+        ca: ca
+    }, app).listen(443);
+}
+else{
+    http.createServer(app).listen(5000);
+}
