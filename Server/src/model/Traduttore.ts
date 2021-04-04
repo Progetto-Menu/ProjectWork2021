@@ -1,4 +1,6 @@
 import { config, sql } from "../database/DbConfig";
+import { Lingua } from "./Lingua";
+import { LinguaTraduttore } from "./LinguaTraduttore";
 import { OtpTraduttore } from "./OtpTraduttore";
 
 export class Traduttore {
@@ -313,6 +315,67 @@ export class Traduttore {
                     .input("emailnuova", emailNuova)
                     .query(`
                     UPDATE ${Traduttore.db_table_name} SET ${Traduttore.db_email} = @emailnuova WHERE ${Traduttore.db_email} = @emailvecchia;`,
+                        (err: any, result: any) => {
+                            console.log(err,result);
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        console.log(result)
+                                        resolve(true)
+                                        //resolve(this.convertToTraduttore(result.recordset[0]));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+    static async setLanguage(id_traduttore: number, id_lingua: number){
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(LinguaTraduttore.db_id_lingua, id_lingua)
+                    .input(LinguaTraduttore.db_id_traduttore, id_traduttore)
+                    .query(`
+                    INSERT INTO ${LinguaTraduttore.db_table_name} (${LinguaTraduttore.db_id_lingua},${LinguaTraduttore.db_id_traduttore}) VALUES (@${LinguaTraduttore.db_id_lingua}, @${LinguaTraduttore.db_id_traduttore});
+                    SELECT * FROM ${LinguaTraduttore.db_table_name} where ${LinguaTraduttore.db_id_lingua} = @${LinguaTraduttore.db_id_lingua} AND ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore};`,
+                        (err: any, result: any) => {
+                            console.log(err,result);
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        console.log(result)
+                                        resolve(true)
+                                        //resolve(this.convertToTraduttore(result.recordset[0]));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+    static async removeLanguage(id_traduttore: number, id_lingua: number){
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(LinguaTraduttore.db_id_lingua, id_lingua)
+                    .input(LinguaTraduttore.db_id_traduttore, id_traduttore)
+                    .query(`
+                    DELETE FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_lingua}=@${LinguaTraduttore.db_id_lingua} AND ${LinguaTraduttore.db_id_traduttore}=@${LinguaTraduttore.db_id_traduttore};`,
                         (err: any, result: any) => {
                             console.log(err,result);
                             if (err) {

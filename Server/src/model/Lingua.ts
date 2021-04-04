@@ -1,4 +1,5 @@
 import { config, sql } from "../database/DbConfig";
+import { LinguaTraduttore } from "./LinguaTraduttore";
 
 export class Lingua {
     readonly id: number;
@@ -17,7 +18,7 @@ export class Lingua {
     }
 
 
-    static convertToLanguage(record:any): Lingua | null{
+    static convertToLanguage(record: any): Lingua | null {
         return record != null ? {
             id: record[Lingua.db_id],
             nome: record[Lingua.db_nome],
@@ -25,10 +26,10 @@ export class Lingua {
         } : null;
     }
 
-    static convertToArrayOfLanguages(recordset:any): Lingua[] | null{
+    static convertToArrayOfLanguages(recordset: any): Lingua[] | null {
         const array: Lingua[] = [];
 
-        for(let record of recordset){
+        for (let record of recordset) {
             array.push({
                 id: record[Lingua.db_id],
                 nome: record[Lingua.db_nome],
@@ -64,5 +65,58 @@ export class Lingua {
     }
 
 
+    static async getAllLanguagesThatAreUnknownByTranslator(id: number) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(LinguaTraduttore.db_id_traduttore, id)
+                    .query(`SELECT * FROM ${Lingua.db_table_name} 
+                    WHERE ${Lingua.db_id} NOT IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore});`,
+                        (err: any, result: any) => {
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        resolve(this.convertToArrayOfLanguages(result.recordset));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+    static async getAllLanguagesThatAreKnownByTranslator(id: number) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(LinguaTraduttore.db_id_traduttore, id)
+                    .query(`SELECT * FROM ${Lingua.db_table_name} 
+                    WHERE ${Lingua.db_id} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})
+                    
+                    ;`,
+                        (err: any, result: any) => {
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        resolve(this.convertToArrayOfLanguages(result.recordset));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
 
 }

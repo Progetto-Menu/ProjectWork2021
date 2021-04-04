@@ -21,8 +21,8 @@ import { Users } from "../../utils/Users";
 
 export const PageProfile: React.FunctionComponent = () => {
 
-    const [languages, setLanguages] = useState<Language[]>([]);
-    const [myLaguages, setMyLanguages] = useState<Language[]>([]);
+    const [unKnownLanguages, setUnknownLanguages] = useState<Language[]>([]);
+    const [knownLanguages, setKnownLanguages] = useState<Language[]>([]);
     const [user, setUser] = useState<UserProp>({
         email: "",
         name: "",
@@ -35,13 +35,48 @@ export const PageProfile: React.FunctionComponent = () => {
 
     const history = useHistory();
 
+    const getAllLanguagesUnknown = ()=>{
+        AjaxUtils.getAllLanguagesUnknown().then((result)=>{
+            const langs : Language[] = [];
+
+            for(let x of result.data){
+                langs.push({
+                    id: JSONUtils.getProperty(x, "id", ""),
+                    name: JSONUtils.getProperty(x, "nome", ""),
+                    sign: JSONUtils.getProperty(x, "cod_lingua", "")
+                })
+            }
+
+
+            setUnknownLanguages(langs);
+            
+        })
+    }
+
+    const getAllLanguagesKnown = ()=>{
+        AjaxUtils.getAllLanguagesKnown().then((result)=>{
+            const langs : Language[] = [];
+
+            for(let x of result.data){
+                langs.push({
+                    id: JSONUtils.getProperty(x, "id", ""),
+                    name: JSONUtils.getProperty(x, "nome", ""),
+                    sign: JSONUtils.getProperty(x, "cod_lingua", "")
+                })
+            }
+
+
+            setKnownLanguages(langs);
+            
+        })
+    }
+
     useEffect(() => {
         AjaxUtils.getUser(Users.TRADUTTORE).then((result) => {
                 const nome: string = JSONUtils.getProperty(result.data, "nome", "");
                 const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
                 const email: string = JSONUtils.getProperty(result.data, "email", "");
                 const n_token: string = JSONUtils.getProperty(result.data, "numero_token", "");
-                console.log(result)
                 const u: UserProp = {
                     email: email,
                     name: nome,
@@ -54,21 +89,10 @@ export const PageProfile: React.FunctionComponent = () => {
                 setUser(u)
             })
 
-        AjaxUtils.getAllLanguages().then((result)=>{
-            const langs : Language[] = [];
-
-            for(let x of result.data){
-                langs.push({
-                    id: JSONUtils.getProperty(x, "id", ""),
-                    name: JSONUtils.getProperty(x, "nome", ""),
-                    sign: JSONUtils.getProperty(x, "cod_lingua", "")
-                })
-            }
-
-
-            setLanguages(langs);
-            
-        })
+        
+            getAllLanguagesUnknown();
+            getAllLanguagesKnown();
+        
     }, [])
 
 
@@ -178,7 +202,13 @@ export const PageProfile: React.FunctionComponent = () => {
 
             <div className="row mt-5">
                 <div className="col-12">
-                    <YourLanguagesComponent allLanguages={languages} />
+                    <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={()=>{
+                        getAllLanguagesKnown();
+                        getAllLanguagesUnknown();
+                    }} onClickRemove={()=>{
+                        getAllLanguagesKnown();
+                        getAllLanguagesUnknown();
+                    }}/>
                 </div>
             </div>
 

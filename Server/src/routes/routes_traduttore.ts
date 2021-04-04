@@ -104,7 +104,7 @@ router.post("/verify-email", async (req: any, res: any) => {
     const email = JSONUtils.getProperty(json, "email", "");
     const token = JSONUtils.getProperty(json, "token", "")
 
-    if (email == "" || token == "")return res.send({ "result": "error" });
+    if (email == "" || token == "") return res.send({ "result": "error" });
 
     JwtUtils.JWT.verify(token, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
         if (err) return res.send({ "result": "error" });
@@ -198,9 +198,9 @@ router.post("/change-email", async (req: any, res: any) => {
 
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
-                return Promise.resolve(traduttoreController.changeEmail(result.email, emailNuova)).then(()=>{
+                return Promise.resolve(traduttoreController.changeEmail(result.email, emailNuova)).then(() => {
                     return res.send({ "result": "OK" });
-                }).catch(()=>{
+                }).catch(() => {
                     return res.send({ "result": "error" });
                 })
             }).catch((error) => {
@@ -230,7 +230,7 @@ router.post("/validate-email", async (req: any, res: any) => {
                             console.log(e);
                             return res.send({ "result": "error" });
                         })
-                    }).catch((e)=>{
+                    }).catch((e) => {
                         console.log(e);
                         return res.send({ "result": "error" });
                     })
@@ -267,7 +267,7 @@ router.post("/profile", async (req: any, res: any) => {
 
     JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
         if (err) return res.send({ "result": "error" });
-        if (decoded.exp - Math.floor(Date.now() / 1000) < 0)  return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
 
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
@@ -278,7 +278,7 @@ router.post("/profile", async (req: any, res: any) => {
     });
 })
 
-router.post("/profile", async (req: any, res: any) => {
+router.post("/profile/update", async (req: any, res: any) => {
     const json = req.body;
 
     const clientToken = JSONUtils.getProperty(json, "token", "");
@@ -287,11 +287,11 @@ router.post("/profile", async (req: any, res: any) => {
 
     JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
         if (err) return res.send({ "result": "error" });
-        if (decoded.exp - Math.floor(Date.now() / 1000) < 0)  return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
 
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
-                const newTraduttore : Traduttore = {
+                const newTraduttore: Traduttore = {
                     id: result.id,
                     nome: nome,
                     cognome: cognome,
@@ -312,24 +312,121 @@ router.post("/profile", async (req: any, res: any) => {
     });
 })
 
-router.post("/profile/all-languages", async (req: any, res: any) => {
+router.post("/profile/languages/unknown", async (req: any, res: any) => {
     const json = req.body;
 
     const clientToken = JSONUtils.getProperty(json, "token", "");
 
     JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
         if (err) return res.send({ "result": "error" });
-        if (decoded.exp - Math.floor(Date.now() / 1000) < 0)  return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
 
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
-                return Promise.resolve(lingueController.getAll()).then((result)=>{
+                return Promise.resolve(traduttoreController.getAllLanguagesThatAreUnknownByTranslator(result.id)).then((result) => {
                     return res.send(result);
-                }).catch((error)=>{
+                }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });
                 })
-               
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/profile/languages/known", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.getAllLanguagesThatAreKnownByTranslator(result.id)).then((result) => {
+                    return res.send(result);
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/profile/languages/add", async (req: any, res: any) => {
+    const json = req.body;
+
+    const lingua = JSONUtils.getProperty(json, "lingua", "");
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    if (lingua === "") return res.send({ "result": "error" });
+
+    let id_lingua: number = -1;
+
+    try {
+        id_lingua = parseInt(lingua);
+    } catch {
+        return res.send({ "result": "error" });
+    }
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.setLanguageForTranslator(result.id, id_lingua)).then((result) => {
+                    return res.send({"result": "OK"});
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/profile/languages/remove", async (req: any, res: any) => {
+    const json = req.body;
+
+    const lingua = JSONUtils.getProperty(json, "lingua", "");
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    if (lingua === "") return res.send({ "result": "error" });
+
+    let id_lingua: number = -1;
+
+    try {
+        id_lingua = parseInt(lingua);
+    } catch {
+        return res.send({ "result": "error" });
+    }
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.removeLanguageForTranslator(result.id, id_lingua)).then((result) => {
+                    return res.send({"result": "OK"});
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
             }).catch((error) => {
                 console.error(error);
                 return res.send({ "result": "error" });

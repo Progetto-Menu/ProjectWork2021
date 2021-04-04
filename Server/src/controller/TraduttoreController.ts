@@ -1,3 +1,4 @@
+import { Lingua } from "../model/Lingua";
 import { OtpTraduttore } from "../model/OtpTraduttore";
 import { Traduttore } from "../model/Traduttore";
 import { BasePresenter } from "./BaseController";
@@ -46,6 +47,22 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
 
     async changeEmail(emailVecchia: string, emailNuova: string){
         return await Traduttore.changeEmail(emailVecchia, emailNuova);
+    }
+
+    async getAllLanguagesThatAreUnknownByTranslator(id: number){
+        return await Lingua.getAllLanguagesThatAreUnknownByTranslator(id);
+    }
+
+    async getAllLanguagesThatAreKnownByTranslator(id: number){
+        return await Lingua.getAllLanguagesThatAreKnownByTranslator(id);
+    }
+
+    async setLanguageForTranslator(id_traduttore: number, id_lingua: number){
+        return await Traduttore.setLanguage(id_traduttore, id_lingua);
+    }
+
+    async removeLanguageForTranslator(id_traduttore: number, id_lingua: number){
+        return await Traduttore.removeLanguage(id_traduttore, id_lingua);
     }
     
 }

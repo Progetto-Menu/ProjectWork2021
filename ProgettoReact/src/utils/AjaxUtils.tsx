@@ -164,9 +164,32 @@ export class AjaxUtils {
         })
     }
 
-    static async getAllLanguages(){
-        let url = API_SERVER + "/traduttori/profile/all-languages";
+    static async getAllLanguagesUnknown(){
+        let url = API_SERVER + "/traduttori/profile/languages/unknown";
         return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getAllLanguagesKnown(){
+        let url = API_SERVER + "/traduttori/profile/languages/known";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async setLanguageForTranslator(id_lingua: number){
+        let url = API_SERVER + "/traduttori/profile/languages/add";
+        return axios.post(url, {
+            lingua: id_lingua,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async removeLanguageForTranslator(id_lingua: number){
+        let url = API_SERVER + "/traduttori/profile/languages/remove";
+        return axios.post(url, {
+            lingua: id_lingua,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }

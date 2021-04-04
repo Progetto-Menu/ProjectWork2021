@@ -20,8 +20,8 @@ export const BottomNavBarComponent: React.FunctionComponent<BottomNavBarProps> =
 
       return <div className="text-center position-fixed fixed-bottom d-flex flex-row align-content-center justify-content-center">
             {prop.actions.map((value, index)=>{
-                  return value.selected ? <div style={{width: width + "%", cursor: "pointer"}} className="bg-primary p-3 text-white" onClick={()=>value.onClick()}>{value.label}</div>
-                  : <div style={{width: width + "%", cursor: "pointer"}} className="bg-secondary p-3" onClick={()=>value.onClick()}>{value.label}</div>
+                  return value.selected ? <div key={index} style={{width: width + "%", cursor: "pointer"}} className="bg-primary p-3 text-white" onClick={()=>value.onClick()}>{value.label}</div>
+                  : <div key={index} style={{width: width + "%", cursor: "pointer"}} className="bg-secondary p-3" onClick={()=>value.onClick()}>{value.label}</div>
             })}
       </div>
 }
