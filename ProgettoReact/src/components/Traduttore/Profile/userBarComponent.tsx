@@ -1,13 +1,13 @@
 import axios from 'axios';
 import React, { Component, useEffect, useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
+import { Traduttore } from '../../../model/Traduttore';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
 import { Users } from '../../../utils/Users';
-import { UserProp } from '../Prop/userProp';
 
 interface UserBarComponentProps {
-    user: UserProp
+    user: Traduttore
 }
 
 export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = (prop) => {

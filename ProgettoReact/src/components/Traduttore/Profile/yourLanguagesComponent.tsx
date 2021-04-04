@@ -1,9 +1,8 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
+import { Language } from '../../../model/Language';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
-import { Language } from '../Prop/menuProp';
-import { UserProp } from '../Prop/userProp';
 
 interface YourLanguagesProps {
     knownLanguages: Language[],

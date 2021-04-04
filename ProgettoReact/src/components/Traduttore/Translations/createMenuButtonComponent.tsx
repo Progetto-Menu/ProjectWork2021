@@ -1,5 +1,7 @@
 import React, { Component, useState } from 'react';
-import { CreateMenuCallBack, MenuProp, Restaurant, Section, Language } from '../Prop/menuProp';
+import { Language } from '../../../model/Language';
+import { CreateMenuCallBack, Menu } from '../../../model/Menu';
+import { Section } from '../../../model/Section';
 import { NewSectionComponent } from "./newSectionComponent";
 
 interface CreateMenuButtonProps{
@@ -75,7 +77,7 @@ export const CreateMenuButtonComponent: React.FunctionComponent<CreateMenuButton
         </ul>
         
         <button onClick={() => {
-            let newMenu: MenuProp = {
+            let newMenu: Menu = {
                 idMenu: idMenuValue,
                 title: titleValue,
                 restaurant: {

@@ -7,12 +7,12 @@ import { LoginComponent } from './Login/LoginComponent';
 import { OTPComponent } from './Login/OTPComponent';
 import { RegisterComponent } from './Login/RegisterComponent';
 import { SwitchLoginComponent } from './Login/SwitchLoginComponent';
-import { HomeTraduttore } from './Traduttore/HomeTraduttore';
+import { HomeTraduttore } from './Traduttore/Home/HomeTraduttore';
 import { HomeRistoratore } from './Ristoratore/HomeRistoratore';
 import { StorageUtils } from '../utils/StorageUtils';
 import { PrivateRoute } from '../utils/RouterUtils';
-import { PageTranslations } from './Traduttore/pageTranslations';
-import { PageProfile } from './Traduttore/pageProfile';
+import { PageTranslations } from './Traduttore/Translations/pageTranslations';
+import { PageProfile } from './Traduttore/Profile/pageProfile';
 
 export interface AppRequest {
     token: string | null,

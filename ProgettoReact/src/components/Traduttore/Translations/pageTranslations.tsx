@@ -1,12 +1,11 @@
 import React, { Component, useState } from 'react';
 import { useHistory } from 'react-router';
-import { RoutesTraduttore } from '../../routes/Traduttore';
-import { BottomNavBarComponent, BottomNavBarProps } from '../shared/BottomNavBarComponent';
-import { CreateMenuButtonComponent } from './Component/createMenuButtonComponent';
-import { MenuToTranslateComponent } from './Component/menuToTranslateComponent';
-import { SearchBar } from './Component/searchbar';
-import { bottomNavBar } from './Prop/bottomNavBarProp';
-import { MenuProp, Language, CreateMenuCallBack } from "./Prop/menuProp";
+import { CreateMenuCallBack, Menu } from '../../../model/Menu';
+import { RoutesTraduttore } from '../../../routes/Traduttore';
+import { BottomNavBarComponent, BottomNavBarProps } from '../../shared/BottomNavBarComponent';
+import { CreateMenuButtonComponent } from './createMenuButtonComponent';
+import { MenuToTranslateComponent } from './menuToTranslateComponent';
+import { SearchBar } from './searchbar';
 
 
 export const PageTranslations: React.FunctionComponent = () => {
@@ -98,9 +97,9 @@ export const PageTranslations: React.FunctionComponent = () => {
     //     languages: [l1, l3]
     // } 
 
-    let MenuArray : MenuProp[] = [];
+    let MenuArray : Menu[] = [];
 
-    let [menuArray, setMenuArray] = useState<MenuProp[]>([]);
+    let [menuArray, setMenuArray] = useState<Menu[]>([]);
 
     let callbackCreate : CreateMenuCallBack = (newMenu) => {
         let nuovalista = menuArray.concat(newMenu);

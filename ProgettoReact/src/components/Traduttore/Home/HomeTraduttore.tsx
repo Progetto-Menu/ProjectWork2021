@@ -1,19 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { RoutesTraduttore } from '../../routes/Traduttore';
-import { AjaxUtils } from '../../utils/AjaxUtils';
-import { JSONUtils } from '../../utils/JSONUtils';
-import { StorageUtils } from '../../utils/StorageUtils';
-import { Users } from '../../utils/Users';
-import { AppRequest } from '../App';
-import { TopBar } from '../shared/TopBar';
-import { TranslationTakenOverComponent } from './Component/translationTakenOverComponent';
-import { WelcomeBackComponent } from './Component/welcomeBackComponent';
-import { YourTranslationToReviewComponent } from './Component/yourTranslationToReviewComponent';
-import { Language, MenuProp } from './Prop/menuProp';
-import { UserProp } from './Prop/userProp';
-import { BottomNavBarComponent, BottomNavBarProps } from "../shared/BottomNavBarComponent"
+import { RoutesTraduttore } from '../../../routes/Traduttore';
+import { AjaxUtils } from '../../../utils/AjaxUtils';
+import { JSONUtils } from '../../../utils/JSONUtils';
+import { StorageUtils } from '../../../utils/StorageUtils';
+import { Users } from '../../../utils/Users';
+import { AppRequest } from '../../App';
+import { TopBar } from '../../shared/TopBar';
+import { TranslationTakenOverComponent } from './translationTakenOverComponent';
+import { YourTranslationToReviewComponent } from './yourTranslationToReviewComponent';
+import { BottomNavBarComponent, BottomNavBarProps } from "../../shared/BottomNavBarComponent"
+import { Traduttore } from '../../../model/Traduttore';
  
 
 export const HomeTraduttore: React.FunctionComponent = () => {
@@ -99,7 +97,7 @@ export const HomeTraduttore: React.FunctionComponent = () => {
     //     languages: [l1, l3]
     // } 
 
-    let user: UserProp = {
+    let user: Traduttore = {
         name: "Andrea ",
         surname: "Latino ",
         nToken: 20,

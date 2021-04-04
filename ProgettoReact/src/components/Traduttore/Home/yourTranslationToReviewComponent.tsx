@@ -2,10 +2,10 @@ import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { MenuToReviewHomeComponent } from "./menuToReviewHomeComponent";
-import { UserProp } from "../Prop/userProp";
+import { Traduttore } from "../../../model/Traduttore";
 
 
-export const YourTranslationToReviewComponent: React.FunctionComponent<UserProp> = (prop) => {
+export const YourTranslationToReviewComponent: React.FunctionComponent<Traduttore> = (prop) => {
     return <div className="bg-white w-50 border border-secondary rounded text-dark text-center mx-auto ">
    Your translation to review
     {prop.reviewTranslations.map((item, index) => 
