@@ -25,7 +25,7 @@ export const MyTranslationsComponent: React.FunctionComponent<MyTranslationsProp
                         </tr>
                     </thead>
                     <tbody>
-                        {props.translations.length === 0 && <tr><td colSpan={4}>Nessun Elemento presente nella tabella</td></tr>}
+                        {props.translations.length === 0 && <tr><td colSpan={4} className="text-center align-middle">Nessun Elemento Presente nella Tabella</td></tr>}
                             {props.translations.map((value, index)=>{
                                 return <tr>
                                     <td>
