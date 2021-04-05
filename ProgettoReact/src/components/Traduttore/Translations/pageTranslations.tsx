@@ -3,7 +3,9 @@ import { useHistory } from 'react-router';
 import { CreateMenuCallBack, Menu } from '../../../model/Menu';
 import { RoutesTraduttore } from '../../../routes/Traduttore';
 import { BottomNavBarComponent, BottomNavBarProps } from '../../shared/BottomNavBarComponent';
+import { TopBar } from '../../shared/TopBar';
 import { CreateMenuButtonComponent } from './createMenuButtonComponent';
+import { FilterMenuComponent } from './FilterMenuComponent';
 import { MenuToTranslateComponent } from './menuToTranslateComponent';
 import { SearchBar } from './searchbar';
 
@@ -131,15 +133,17 @@ export const PageTranslations: React.FunctionComponent = () => {
         ]
     }
 
-    return <div className="container py-5">
-        <SearchBar/>
-        <CreateMenuButtonComponent callback={callbackCreate} />
-        {MenuArray.map((item, index) => 
-            <React.Fragment key={index}>
-                <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages} mainLanguage={item.mainLanguage} sections={item.sections}/>
-            </React.Fragment>
-        )}
-        <BottomNavBarComponent actions={bottombarprops.actions} />
-    </div>   
+    return <>
+        <TopBar text="Translation" />
+        <div className="container py-5 mt-5">
+            <FilterMenuComponent onChange={()=>{}}/>
+            {MenuArray.map((item, index) => 
+                <React.Fragment key={index}>
+                    <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages} mainLanguage={item.mainLanguage} sections={item.sections}/>
+                </React.Fragment>
+            )}
+            <BottomNavBarComponent actions={bottombarprops.actions} />
+        </div>  
+    </> 
 
 }

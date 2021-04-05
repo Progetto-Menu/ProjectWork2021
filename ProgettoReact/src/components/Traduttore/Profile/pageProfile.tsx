@@ -16,11 +16,14 @@ import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { Users } from "../../../utils/Users";
 import { Language } from "../../../model/Language";
 import { Traduttore } from "../../../model/Traduttore";
+import { CustomTraduzione } from "../../../model/CustomTraduzione";
 
 export const PageProfile: React.FunctionComponent = () => {
 
     const [unKnownLanguages, setUnknownLanguages] = useState<Language[]>([]);
     const [knownLanguages, setKnownLanguages] = useState<Language[]>([]);
+    const [translations, setTranslations] = useState<CustomTraduzione[]>([]);
+
     const [user, setUser] = useState<Traduttore>({
         email: "",
         name: "",
@@ -33,11 +36,11 @@ export const PageProfile: React.FunctionComponent = () => {
 
     const history = useHistory();
 
-    const getAllLanguagesUnknown = ()=>{
-        AjaxUtils.getAllLanguagesUnknown().then((result)=>{
-            const langs : Language[] = [];
+    const getAllLanguagesUnknown = () => {
+        AjaxUtils.getAllLanguagesUnknown().then((result) => {
+            const langs: Language[] = [];
 
-            for(let x of result.data){
+            for (let x of result.data) {
                 langs.push({
                     id: JSONUtils.getProperty(x, "id", ""),
                     name: JSONUtils.getProperty(x, "nome", ""),
@@ -47,15 +50,15 @@ export const PageProfile: React.FunctionComponent = () => {
 
 
             setUnknownLanguages(langs);
-            
+
         })
     }
 
-    const getAllLanguagesKnown = ()=>{
-        AjaxUtils.getAllLanguagesKnown().then((result)=>{
-            const langs : Language[] = [];
+    const getAllLanguagesKnown = () => {
+        AjaxUtils.getAllLanguagesKnown().then((result) => {
+            const langs: Language[] = [];
 
-            for(let x of result.data){
+            for (let x of result.data) {
                 langs.push({
                     id: JSONUtils.getProperty(x, "id", ""),
                     name: JSONUtils.getProperty(x, "nome", ""),
@@ -65,32 +68,38 @@ export const PageProfile: React.FunctionComponent = () => {
 
 
             setKnownLanguages(langs);
-            
+
         })
     }
 
     useEffect(() => {
         AjaxUtils.getUser(Users.TRADUTTORE).then((result) => {
-                const nome: string = JSONUtils.getProperty(result.data, "nome", "");
-                const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
-                const email: string = JSONUtils.getProperty(result.data, "email", "");
-                const n_token: string = JSONUtils.getProperty(result.data, "numero_token", "");
-                const u: Traduttore = {
-                    email: email,
-                    name: nome,
-                    surname: cognome,
-                    nToken: parseInt(n_token),
-                    reviewTranslations: [],
-                    takenTranslations: []
-                }
+            const nome: string = JSONUtils.getProperty(result.data, "nome", "");
+            const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
+            const email: string = JSONUtils.getProperty(result.data, "email", "");
+            const n_token: string = JSONUtils.getProperty(result.data, "numero_token", "");
+            const u: Traduttore = {
+                email: email,
+                name: nome,
+                surname: cognome,
+                nToken: parseInt(n_token),
+                reviewTranslations: [],
+                takenTranslations: []
+            }
 
-                setUser(u)
-            })
+            setUser(u)
+        })
 
-        
-            getAllLanguagesUnknown();
-            getAllLanguagesKnown();
-        
+        AjaxUtils.getAllTranslations().then((result)=>{
+            setTranslations(result.data);
+        }).catch((error)=>{
+
+        })
+
+
+        getAllLanguagesUnknown();
+        getAllLanguagesKnown();
+
     }, [])
 
 
@@ -194,19 +203,19 @@ export const PageProfile: React.FunctionComponent = () => {
 
             <div className="row mt-5">
                 <div className="col-12">
-                    <MyTranslationsComponent name={user.name} surname={user.surname} email={user.email} nToken={user.nToken} takenTranslations={user.takenTranslations} reviewTranslations={user.reviewTranslations} />
+                    <MyTranslationsComponent translations={translations} />
                 </div>
             </div>
 
             <div className="row mt-5">
                 <div className="col-12">
-                    <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={()=>{
+                    <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={() => {
                         getAllLanguagesKnown();
                         getAllLanguagesUnknown();
-                    }} onClickRemove={()=>{
+                    }} onClickRemove={() => {
                         getAllLanguagesKnown();
                         getAllLanguagesUnknown();
-                    }}/>
+                    }} />
                 </div>
             </div>
 

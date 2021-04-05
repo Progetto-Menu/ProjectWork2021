@@ -193,4 +193,11 @@ export class AjaxUtils {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
+
+    static async getAllTranslations(){
+        let url = API_SERVER + "/traduttori/profile/translations/all";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
 }
