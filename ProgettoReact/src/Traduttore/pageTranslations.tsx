@@ -3,7 +3,7 @@ import { MenuProp, Language, CreateMenuCallBack } from "./Prop/menuProp";
 import { MenuToTranslateComponent } from "./Component/menuToTranslateComponent";
 import { BottomNavBarComponent } from "./Component/bottomNavBarComponent";
 import { bottomNavBar } from './Prop/bottomNavBarProp';
-import { SearchBar } from "./Component/searchbar";
+import {SearchBar} from "./Component/searchbar";
 
 
 export const PageTranslations: React.FunctionComponent = () => {
@@ -69,21 +69,25 @@ export const PageTranslations: React.FunctionComponent = () => {
         languages: [l1, l3]
     } 
 
-    let MenuArray : MenuProp[] = [menu1, menu2, menu3, menu4];
+    let menu5: MenuProp = {
+        idMenu: 5,
+        title: "Menù Pesci",
+        restaurant: {
+            name: "Santo Domingo",
+            address: {
+                state: "Italy",
+                city: "Urbino",
+                address: "Via Marcello, 30"
+            }
+        },
+        languages: [l1, l3]
+    } 
 
-    let [menuArray, setMenuArray] = useState<MenuProp[]>([]);
+    let MenuArray : MenuProp[] = [menu1, menu2, menu3, menu4, menu5];
 
-    let callbackCreate : CreateMenuCallBack = (newMenu) => {
-        let nuovalista = menuArray.concat(newMenu);
-        console.log(menuArray);
-        setMenuArray(nuovalista);
-    }
-    
-
-    return <React.Fragment>
-        <SearchBar/>
-        <CreateMenuButtonComponent callback={callbackCreate} />
-        {MenuArray.map((item, index) => 
+    return <>
+   <SearchBar/>
+   {MenuArray.map((item, index) => 
             <React.Fragment key={index}>
                 <MenuToTranslateComponent idMenu={item.idMenu} title={item.title} restaurant={item.restaurant} languages={item.languages}/>
             </React.Fragment>

@@ -5,7 +5,7 @@ import { bottomNavBarProp, bottomNavBar } from "../Prop/bottomNavBarProp";
 
 export const BottomNavBarComponent: React.FunctionComponent<bottomNavBarProp> = (prop) => {
 
-    return <div className="text-center fixed-bottom">        
+    return <div className="text-center ">        
             <Link to="home">
                   {prop.type == bottomNavBar.home ? 
                         <button style={{background: "green", width: "20%" }} className="py-3 my-1 text-center col-6 mx-auto rounded border-secondary text-dark "> 
