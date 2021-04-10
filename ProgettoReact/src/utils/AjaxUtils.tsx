@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useHistory } from "react-router";
+import { CustomTraduzione } from "../model/CustomTraduzione";
 import { API_SERVER } from "./AppConstants";
 import { RouterUtils } from "./RouterUtils";
 import { StorageUtils } from "./StorageUtils";
@@ -197,6 +198,29 @@ export class AjaxUtils {
     static async getAllTranslations(){
         let url = API_SERVER + "/traduttori/profile/translations/all";
         return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getAllTranslationsInProgress(){
+        let url = API_SERVER + "/traduttori/home/translations/progress/all";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getTranslationsToReview(){
+        let url = API_SERVER + "/traduttori/home/translations/review";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async sendTranslation(id_translation: number, text_translated: string){
+        let url = API_SERVER + "/traduttori/home/translations/update";
+        return axios.post(url, {
+            id_translation: id_translation,
+            text_translated: text_translated,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
