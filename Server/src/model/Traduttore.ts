@@ -117,6 +117,54 @@ export class Traduttore {
         });
     }
 
+    static async update(traduttore: Traduttore) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(Traduttore.db_id, traduttore.id)
+                    .input(Traduttore.db_nome, traduttore.nome)
+                    .input(Traduttore.db_cognome, traduttore.cognome)
+                    .input(Traduttore.db_email, traduttore.email)
+                    .input(Traduttore.db_password, traduttore.password)
+                    .input(Traduttore.db_revisore, traduttore.revisore)
+                    .input(Traduttore.db_numero_token, traduttore.numero_token)
+                    .input(Traduttore.db_validato, traduttore.validato ? 1 : 0)
+                    .input(Traduttore.db_creato_il, traduttore.creato_il)
+                    .input(Traduttore.db_modificato_il, traduttore.modificato_il ?? new Date())
+                    .input(Traduttore.db_cancellato_il, traduttore.cancellato_il ?? null)
+                    .query(`UPDATE ${Traduttore.db_table_name}
+                        SET ${Traduttore.db_nome} = @${Traduttore.db_nome},
+                        ${Traduttore.db_cognome} = @${Traduttore.db_cognome},
+                        ${Traduttore.db_email} = @${Traduttore.db_email},
+                        ${Traduttore.db_password} = @${Traduttore.db_password},
+                        ${Traduttore.db_revisore} = @${Traduttore.db_revisore},
+                        ${Traduttore.db_numero_token} = @${Traduttore.db_numero_token},
+                        ${Traduttore.db_validato} = @${Traduttore.db_validato},
+                        ${Traduttore.db_creato_il} = @${Traduttore.db_creato_il},
+                        ${Traduttore.db_modificato_il} = @${Traduttore.db_modificato_il},
+                        ${Traduttore.db_cancellato_il} = @${Traduttore.db_cancellato_il}
+                        WHERE ${Traduttore.db_id} = @${Traduttore.db_id};
+                        SELECT * FROM ${Traduttore.db_table_name} where ${Traduttore.db_id} = @${Traduttore.db_id};`,
+                        (err: any, result: any) => {
+                            console.log(err)
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        resolve(this.convertToTraduttore(result.recordset[0]));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
     static async getTraduttoreById(id: number) {
         const pool = await sql.connect(config);
         const transaction = await pool.transaction();

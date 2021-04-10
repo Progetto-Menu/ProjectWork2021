@@ -129,10 +129,10 @@ export class AjaxUtils {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
-                url += "/traduttori/profile";
+                url += "/traduttori/profile/update";
                 break;
             case Users.RISTORATORE:
-                url += "/ristoratori/profile";
+                url += "/ristoratori/profile/update";
                 break;
             case Users.AMMINISTRATORE:
                 break;

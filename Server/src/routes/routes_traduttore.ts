@@ -304,8 +304,12 @@ router.post("/profile/update", async (req: any, res: any) => {
                     modificato_il: new Date(),
                     cancellato_il: result.cancellato_il
                 }
-                traduttoreController.update(newTraduttore)
-                return res.send(result);
+                traduttoreController.update(newTraduttore).then((resultUpdate)=>{
+                    return res.send({ "result": resultUpdate });
+                }).catch(()=>{
+                    return res.send({ "result": "error" });
+                })
+                
             }).catch((error) => {
                 return res.send({ "result": "error" });
             });

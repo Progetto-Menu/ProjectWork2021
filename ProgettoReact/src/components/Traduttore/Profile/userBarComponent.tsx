@@ -16,7 +16,7 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
     const [cognome, setCognome] = useState(prop.user.surname);
     const [email, setEmail] = useState(prop.user.email);
     const [token, setToken] = useState(prop.user.nToken);
-    const [isEditing, setIsEditing] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         setNome(prop.user.name);
@@ -34,14 +34,14 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
             <Card.Body>
                 <Form.Group className="col-12">
                     <Form.Label>Nome</Form.Label>
-                    <Form.Control type="text" placeholder="Nome" readOnly={isEditing} value={nome} onChange={(e) => {
+                    <Form.Control type="text" placeholder="Nome" readOnly={!isEditing} value={nome} onChange={(e) => {
                         setNome(e.target.value);
                     }} />
                 </Form.Group>
 
                 <Form.Group className="col-12">
                     <Form.Label>Cognome</Form.Label>
-                    <Form.Control type="text" placeholder="Cognome" readOnly={isEditing} value={cognome} onChange={(e) => {
+                    <Form.Control type="text" placeholder="Cognome" readOnly={!isEditing} value={cognome} onChange={(e) => {
                         setCognome(e.target.value);
                     }} />
                 </Form.Group>
@@ -61,11 +61,14 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
                         if (isEditing) {
                             AjaxUtils.updateUser(Users.TRADUTTORE, nome, cognome).then((result) => {
                                 const resultRequest = JSONUtils.getProperty(result.data, "result", "error");
-                                if (resultRequest === "OK") {
-
+                                if (resultRequest === "error") {
+                                    console.log("non aggiornato")
                                 }
                                 else {
-
+                                    const ajaxNome = JSONUtils.getProperty(resultRequest, "nome", "");
+                                    const ajaxCognome = JSONUtils.getProperty(resultRequest, "cognome", "");
+                                    setNome(ajaxNome);
+                                    setCognome(ajaxCognome);
                                 }
                             }).catch(() => {
 
@@ -76,7 +79,7 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
                         else{
                             setIsEditing(true);
                         }
-                    }}> {!isEditing ? <>Salva</> : <>Modifica</>}  </button>
+                    }}> {isEditing ? <>Salva</> : <>Modifica</>}  </button>
 
                 </div>
             </Card.Body>

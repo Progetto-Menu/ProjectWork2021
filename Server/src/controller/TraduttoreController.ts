@@ -9,7 +9,7 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
         return await Traduttore.insert(obj);
     }
     async update(obj: Traduttore): Promise<Traduttore> {
-        throw new Error("Method not implemented.");
+        return await Traduttore.update(obj);
     }
     async delete(obj: Traduttore): Promise<Traduttore> {
         throw new Error("Method not implemented.");
