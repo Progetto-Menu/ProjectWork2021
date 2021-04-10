@@ -1,5 +1,6 @@
 import { config, sql } from "../database/DbConfig";
 import { CustomTraduzione } from "./custom/CustomTraduzione";
+import { StatoTraduzione } from "./custom/StatoTraduzione";
 import { Lingua } from "./Lingua";
 import { Stringa } from "./Stringa";
 
@@ -37,6 +38,7 @@ export class Traduzione {
 
         for (let record of recordset) {
             array.push({
+                id: record[Traduzione.db_id],
                 codLingua: record[Lingua.db_cod_lingua],
                 stato: record[Traduzione.db_stato],
                 testo: record[Stringa.db_testo],
@@ -53,7 +55,7 @@ export class Traduzione {
             transaction.begin(async (err: any) => {
                 await transaction.request()
                     .input(Traduzione.db_id_traduttore, id)
-                    .query(`SELECT ${Traduzione.db_table_name}.${Traduzione.db_stato}, ${Lingua.db_table_name}.${Lingua.db_cod_lingua}, ${Stringa.db_table_name}.${Stringa.db_testo}, ${Traduzione.db_table_name}.${Traduzione.db_testo} as TestoTradotto FROM ${Traduzione.db_table_name}
+                    .query(`SELECT ${Traduzione.db_table_name}.${Traduzione.db_id}, ${Traduzione.db_table_name}.${Traduzione.db_stato}, ${Lingua.db_table_name}.${Lingua.db_cod_lingua}, ${Stringa.db_table_name}.${Stringa.db_testo}, ${Traduzione.db_table_name}.${Traduzione.db_testo} as TestoTradotto FROM ${Traduzione.db_table_name}
                     INNER JOIN ${Lingua.db_table_name} ON ${Lingua.db_table_name}.${Lingua.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_lingua}
                     INNER JOIN ${Stringa.db_table_name} ON ${Stringa.db_table_name}.${Stringa.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_stringa}
                     WHERE ${Traduzione.db_table_name}.${Traduzione.db_id_traduttore} = @${Traduzione.db_id_traduttore}`,
@@ -68,6 +70,93 @@ export class Traduzione {
                                     if (!err) {
                                         console.log(result)
                                         resolve(this.convertToArrayOfTranslations(result.recordset));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+    static async getAllTranslationInProgressByTranslatorId(id: number) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(Traduzione.db_id_traduttore, id)
+                    .query(`SELECT ${Traduzione.db_table_name}.${Traduzione.db_id}, ${Traduzione.db_table_name}.${Traduzione.db_stato}, ${Lingua.db_table_name}.${Lingua.db_cod_lingua}, ${Stringa.db_table_name}.${Stringa.db_testo}, ${Traduzione.db_table_name}.${Traduzione.db_testo} as TestoTradotto FROM ${Traduzione.db_table_name}
+                    INNER JOIN ${Lingua.db_table_name} ON ${Lingua.db_table_name}.${Lingua.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_lingua}
+                    INNER JOIN ${Stringa.db_table_name} ON ${Stringa.db_table_name}.${Stringa.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_stringa}
+                    WHERE ${Traduzione.db_table_name}.${Traduzione.db_id_traduttore} = @${Traduzione.db_id_traduttore} AND ${Traduzione.db_table_name}.${Traduzione.db_stato} = ${StatoTraduzione.IN_CORSO.toString()}`,
+                        (err: any, result: any) => {
+                            console.log(err, result);
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        console.log(result)
+                                        resolve(this.convertToArrayOfTranslations(result.recordset));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+    static async getTranslationToReview() {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .query(`SELECT ${Traduzione.db_table_name}.${Traduzione.db_id}, ${Traduzione.db_table_name}.${Traduzione.db_stato}, ${Lingua.db_table_name}.${Lingua.db_cod_lingua}, ${Stringa.db_table_name}.${Stringa.db_testo}, ${Traduzione.db_table_name}.${Traduzione.db_testo} as TestoTradotto FROM ${Traduzione.db_table_name}
+                    INNER JOIN ${Lingua.db_table_name} ON ${Lingua.db_table_name}.${Lingua.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_lingua}
+                    INNER JOIN ${Stringa.db_table_name} ON ${Stringa.db_table_name}.${Stringa.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_stringa}
+                    WHERE ${Traduzione.db_table_name}.${Traduzione.db_stato} = ${StatoTraduzione.DA_REVISIONARE.toString()}`,
+                        (err: any, result: any) => {
+                            console.log(err, result);
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        console.log(result)
+                                        resolve(this.convertToArrayOfTranslations(result.recordset));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+    }
+
+    static async updateTranslation(id: number, text_translated: string) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                await transaction.request()
+                    .input(Traduzione.db_id, id)
+                    .input(Traduzione.db_testo, text_translated)
+                    .query(`UPDATE ${Traduzione.db_table_name} SET ${Traduzione.db_testo} = @${Traduzione.db_testo}, ${Traduzione.db_stato} = ${StatoTraduzione.DA_REVISIONARE.toString()} WHERE ${Traduzione.db_id} = @${Traduzione.db_id}`,
+                        (err: any, result: any) => {
+                            console.log(err, result);
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        console.log(result)
+                                        resolve(true);
                                     }
                                 });
                             }
