@@ -13,6 +13,7 @@ import { StorageUtils } from '../utils/StorageUtils';
 import { PrivateRoute } from '../utils/RouterUtils';
 import { PageTranslations } from './Traduttore/Translations/pageTranslations';
 import { PageProfile } from './Traduttore/Profile/pageProfile';
+import { BaseTraduttore } from './Traduttore/Base/BaseTraduttore';
 
 export interface AppRequest {
     token: string | null,
@@ -64,13 +65,13 @@ export const App: React.FunctionComponent = () => {
                 <OTPComponent user={user} />
             </Route>
             <PrivateRoute path={RoutesTraduttore.HOME} exact>
-                <HomeTraduttore />
+                <BaseTraduttore route={RoutesTraduttore.HOME} />
             </PrivateRoute>
             <PrivateRoute path={RoutesTraduttore.TRANSLATIONS} exact>
-                <PageTranslations />
+                <BaseTraduttore route={RoutesTraduttore.TRANSLATIONS} />
             </PrivateRoute>
             <PrivateRoute path={RoutesTraduttore.PROFILE} exact>
-                <PageProfile />
+                <BaseTraduttore route={RoutesTraduttore.PROFILE} />
             </PrivateRoute>
         </Switch>
     }

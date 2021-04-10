@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import Logo from '../../img/logo_menu.png';
+import Logo from '../../img/logo_google_translate.svg';
 import { Users } from '../../utils/Users';
 import axios from 'axios';
 import { JSONUtils } from '../../utils/JSONUtils';
@@ -68,7 +68,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                  
 
                   <div className="row">
-                        <div className="col-12 py-3 my-5 text-center mx-auto"> <img className="" src={Logo} alt="Logo" /> </div>
+                        <div className="col-12 py-3 my-5 text-center mx-auto"> <img style={{width:"15%"}} src={Logo} alt="Logo" /> </div>
                         <div className="col-0 col-md-3" />
                         <div className="col-12 col-md-6">
                               <Alert className="mb-3" variant="danger" show={isVisibleAlertError} onClose={() => { setIsVisibleAlertError(false) }} dismissible>{errorMessage}</Alert>

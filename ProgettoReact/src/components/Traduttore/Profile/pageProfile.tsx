@@ -72,7 +72,7 @@ export const PageProfile: React.FunctionComponent = () => {
         })
     }
 
-    useEffect(() => {
+    const getUser = () =>{
         AjaxUtils.getUser(Users.TRADUTTORE).then((result) => {
             const nome: string = JSONUtils.getProperty(result.data, "nome", "");
             const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
@@ -89,146 +89,59 @@ export const PageProfile: React.FunctionComponent = () => {
 
             setUser(u)
         })
+    }
 
-        AjaxUtils.getAllTranslations().then((result)=>{
+    const getAllTranslations = ()=>{
+        AjaxUtils.getAllTranslations().then((result) => {
             setTranslations(result.data);
-        }).catch((error)=>{
+        }).catch((error) => {
 
         })
+    }
 
 
+
+    useEffect(() => {
+        getUser();
+        getAllTranslations();
         getAllLanguagesUnknown();
         getAllLanguagesKnown();
 
     }, [])
 
 
-    // let menu1: MenuProp = {
-    //     idMenu: 1,
-    //     title: "Voglia di pizza ",
-    //     restaurant: {
-    //         name: "Piziamo ",
-    //         address: {
-    //             state: "Italy ",
-    //             city: "Cesena ",
-    //             address: "Via Aldo Moro, 23 "
-    //         }
-    //     },
-    //     sections: [],
-    //     mainLanguage: { sign: "it-IT" },
-    //     languages: [l1, l3, l4]
-    // }
-
-    // let menu2: MenuProp = {
-    //     idMenu: 2,
-    //     title: "Menù Carne ",
-    //     restaurant: {
-    //         name: "Tramontana ",
-    //         address: {
-    //             state: "Italy ",
-    //             city: "Bologna ",
-    //             address: "Via Unità, 142 "
-    //         }
-    //     },
-    //     sections: [],
-    //     mainLanguage: { sign: "it-IT" },
-    //     languages: [l1, l2, l4]
-    // }
-
-    // let menu3: MenuProp = {
-    //     idMenu: 3,
-    //     title: "Menù Primi ",
-    //     restaurant: {
-    //         name: "Piziamo ",
-    //         address: {
-    //             state: "Italy ",
-    //             city: "Modena ",
-    //             address: "Via Giovecca, 13 "
-    //         }
-    //     },
-    //     sections: [],
-    //     mainLanguage: { sign: "it-IT" },
-    //     languages: [l1, l2]
-    // }
-
-    // let menu4: MenuProp = {
-    //     idMenu: 4,
-    //     title: "Menù Pesci",
-    //     restaurant: {
-    //         name: "Sant Colombano ",
-    //         address: {
-    //             state: "Italy",
-    //             city: "Rovereto",
-    //             address: "Via Vicenza, 30"
-    //         }
-    //     },
-    //     sections: [],
-    //     mainLanguage: { sign: "it-IT" },
-    //     languages: [l1, l3]
-    // }
-
-    const bottombarprops: BottomNavBarProps = {
-        actions: [
-            {
-                label: "Home",
-                selected: false,
-                onClick: () => {
-                    history.replace(RoutesTraduttore.HOME);
-                }
-            }, {
-                label: "Translations",
-                selected: false,
-                onClick: () => {
-                    history.replace(RoutesTraduttore.TRANSLATIONS);
-                }
-            }, {
-                label: "Profile",
-                selected: true,
-                onClick: () => {
-                    history.replace(RoutesTraduttore.PROFILE);
-                }
-            },
-        ]
-    }
-
     return <>
-        <TopBar text="Profile" />
-        <div className="container py-5">
-
-            <div className="row mt-5">
-                <div className="col-12">
-                    <UserBarComponent user={user} />
-                </div>
+        <div className="row mt-5">
+            <div className="col-12">
+                <UserBarComponent user={user} />
             </div>
+        </div>
 
-            <div className="row mt-5">
-                <div className="col-12">
-                    <MyTranslationsComponent translations={translations} />
-                </div>
+        <div className="row mt-5">
+            <div className="col-12">
+                <MyTranslationsComponent translations={translations} />
             </div>
+        </div>
 
-            <div className="row mt-5">
-                <div className="col-12">
-                    <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={() => {
-                        getAllLanguagesKnown();
-                        getAllLanguagesUnknown();
-                    }} onClickRemove={() => {
-                        getAllLanguagesKnown();
-                        getAllLanguagesUnknown();
-                    }} />
-                </div>
+        <div className="row mt-5">
+            <div className="col-12">
+                <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={() => {
+                    getAllLanguagesKnown();
+                    getAllLanguagesUnknown();
+                }} onClickRemove={() => {
+                    getAllLanguagesKnown();
+                    getAllLanguagesUnknown();
+                }} />
             </div>
+        </div>
 
-            <div className="row my-5">
-                <div className="col-12 text-center">
-                    <button className="btn btn-primary w-100" onClick={() => {
-                        StorageUtils.remove(StorageUtils.token_key);
-                        history.replace(RoutesTraduttore.LOGIN);
-                    }}>Logout</button>
-                </div>
+        <div className="row my-5">
+            <div className="col-12 text-center">
+                <button className="btn btn-primary w-100" onClick={() => {
+                    StorageUtils.remove(StorageUtils.token_key);
+                    history.replace(RoutesTraduttore.LOGIN);
+                }}>Logout</button>
             </div>
-
-            <BottomNavBarComponent actions={bottombarprops.actions} />
         </div>
     </>
 }

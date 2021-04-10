@@ -27,7 +27,7 @@ export const MyTranslationsComponent: React.FunctionComponent<MyTranslationsProp
                     <tbody>
                         {props.translations.length === 0 && <tr><td colSpan={4} className="text-center align-middle">Nessun Elemento Presente nella Tabella</td></tr>}
                             {props.translations.map((value, index)=>{
-                                return <tr>
+                                return <tr key={index}>
                                     <td>
                                         {value.testo}
                                     </td>
@@ -38,7 +38,11 @@ export const MyTranslationsComponent: React.FunctionComponent<MyTranslationsProp
                                         {value.codLingua.toUpperCase()}
                                     </td>
                                     <td>
-                                        {value.stato}
+                                        {value.stato === 0 && <div className="text-black">In corso</div>}
+                                        {value.stato === 1 && <div className="text-info">In fase di convalida</div>}
+                                        {value.stato === 2 && <div className="text-success">Approvata</div>}
+                                        {value.stato === 3 && <div className="text-danger">Scartata</div>}
+                                        {value.stato === 4 && <div className="text-warning">Approvata e scartata</div>}
                                     </td>
                                 </tr>
                             })}
