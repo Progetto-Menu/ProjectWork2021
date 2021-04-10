@@ -464,3 +464,86 @@ router.post("/profile/translations/all", async (req: any, res: any) => {
             });
     });
 })
+
+
+router.post("/home/translations/progress/all", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.getAllTranslationsInProgress(result.id)).then((result) => {
+                    console.log(result)
+                    return res.send(result);
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/home/translations/review", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.getTranslationsToReview()).then((result) => {
+                    console.log(result)
+                    return res.send(result);
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/home/translations/update", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const idTranslation = JSONUtils.getProperty(json, "id_translation", "");
+    const textTranslated = JSONUtils.getProperty(json, "text_translated", "");
+
+    if(!Number.isInteger(idTranslation)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.updateTranslation(idTranslation, textTranslated)).then((result) => {
+                    console.log(result)
+                    return res.send({ "result": "OK" });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
