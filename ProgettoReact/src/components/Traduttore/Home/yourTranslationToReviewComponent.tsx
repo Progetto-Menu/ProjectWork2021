@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { MenuToReviewHomeComponent } from "./menuToReviewHomeComponent";
 import { Traduttore } from "../../../model/Traduttore";
 import { Button, Card } from "react-bootstrap";
 import { CustomTraduzione } from "../../../model/CustomTraduzione";
