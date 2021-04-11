@@ -1,10 +1,15 @@
 import { LinguaController } from "../controller/LinguaController";
 import { TraduttoreController } from "../controller/TraduttoreController";
+import { ProvinciaController } from "../controller/ProvinciaController";
 import { OtpTraduttore } from "../model/OtpTraduttore";
 import { Traduttore } from "../model/Traduttore";
 import { EmailUtils } from "../utils/EmailUtils";
 import { JSONUtils } from "../utils/JSONUtils";
 import { JwtUtils } from "../utils/JwtUtils";
+import { CittaController } from "../controller/CittaController";
+import { Citta } from "../model/Citta";
+import { Numeric } from "mssql";
+import { RistoranteController } from "../controller/RistoranteController";
 
 const router = require("express").Router();
 
@@ -12,6 +17,9 @@ module.exports = router;
 
 const traduttoreController: TraduttoreController = new TraduttoreController();
 const lingueController: LinguaController = new LinguaController();
+const provinceController : ProvinciaController = new ProvinciaController();
+const cittaController: CittaController = new CittaController();
+const ristoranteController: RistoranteController = new RistoranteController();
 
 
 router.post("/login", async (req: any, res: any) => {
@@ -479,7 +487,7 @@ router.post("/home/translations/progress/all", async (req: any, res: any) => {
             .then((result) => {
                 return Promise.resolve(traduttoreController.getAllTranslationsInProgress(result.id)).then((result) => {
                     console.log(result)
-                    return res.send(result);
+                    return res.send({ "result": result });
                 }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });
@@ -505,7 +513,7 @@ router.post("/home/translations/review", async (req: any, res: any) => {
             .then((result) => {
                 return Promise.resolve(traduttoreController.getTranslationsToReview()).then((result) => {
                     console.log(result)
-                    return res.send(result);
+                    return res.send({ "result": result });
                 }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });
@@ -606,3 +614,85 @@ router.post("/home/translations/discard", async (req: any, res: any) => {
             });
     });
 })
+
+router.post("/translations/provinces/all", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(provinceController.getAll()).then((result) => {
+                    return res.send({ "result": result });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/translations/province/cities/all", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_provincia = JSONUtils.getProperty(json, "id_provincia", "");
+
+    if(!Number.isInteger(id_provincia)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(cittaController.getCitiesByProvinceId(id_provincia)).then((result) => {
+                    return res.send({ "result": result });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/translations/province/city/restaurants", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_citta = JSONUtils.getProperty(json, "id_citta", "");
+
+    if(!Number.isInteger(id_citta)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(ristoranteController.getRestaurantsByCityId(id_citta)).then((result) => {
+                    return res.send({ "result": result });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
