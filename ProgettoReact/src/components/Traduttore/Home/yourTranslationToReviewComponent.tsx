@@ -9,6 +9,16 @@ import { CustomTraduzione } from "../../../model/CustomTraduzione";
 
 interface YourTranslationToReviewProps {
     translations: CustomTraduzione[]
+    onClickApprove: OnClickApprove
+    onClickDiscard: OnClickDiscard
+}
+
+interface OnClickApprove{
+    (translation: CustomTraduzione): void
+}
+
+interface OnClickDiscard{
+    (translation: CustomTraduzione): void
 }
 
 export const YourTranslationToReviewComponent: React.FunctionComponent<YourTranslationToReviewProps> = (props) => {
@@ -41,16 +51,8 @@ export const YourTranslationToReviewComponent: React.FunctionComponent<YourTrans
                                     {value.testoTradotto}
                                 </td>
                                 <td className="align-middle text-center">
-                                    <Button variant="success" className="mr-2" onClick={
-                                        ()=>{
-
-                                        }
-                                    }>Approva</Button>
-                                    <Button variant="danger" onClick={
-                                        ()=>{
-                                            
-                                        }
-                                    }>Scarta</Button>
+                                    <Button variant="success" className="mr-2" onClick={()=> props.onClickApprove(value)}>Approva</Button>
+                                    <Button variant="danger" onClick={()=>props.onClickDiscard(value)}>Scarta</Button>
                                 </td>
                             </tr>
                         })}

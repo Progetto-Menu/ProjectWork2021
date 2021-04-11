@@ -82,4 +82,12 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
         return await Traduzione.updateTranslation(id, text_translated)
     }
 
+    async approveTranslation(id_translation: number, id_reviser: number){
+        return await Traduzione.approveTranslation(id_translation, id_reviser);
+    }
+
+    async discardTranslation(id_translation: number, id_reviser: number){
+        return await Traduzione.discardTranslation(id_translation, id_reviser);
+    }
+
 }

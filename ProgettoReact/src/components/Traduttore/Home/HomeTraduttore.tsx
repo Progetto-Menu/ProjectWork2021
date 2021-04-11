@@ -13,6 +13,7 @@ import { YourTranslationToReviewComponent } from './yourTranslationToReviewCompo
 import { BottomNavBarComponent, BottomNavBarProps } from "../../shared/BottomNavBarComponent"
 import { Traduttore } from '../../../model/Traduttore';
 import { CustomTraduzione } from '../../../model/CustomTraduzione';
+import { Button, Modal } from 'react-bootstrap';
 
 
 export const HomeTraduttore: React.FunctionComponent = () => {
@@ -28,10 +29,43 @@ export const HomeTraduttore: React.FunctionComponent = () => {
         })
     }
 
-    const getTranslationsToReview = ()=>{
+    const getTranslationsToReview = () => {
         AjaxUtils.getTranslationsToReview().then((result) => {
             setTranslationsToReview(result.data);
         }).catch((error) => {
+
+        })
+    }
+
+    const sendTranslation = (id: number, text:string)=>{
+        AjaxUtils.sendTranslation(id, text).then((result) => {
+            const resultAjax = JSONUtils.getProperty(result.data, "result", "error");
+            if (resultAjax === "OK") {
+                getAllTranslationsInProgress();
+            }
+        }).catch(() => {
+
+        })
+    }
+
+    const approveTranslation = (translation: CustomTraduzione) =>{
+        AjaxUtils.approveTranslation(translation.id).then((result) => {
+            const resultAjax = JSONUtils.getProperty(result.data, "result", "error");
+            if (resultAjax === "OK") {
+                getTranslationsToReview();
+            }
+        }).catch(() => {
+
+        })
+    }
+
+    const discardTranslation = (translation: CustomTraduzione) =>{
+        AjaxUtils.discardTranslation(translation.id).then((result) => {
+            const resultAjax = JSONUtils.getProperty(result.data, "result", "error");
+            if (resultAjax === "OK") {
+                getTranslationsToReview();
+            }
+        }).catch(() => {
 
         })
     }
@@ -42,17 +76,8 @@ export const HomeTraduttore: React.FunctionComponent = () => {
     }, [])
 
     return <>
-        <TranslationTakenOverComponent translations={translationsTakenOver} onClickSend={(id, text) => {
-            AjaxUtils.sendTranslation(id, text).then((result) => {
-                const resultAjax = JSONUtils.getProperty(result.data, "result", "error");
-                if (resultAjax === "OK") {
-                    getAllTranslationsInProgress();
-                }
-            }).catch(() => {
-
-            })
-        }} />
+        <TranslationTakenOverComponent translations={translationsTakenOver} onClickSend={sendTranslation} />
         <br></br>
-        <YourTranslationToReviewComponent translations={translationsToReview} />
+        <YourTranslationToReviewComponent translations={translationsToReview} onClickApprove={approveTranslation} onClickDiscard={discardTranslation} />
     </>
 }

@@ -72,7 +72,7 @@ export const PageProfile: React.FunctionComponent = () => {
         })
     }
 
-    const getUser = () =>{
+    const getUser = () => {
         AjaxUtils.getUser(Users.TRADUTTORE).then((result) => {
             const nome: string = JSONUtils.getProperty(result.data, "nome", "");
             const cognome: string = JSONUtils.getProperty(result.data, "cognome", "");
@@ -91,12 +91,22 @@ export const PageProfile: React.FunctionComponent = () => {
         })
     }
 
-    const getAllTranslations = ()=>{
+    const getAllTranslations = () => {
         AjaxUtils.getAllTranslations().then((result) => {
             setTranslations(result.data);
         }).catch((error) => {
 
         })
+    }
+
+    const refreshLanguages = () => {
+        getAllLanguagesKnown();
+        getAllLanguagesUnknown();
+    }
+
+    const logout = () => {
+        StorageUtils.remove(StorageUtils.token_key);
+        history.replace(RoutesTraduttore.LOGIN);
     }
 
 
@@ -125,22 +135,13 @@ export const PageProfile: React.FunctionComponent = () => {
 
         <div className="row mt-5">
             <div className="col-12">
-                <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={() => {
-                    getAllLanguagesKnown();
-                    getAllLanguagesUnknown();
-                }} onClickRemove={() => {
-                    getAllLanguagesKnown();
-                    getAllLanguagesUnknown();
-                }} />
+                <YourLanguagesComponent unKnownLanguages={unKnownLanguages} knownLanguages={knownLanguages} onClickAdd={refreshLanguages} onClickRemove={refreshLanguages} />
             </div>
         </div>
 
         <div className="row my-5">
             <div className="col-12 text-center">
-                <button className="btn btn-primary w-100" onClick={() => {
-                    StorageUtils.remove(StorageUtils.token_key);
-                    history.replace(RoutesTraduttore.LOGIN);
-                }}>Logout</button>
+                <button className="btn btn-primary w-100" onClick={logout}>Logout</button>
             </div>
         </div>
     </>

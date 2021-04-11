@@ -547,3 +547,62 @@ router.post("/home/translations/update", async (req: any, res: any) => {
             });
     });
 })
+
+
+router.post("/home/translations/approve", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const idTranslation = JSONUtils.getProperty(json, "id_translation", "");
+
+    if(!Number.isInteger(idTranslation)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.approveTranslation(idTranslation, result.id)).then((result) => {
+                    console.log(result)
+                    return res.send({ "result": "OK" });
+                }).catch((error) => {
+                    //console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/home/translations/discard", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const idTranslation = JSONUtils.getProperty(json, "id_translation", "");
+
+    if(!Number.isInteger(idTranslation)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(traduttoreController.discardTranslation(idTranslation, result.id)).then((result) => {
+                    console.log(result)
+                    return res.send({ "result": "OK" });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})

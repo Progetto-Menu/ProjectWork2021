@@ -224,4 +224,20 @@ export class AjaxUtils {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
+
+    static async approveTranslation(id_translation: number){
+        let url = API_SERVER + "/traduttori/home/translations/approve";
+        return axios.post(url, {
+            id_translation: id_translation,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async discardTranslation(id_translation: number){
+        let url = API_SERVER + "/traduttori/home/translations/discard";
+        return axios.post(url, {
+            id_translation: id_translation,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
 }
