@@ -23,7 +23,10 @@ export const HomeTraduttore: React.FunctionComponent = () => {
 
     const getAllTranslationsInProgress = () => {
         AjaxUtils.getAllTranslationsInProgress().then((result) => {
-            setTranslationsTakenOver(result.data);
+            const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+            if(ajaxResult !== "error"){
+                setTranslationsTakenOver(ajaxResult);
+            }
         }).catch((error) => {
 
         })
@@ -31,7 +34,10 @@ export const HomeTraduttore: React.FunctionComponent = () => {
 
     const getTranslationsToReview = () => {
         AjaxUtils.getTranslationsToReview().then((result) => {
-            setTranslationsToReview(result.data);
+            const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+            if(ajaxResult !== "error"){
+                setTranslationsToReview(ajaxResult);
+            }
         }).catch((error) => {
 
         })
