@@ -18,5 +18,8 @@ export class RistoranteController implements BasePresenter<Ristorante>{
         throw new Error("Method not implemented.");
     }
     
+    async getRestaurantsByCityId(id_citta: number){
+        return await Ristorante.getRestaurantsByCityId(id_citta);
+    }
 
 }

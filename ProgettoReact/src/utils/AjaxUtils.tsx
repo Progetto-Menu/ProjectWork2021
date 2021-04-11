@@ -240,4 +240,27 @@ export class AjaxUtils {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
+
+    static async getProvinces(){
+        let url = API_SERVER + "/traduttori/translations/provinces/all";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getCitiesByProvinceId(id_provincia: number){
+        let url = API_SERVER + "/traduttori/translations/province/cities/all";
+        return axios.post(url, {
+            id_provincia: id_provincia,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getRestaurantsByCityId(id_citta: number){
+        let url = API_SERVER + "/traduttori/translations/province/city/restaurants";
+        return axios.post(url, {
+            id_citta: id_citta,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
 }

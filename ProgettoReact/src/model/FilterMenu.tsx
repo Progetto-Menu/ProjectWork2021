@@ -1,6 +1,5 @@
 export interface FilterMenu{
-    restaurant: string
-    city: string
-    province: string
-    address: string
+    restaurant_id: number | null
+    city_id: number | null
+    province_id: number | null
 }

@@ -1,53 +1,123 @@
+import { useEffect, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
+import { Citta } from "../../../model/Citta";
 import { FilterMenu } from "../../../model/FilterMenu";
+import { Provincia } from "../../../model/Provincia";
+import { Restaurant } from "../../../model/Restaurant";
+import { AjaxUtils } from "../../../utils/AjaxUtils";
+import { JSONUtils } from "../../../utils/JSONUtils";
 
-interface FilterMenuProps{
-    onChange: FilterMenuComponentCallback
+interface FilterMenuProps {
+  onClickSearch: OnClickSearch
 }
 
-interface FilterMenuComponentCallback{
-    (filterMenu: FilterMenu): void
+interface OnClickSearch {
+  (filterMenu: FilterMenu): void
 }
 
-export const FilterMenuComponent : React.FunctionComponent<FilterMenuProps>= (props)=>{
+export const FilterMenuComponent: React.FunctionComponent<FilterMenuProps> = (props) => {
 
-    return <Form>
-    <Form.Row>
-      <Form.Group as={Col} controlId="formGridEmail">
-        <Form.Label>Nome ristorante</Form.Label>
-        <Form.Control />
-      </Form.Group>
-    </Form.Row>
-  
-    <Form.Group controlId="formGridAddress1">
-      <Form.Label>Indirizzo</Form.Label>
-      <Form.Control />
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [cities, setCities] = useState<Citta[]>([]);
+  const [provinces, setProvinces] = useState<Provincia[]>([]);
+
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedProvince, setSelectedProvince] = useState<string>("");
+  const [selectedRestaturant, setSelectedRestaurant] = useState<string>("");
+
+  const getProvinces = () => {
+    AjaxUtils.getProvinces().then((result) => {
+      const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+      if (ajaxResult !== "error") {
+        setProvinces(ajaxResult);
+      }
+
+    })
+  }
+
+  const getCitiesByProvinceId = (id_provincia: number) => {
+    AjaxUtils.getCitiesByProvinceId(id_provincia).then((result) => {
+      const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+      if (ajaxResult !== "error") {
+        setSelectedCity("");
+        setCities(ajaxResult);
+      }
+
+    })
+  }
+
+  const getRestaurantsByCityId = (id_citta: number) => {
+    AjaxUtils.getRestaurantsByCityId(id_citta).then((result) => {
+      const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+      if (ajaxResult !== "error") {
+        setSelectedRestaurant("");
+        setRestaurants(ajaxResult);
+      }
+    })
+  }
+
+  useEffect(() => {
+    getProvinces();
+  }, [])
+
+  return <Form>
+
+    <Form.Group controlId="formGridState">
+      <Form.Label>Provincia</Form.Label>
+      <Form.Control as="select" value={selectedProvince} onChange={(e) => {
+        setSelectedProvince(e.target.value)
+        if (e.target.value !== "") {
+          getCitiesByProvinceId(parseInt(e.target.value))
+        } else {
+          setSelectedCity("");
+          setCities([])
+        }
+      }}>
+        <option value="">Scegli...</option>
+        {provinces.map((value, index) => {
+          return <option key={index} value={value.id}>{value.nome} ({value.sigla})</option>
+        })}
+      </Form.Control>
     </Form.Group>
-  
-    <Form.Row>
-      <Form.Group as={Col} controlId="formGridCity">
-        <Form.Label>Citta</Form.Label>
-        <Form.Control />
-      </Form.Group>
-  
-      <Form.Group as={Col} controlId="formGridState">
-        <Form.Label>Provincia</Form.Label>
-        <Form.Control as="select" defaultValue="Choose...">
-          <option>Scegli...</option>
-          <option>...</option>
-        </Form.Control>
-      </Form.Group>
-  
-      <Form.Group as={Col} controlId="formGridZip">
-        <Form.Label>CAP</Form.Label>
-        <Form.Control />
-      </Form.Group>
-    </Form.Row>
-  
-    <Button variant="primary" type="bottom" onClick={()=>{
-        
+
+    <Form.Group controlId="formGridCity">
+      <Form.Label>Citta</Form.Label>
+      <Form.Control as="select" value={selectedCity} onChange={(e) => {
+        setSelectedCity(e.target.value);
+        if (e.target.value !== "") {
+          getRestaurantsByCityId(parseInt(e.target.value));
+        } else {
+          setSelectedRestaurant("");
+          setRestaurants([]);
+        }
+      }}>
+        <option value="">Scegli...</option>
+        {cities.map((value, index) => {
+          return <option key={index} value={value.id}>{value.nome}</option>
+        })}
+      </Form.Control>
+    </Form.Group>
+
+    <Form.Group controlId="formGridRistorante">
+      <Form.Label>Ristorante</Form.Label>
+      <Form.Control as="select" value={selectedRestaturant} onChange={(e)=>{
+        setSelectedRestaurant(e.target.value);
+      }}>
+        <option value="">Scegli...</option>
+        {restaurants.map((value, index)=>{
+          return <option key={index} value={value.id}>{value.nome}, {value.indirizzo} {value.civico}</option>
+        })}
+      </Form.Control>
+    </Form.Group>
+
+    <Button variant="primary" type="button" onClick={() => {
+      props.onClickSearch({
+        city_id: selectedCity === "" ? null : parseInt(selectedCity),
+        restaurant_id: selectedRestaturant === "" ? null : parseInt(selectedRestaturant),
+        province_id: selectedProvince === "" ? null : parseInt(selectedProvince)
+      })
     }}>
-      Submit
+      Cerca
     </Button>
   </Form>
 

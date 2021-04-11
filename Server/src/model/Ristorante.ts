@@ -1,3 +1,5 @@
+import { config, sql } from "../database/DbConfig";
+
 export class Ristorante {
     readonly id: number;
     readonly nome: string;
@@ -7,12 +9,13 @@ export class Ristorante {
     readonly id_ristoratore: number;
 
 
+    static readonly db_table_name = "ristoranti";
     static readonly db_id = "Id";
     static readonly db_nome = "Nome";
     static readonly db_indirizzo = "Indirizzo";
     static readonly db_civico = "Civico";
-    static readonly db_id_citta = "IdCitta";
-    static readonly db_id_ristoratore = "IdRistorante";
+    static readonly db_id_citta = "Id_Citta";
+    static readonly db_id_ristoratore = "Id_Ristorante";
 
 
     constructor(id: number, nome: string, indirizzo: string, civico: string, id_citta: number, id_ristoratore: number) {
@@ -22,6 +25,47 @@ export class Ristorante {
         this.civico = civico
         this.id_citta = id_citta
         this.id_ristoratore = id_ristoratore
+    }
+
+    static convertToArray(recordset: any) : Ristorante[]{
+        const array: Ristorante[] = [];
+
+        for (let record of recordset) {
+            array.push({
+                id: record[Ristorante.db_id],
+                nome: record[Ristorante.db_nome],
+                civico: record[Ristorante.db_civico],
+                id_citta: record[Ristorante.db_id_citta],
+                id_ristoratore: record[Ristorante.db_id_ristoratore],
+                indirizzo: record[Ristorante.db_indirizzo]
+            });
+        }
+        return array;
+    }
+
+    static async getRestaurantsByCityId(id_citta: number){
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>((resolve, reject) => {
+            transaction.begin(async (err: any) => {
+                const request: any = await transaction.request()
+                    .input(Ristorante.db_id_citta, id_citta)
+                    .query(`SELECT * FROM ${Ristorante.db_table_name} where ${Ristorante.db_id_citta} = @${Ristorante.db_id_citta};`,
+                        (err: any, result: any) => {
+                            if (err) {
+                                transaction.rollback();
+                                reject(err);
+                            }
+                            else {
+                                transaction.commit((err: any) => {
+                                    if (!err) {
+                                        resolve(this.convertToArray(result.recordset));
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
     }
 
 }

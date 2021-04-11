@@ -18,4 +18,8 @@ export class CittaController implements BasePresenter<Citta>{
         throw new Error("Method not implemented.");
     }
 
+    async getCitiesByProvinceId(id_provincia: number){
+        return await Citta.getCitiesByProvinceId(id_provincia);
+    }
+
 }
