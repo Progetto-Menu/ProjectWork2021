@@ -97,9 +97,6 @@ export const App: React.FunctionComponent = () => {
             <PrivateRoute path={RoutesRistoratore.HOME} exact>
                 <BaseRistoratore route={RoutesRistoratore.HOME} />
             </PrivateRoute>
-            <PrivateRoute path={RoutesRistoratore.RESTAURANTS} exact>
-                <BaseRistoratore route={RoutesRistoratore.RESTAURANTS} />
-            </PrivateRoute>
             <PrivateRoute path={RoutesRistoratore.MENUS} exact>
                 <BaseRistoratore route={RoutesRistoratore.MENUS} />
             </PrivateRoute>
