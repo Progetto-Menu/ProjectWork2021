@@ -87,7 +87,6 @@ export class RouterUtils {
             case RoutesRistoratore.REGISTER:
             case RoutesRistoratore.OTP:
             case RoutesRistoratore.PROFILE:
-            case RoutesRistoratore.RESTAURANTS:
             case RoutesRistoratore.MENUS:
                 return Users.RISTORATORE;
             default:

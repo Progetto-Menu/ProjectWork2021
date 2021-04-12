@@ -284,4 +284,11 @@ export class AjaxUtils {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
+
+    static async getRestaurants(){
+        let url = API_SERVER + "/ristoratori/restaurants/all";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
 }
