@@ -242,6 +242,24 @@ router.post("/validate-email", async (req: any, res: any) => {
     });
 })
 
+router.post("/profile", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return res.send(result);
+            }).catch((error) => {
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
 function generateCode(): string {
     const min = 0;
     const max = 100000;

@@ -8,12 +8,13 @@ import { OTPComponent } from './Login/OTPComponent';
 import { RegisterComponent } from './Login/RegisterComponent';
 import { SwitchLoginComponent } from './Login/SwitchLoginComponent';
 import { HomeTraduttore } from './Traduttore/Home/HomeTraduttore';
-import { HomeRistoratore } from './Ristoratore/HomeRistoratore';
+import { HomeRistoratore } from './Ristoratore/Home/HomeRistoratore';
 import { StorageUtils } from '../utils/StorageUtils';
 import { PrivateRoute } from '../utils/RouterUtils';
 import { PageTranslations } from './Traduttore/Translations/pageTranslations';
 import { PageProfile } from './Traduttore/Profile/pageProfile';
 import { BaseTraduttore } from './Traduttore/Base/BaseTraduttore';
+import { BaseRistoratore } from './Ristoratore/BaseRistoratore';
 
 export interface AppRequest {
     token: string | null,
@@ -49,7 +50,7 @@ export const App: React.FunctionComponent = () => {
     else if (user === Users.TRADUTTORE) {
         return <Switch>
             <Route path="/" exact>
-                <Redirect to={RoutesTraduttore.HOME} />
+                <Redirect to={RoutesTraduttore.LOGIN} />
             </Route>
             <Route path={RoutesTraduttore.LOGIN} exact>
                 <LoginComponent user={user} onClickBack={() => {
@@ -78,7 +79,7 @@ export const App: React.FunctionComponent = () => {
     else if (user === Users.RISTORATORE) {
         return <Switch>
             <Route path="/" exact>
-                <Redirect to={RoutesRistoratore.HOME} />
+                <Redirect to={RoutesRistoratore.LOGIN} />
             </Route>
             <Route path={RoutesRistoratore.LOGIN} exact>
                 <LoginComponent user={user} onClickBack={() => {
@@ -94,7 +95,16 @@ export const App: React.FunctionComponent = () => {
                 <OTPComponent user={user} />
             </Route>
             <PrivateRoute path={RoutesRistoratore.HOME} exact>
-                <HomeRistoratore />
+                <BaseRistoratore route={RoutesRistoratore.HOME} />
+            </PrivateRoute>
+            <PrivateRoute path={RoutesRistoratore.RESTAURANTS} exact>
+                <BaseRistoratore route={RoutesRistoratore.RESTAURANTS} />
+            </PrivateRoute>
+            <PrivateRoute path={RoutesRistoratore.MENUS} exact>
+                <BaseRistoratore route={RoutesRistoratore.MENUS} />
+            </PrivateRoute>
+            <PrivateRoute path={RoutesRistoratore.PROFILE} exact>
+                <BaseRistoratore route={RoutesRistoratore.PROFILE} />
             </PrivateRoute>
         </Switch>
     } else return <></>

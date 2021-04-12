@@ -72,7 +72,7 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
 };
 
 export class RouterUtils {
-    
+
     static getUserByRoute(url: string) {
         switch (url) {
             case RoutesTraduttore.HOME:
@@ -86,6 +86,9 @@ export class RouterUtils {
             case RoutesRistoratore.LOGIN:
             case RoutesRistoratore.REGISTER:
             case RoutesRistoratore.OTP:
+            case RoutesRistoratore.PROFILE:
+            case RoutesRistoratore.RESTAURANTS:
+            case RoutesRistoratore.MENUS:
                 return Users.RISTORATORE;
             default:
                 return Users.NON_IMPOSTATO;

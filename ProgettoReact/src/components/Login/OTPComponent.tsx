@@ -4,7 +4,7 @@ import Logo from '../../img/logo_menu.png';
 import { Users } from '../../utils/Users';
 import axios from 'axios';
 import { JSONUtils } from '../../utils/JSONUtils';
-import { Alert, Card, Form, FormControl } from 'react-bootstrap';
+import { Alert, Button, Card, Form, FormControl } from 'react-bootstrap';
 import { AjaxUtils } from '../../utils/AjaxUtils';
 import OtpInput from 'react-otp-input';
 import { StorageUtils } from '../../utils/StorageUtils';
@@ -66,6 +66,11 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
 
 
                         <div className="col-12 mb-5 text-right">
+                              <Button variant="secondary" className="mr-2" onClick={()=>{
+                                    StorageUtils.remove(StorageUtils.token_key);
+                                    StorageUtils.remove(StorageUtils.user_type);
+                                    history.replace("/")
+                              }}>Indietro</Button>
                               <button className="btn btn-primary" type="button" onClick={() => {
                                     setIsReadOnly(!isReadOnly);
                                     if (!isReadOnly) {

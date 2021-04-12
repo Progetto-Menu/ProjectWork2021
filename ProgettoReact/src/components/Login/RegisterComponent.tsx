@@ -100,7 +100,8 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
                                 const token = JSONUtils.getProperty(res.data, "token", null)
                                 if (token != null) {
                                     StorageUtils.set(StorageUtils.token_key,token);
-                                    history.replace("/traduttori/home");
+                                    if(props.user === Users.TRADUTTORE) history.replace(RoutesTraduttore.HOME)
+                                    if(props.user === Users.RISTORATORE) history.replace(RoutesRistoratore.HOME)
                                 }
                                 else {
                                     //setErrorMessage("Credenziali Sbagliate")
