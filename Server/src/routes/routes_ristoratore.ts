@@ -1,4 +1,3 @@
-import { RistoranteController } from "../controller/RistoranteController";
 import { RistoratoreController } from "../controller/RistoratoreController";
 import { OtpRistoratore } from "../model/OtpRistoratore";
 import { Ristoratore } from "../model/Ristoratore";
@@ -11,7 +10,6 @@ const router = require("express").Router();
 module.exports = router;
 
 const ristoratoreController: RistoratoreController = new RistoratoreController();
-const ristoranteController = new RistoranteController();
 
 router.post("/login", async (req: any, res: any) => {
     const json = req.body;
@@ -274,28 +272,3 @@ function generateCode(): string {
     return result;
 
 }
-
-router.post("/restaurants/all", async (req: any, res: any) => {
-    const json = req.body;
-
-    const clientToken = JSONUtils.getProperty(json, "token", "");
-
-    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
-        if (err) return res.send({ "result": "error" });
-        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
-
-        return Promise.resolve(ristoratoreController.get(decoded.sub))
-            .then((result) => {
-                return Promise.resolve(ristoranteController.getRestaurantsByRestaurateurId(result.id)).then((result) => {
-                    return res.send({ "result": result });
-                }).catch((error) => {
-                    console.error(error);
-                    return res.send({ "result": "error" });
-                })
-
-            }).catch((error) => {
-                console.error(error);
-                return res.send({ "result": "error" });
-            });
-    });
-})

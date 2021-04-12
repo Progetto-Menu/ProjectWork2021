@@ -22,8 +22,4 @@ export class RistoranteController implements BasePresenter<Ristorante>{
         return await Ristorante.getRestaurantsByCityId(id_citta);
     }
 
-    async getRestaurantsByRestaurateurId(id_ristoratore: number){
-        return await Ristorante.getRestaurantsByRestaurateurId(id_ristoratore)
-    }
-
 }

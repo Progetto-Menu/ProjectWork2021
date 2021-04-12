@@ -6,6 +6,7 @@ import { TopBar } from "../shared/TopBar";
 import { HomeRistoratore } from "./Home/HomeRistoratore";
 import { PageMenu } from "./Menu/PageMenu";
 import { PageProfileRistoratore } from "./Profilo/PageProfileRistoratore";
+import { PageRestaurants } from "./Ristoranti/PageRestaurants";
 
 interface BaseTraduttoreProps {
     route: RoutesRistoratore
@@ -20,6 +21,9 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
         switch (props.route) {
             case RoutesRistoratore.HOME:
                 setPage("Home");
+                break;
+            case RoutesRistoratore.RESTAURANTS:
+                setPage("Restaurants");
                 break;
             case RoutesRistoratore.MENUS:
                 setPage("Menus");
@@ -38,6 +42,12 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
                 selected: props.route === RoutesRistoratore.HOME,
                 onClick: () => {
                     history.replace(RoutesRistoratore.HOME);
+                }
+            }, {
+                label: "Restaurants",
+                selected: props.route === RoutesRistoratore.RESTAURANTS,
+                onClick: () => {
+                    history.replace(RoutesRistoratore.RESTAURANTS);
                 }
             }, {
                 label: "Menu",
@@ -59,6 +69,7 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
         <TopBar text={page} />
         <div className="container py-5 my-5">
             {props.route === RoutesRistoratore.HOME && <HomeRistoratore />}
+            {props.route === RoutesRistoratore.RESTAURANTS && <PageRestaurants />}
             {props.route === RoutesRistoratore.MENUS && <PageMenu />}
             {props.route === RoutesRistoratore.PROFILE && <PageProfileRistoratore />}
         </div>

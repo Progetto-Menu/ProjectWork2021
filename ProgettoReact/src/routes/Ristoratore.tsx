@@ -4,5 +4,6 @@ export enum RoutesRistoratore{
     HOME = "/ristoratori/home",
     OTP = "/ristoratori/otp",
     PROFILE = "/ristoratori/profile",
+    RESTAURANTS = "/ristoratori/restaurants",
     MENUS = "/ristoratori/menus"
 }

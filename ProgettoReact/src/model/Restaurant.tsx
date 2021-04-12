@@ -7,6 +7,4 @@ export interface Restaurant{
     readonly civico: string;
     readonly id_citta: number;
     readonly id_ristoratore: number;
-    readonly citta: string
-    readonly provincia: string
 }
