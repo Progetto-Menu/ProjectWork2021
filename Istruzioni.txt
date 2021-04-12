@@ -66,3 +66,17 @@ npm run start
 9) Terminata l'installazione delle librerie digitare il comando "start.bat" e premere invio, il server dovrebbe partire
 10) Se si verificano degli errori durante l'avvio del server bisogna risolverli altrimenti l'applicazione react non riuscirà ad autenticarsi
 
+
+
+Query per aggiungere tabella menu_lingue:
+
+DROP TABLE IF EXISTS menu_lingue;
+
+CREATE TABLE menu_lingue (
+	IdMenu int,
+	IdLingua int,
+	PRIMARY KEY(IdMenu, IdLingua),
+	CONSTRAINT fk_menu_lingue_menu FOREIGN KEY (IdMenu) REFERENCES menu(Id),
+	CONSTRAINT fk_lingue_menu_ligune FOREIGN KEY (IdLingua) REFERENCES lingue(Id)
+	)
+

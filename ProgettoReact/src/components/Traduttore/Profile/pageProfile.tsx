@@ -39,35 +39,39 @@ export const PageProfile: React.FunctionComponent = () => {
     const getAllLanguagesUnknown = () => {
         AjaxUtils.getAllLanguagesUnknown().then((result) => {
             const langs: Language[] = [];
+            const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+            if (ajaxResult !== "error") {
+                for (let x of ajaxResult) {
+                    langs.push({
+                        id: JSONUtils.getProperty(x, "id", ""),
+                        name: JSONUtils.getProperty(x, "nome", ""),
+                        sign: JSONUtils.getProperty(x, "cod_lingua", "")
+                    })
+                }
 
-            for (let x of result.data) {
-                langs.push({
-                    id: JSONUtils.getProperty(x, "id", ""),
-                    name: JSONUtils.getProperty(x, "nome", ""),
-                    sign: JSONUtils.getProperty(x, "cod_lingua", "")
-                })
+
+                setUnknownLanguages(langs);
             }
-
-
-            setUnknownLanguages(langs);
-
         })
     }
 
     const getAllLanguagesKnown = () => {
         AjaxUtils.getAllLanguagesKnown().then((result) => {
             const langs: Language[] = [];
+            const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+            if (ajaxResult !== "error") {
 
-            for (let x of result.data) {
-                langs.push({
-                    id: JSONUtils.getProperty(x, "id", ""),
-                    name: JSONUtils.getProperty(x, "nome", ""),
-                    sign: JSONUtils.getProperty(x, "cod_lingua", "")
-                })
+                for (let x of ajaxResult) {
+                    langs.push({
+                        id: JSONUtils.getProperty(x, "id", ""),
+                        name: JSONUtils.getProperty(x, "nome", ""),
+                        sign: JSONUtils.getProperty(x, "cod_lingua", "")
+                    })
+                }
+
+
+                setKnownLanguages(langs);
             }
-
-
-            setKnownLanguages(langs);
 
         })
     }
@@ -93,7 +97,10 @@ export const PageProfile: React.FunctionComponent = () => {
 
     const getAllTranslations = () => {
         AjaxUtils.getAllTranslations().then((result) => {
-            setTranslations(result.data);
+            const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+            if(ajaxResult !== "error"){
+                setTranslations(ajaxResult);
+            }
         }).catch((error) => {
 
         })

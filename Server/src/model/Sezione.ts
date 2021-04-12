@@ -5,7 +5,7 @@ export class Sezione {
     readonly id_sottotitolo: number;
     readonly id_menu: number;
 
-
+    static readonly db_table_name = "sezioni"
     static readonly db_id = "Id";
     static readonly db_ordinamento = "Ordinamento";
     static readonly db_id_titolo = "IdTitolo";

@@ -10,6 +10,7 @@ import { CittaController } from "../controller/CittaController";
 import { Citta } from "../model/Citta";
 import { Numeric } from "mssql";
 import { RistoranteController } from "../controller/RistoranteController";
+import { MenuController } from "../controller/MenuController";
 
 const router = require("express").Router();
 
@@ -20,6 +21,7 @@ const lingueController: LinguaController = new LinguaController();
 const provinceController : ProvinciaController = new ProvinciaController();
 const cittaController: CittaController = new CittaController();
 const ristoranteController: RistoranteController = new RistoranteController();
+const menuController = new MenuController();
 
 
 router.post("/login", async (req: any, res: any) => {
@@ -336,7 +338,7 @@ router.post("/profile/languages/unknown", async (req: any, res: any) => {
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
                 return Promise.resolve(traduttoreController.getAllLanguagesThatAreUnknownByTranslator(result.id)).then((result) => {
-                    return res.send(result);
+                    return res.send({ "result": result });
                 }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });
@@ -361,7 +363,7 @@ router.post("/profile/languages/known", async (req: any, res: any) => {
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
                 return Promise.resolve(traduttoreController.getAllLanguagesThatAreKnownByTranslator(result.id)).then((result) => {
-                    return res.send(result);
+                    return res.send({ "result": result });
                 }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });
@@ -460,7 +462,7 @@ router.post("/profile/translations/all", async (req: any, res: any) => {
             .then((result) => {
                 return Promise.resolve(traduttoreController.getAllTranslations(result.id)).then((result) => {
                     console.log(result)
-                    return res.send(result);
+                    return res.send({ "result": result });
                 }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });
@@ -511,7 +513,7 @@ router.post("/home/translations/review", async (req: any, res: any) => {
 
         return Promise.resolve(traduttoreController.get(decoded.sub))
             .then((result) => {
-                return Promise.resolve(traduttoreController.getTranslationsToReview()).then((result) => {
+                return Promise.resolve(traduttoreController.getTranslationsToReview(result.id)).then((result) => {
                     console.log(result)
                     return res.send({ "result": result });
                 }).catch((error) => {
@@ -696,3 +698,82 @@ router.post("/translations/province/city/restaurants", async (req: any, res: any
     });
 })
 
+router.post("/translations/menu", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_citta = JSONUtils.getProperty(json, "id_citta", null);
+    const id_provincia = JSONUtils.getProperty(json, "id_provincia", null);
+    const id_ristorante = JSONUtils.getProperty(json, "id_ristorante", null);
+
+    if(id_provincia === null || !Number.isInteger(id_provincia)) return res.send({ "result": "error" });
+    if(id_citta !== null && !Number.isInteger(id_citta)) return res.send({ "result": "error" });
+    if(id_ristorante !== null && !Number.isInteger(id_ristorante)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                if(id_citta === null){
+                    return Promise.resolve(menuController.getMenusToTranslateByProvinceId(id_provincia, result.id)).then((result) => {
+                        return res.send({ "result": result });
+                    }).catch((error) => {
+                        console.error(error);
+                        return res.send({ "result": "error" });
+                    })
+                } else if(id_ristorante === null){
+                    return Promise.resolve(menuController.getMenusToTranslateByCityId(id_citta, result.id)).then((result) => {
+                        return res.send({ "result": result });
+                    }).catch((error) => {
+                        console.error(error);
+                        return res.send({ "result": "error" });
+                    })
+                } else {
+                    return Promise.resolve(menuController.getMenusToTranslateByRestaurantId(id_ristorante, result.id)).then((result) => {
+                        return res.send({ "result": result });
+                    }).catch((error) => {
+                        console.error(error);
+                        return res.send({ "result": "error" });
+                    })
+                }
+                
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/translations/menu/strings-to-translate", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_menu = JSONUtils.getProperty(json, "id_menu", "");
+    const id_lingua = JSONUtils.getProperty(json, "id_lingua", "");
+
+    if(!Number.isInteger(id_menu)) return res.send({ "result": "error" });
+    if(!Number.isInteger(id_lingua)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(traduttoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(menuController.setStringsToTranslate(id_menu, id_lingua, result.id)).then(()=>{
+                    return res.send({ "result": "OK" });
+                }).catch((e)=>{
+                    console.log(e);
+                    res.send({ "result": "error" });
+                })
+                
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})

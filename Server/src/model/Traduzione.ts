@@ -126,16 +126,17 @@ export class Traduzione {
         });
     }
 
-    static async getTranslationToReview() {
+    static async getTranslationToReview(id_traduttore: number) {
         const pool = await sql.connect(config);
         const transaction = await pool.transaction();
         return new Promise<any>((resolve, reject) => {
             transaction.begin(async (err: any) => {
                 await transaction.request()
+                    .input(Traduzione.db_id_traduttore, id_traduttore)
                     .query(`SELECT ${Traduzione.db_table_name}.${Traduzione.db_id}, ${Traduzione.db_table_name}.${Traduzione.db_stato}, ${Lingua.db_table_name}.${Lingua.db_cod_lingua}, ${Stringa.db_table_name}.${Stringa.db_testo}, ${Traduzione.db_table_name}.${Traduzione.db_testo} as TestoTradotto FROM ${Traduzione.db_table_name}
                     INNER JOIN ${Lingua.db_table_name} ON ${Lingua.db_table_name}.${Lingua.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_lingua}
                     INNER JOIN ${Stringa.db_table_name} ON ${Stringa.db_table_name}.${Stringa.db_id} = ${Traduzione.db_table_name}.${Traduzione.db_id_stringa}
-                    WHERE ${Traduzione.db_table_name}.${Traduzione.db_stato} = ${StatoTraduzione.DA_REVISIONARE.toString()}`,
+                    WHERE ${Traduzione.db_table_name}.${Traduzione.db_stato} = ${StatoTraduzione.DA_REVISIONARE.toString()} AND ${Traduzione.db_table_name}.${Traduzione.db_id_traduttore} != @${Traduzione.db_id_traduttore}`,
                         (err: any, result: any) => {
                             console.log(err, result);
                             if (err) {

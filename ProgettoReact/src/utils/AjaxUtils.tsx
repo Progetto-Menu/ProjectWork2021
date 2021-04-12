@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useHistory } from "react-router";
+import { CustomMenuDaTradurre } from "../model/CustomMenuDaTradurre";
 import { CustomTraduzione } from "../model/CustomTraduzione";
+import { FilterMenu } from "../model/FilterMenu";
 import { API_SERVER } from "./AppConstants";
 import { RouterUtils } from "./RouterUtils";
 import { StorageUtils } from "./StorageUtils";
@@ -260,6 +262,25 @@ export class AjaxUtils {
         let url = API_SERVER + "/traduttori/translations/province/city/restaurants";
         return axios.post(url, {
             id_citta: id_citta,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getMenus(filtermenu: FilterMenu){
+        let url = API_SERVER + "/traduttori/translations/menu";
+        return axios.post(url, {
+            id_ristorante: filtermenu.restaurant_id,
+            id_citta: filtermenu.city_id,
+            id_provincia: filtermenu.province_id,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async setStringsToTranslate(menu: CustomMenuDaTradurre){
+        let url = API_SERVER + "/traduttori/translations/menu/strings-to-translate";
+        return axios.post(url, {
+            id_menu: menu.id_menu,
+            id_lingua: menu.id_lingua,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }

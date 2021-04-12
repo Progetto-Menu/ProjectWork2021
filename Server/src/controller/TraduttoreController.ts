@@ -74,8 +74,8 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
         return await Traduzione.getAllTranslationInProgressByTranslatorId(id)
     }
 
-    async getTranslationsToReview() {
-        return await Traduzione.getTranslationToReview()
+    async getTranslationsToReview(id_traduttore: number) {
+        return await Traduzione.getTranslationToReview(id_traduttore)
     }
 
     async updateTranslation(id: number, text_translated: string) {

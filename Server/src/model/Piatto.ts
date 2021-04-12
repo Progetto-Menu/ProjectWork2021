@@ -7,6 +7,7 @@ export class Piatto {
     readonly id_descrizione: number;
 
 
+    static readonly db_table_name = "piatti"
     static readonly db_id = "Id";
     static readonly db_prezzo = "Prezzo";
     static readonly db_ordinamento = "Ordinamento";
