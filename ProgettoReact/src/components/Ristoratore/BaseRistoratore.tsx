@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 import { RoutesRistoratore } from "../../routes/Ristoratore";
 import { BottomNavBarComponent, BottomNavBarProps } from "../shared/BottomNavBarComponent";
 import { TopBar } from "../shared/TopBar";
+import { AddRestaurantComponent } from "./Home/AddRestaurantComponent";
 import { HomeRistoratore } from "./Home/HomeRistoratore";
 import { PageMenu } from "./Menu/PageMenu";
 import { PageProfileRistoratore } from "./Profilo/PageProfileRistoratore";
@@ -21,6 +22,9 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
             case RoutesRistoratore.HOME:
                 setPage("Home");
                 break;
+            case RoutesRistoratore.ADD_RESTAURANT:
+                setPage("Add Restaurant");
+                break;
             case RoutesRistoratore.MENUS:
                 setPage("Menus");
                 break;
@@ -35,7 +39,7 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
         actions: [
             {
                 label: "Home",
-                selected: props.route === RoutesRistoratore.HOME,
+                selected: props.route === RoutesRistoratore.HOME || props.route === RoutesRistoratore.ADD_RESTAURANT,
                 onClick: () => {
                     history.replace(RoutesRistoratore.HOME);
                 }
@@ -58,7 +62,7 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
     return <>
         <TopBar text={page} />
         <div className="container py-5 my-5">
-            {props.route === RoutesRistoratore.HOME && <HomeRistoratore />}
+            {(props.route === RoutesRistoratore.HOME || props.route === RoutesRistoratore.ADD_RESTAURANT) && <HomeRistoratore route={props.route} />}
             {props.route === RoutesRistoratore.MENUS && <PageMenu />}
             {props.route === RoutesRistoratore.PROFILE && <PageProfileRistoratore />}
         </div>

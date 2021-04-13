@@ -58,8 +58,6 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
       if(request.isLoaded && request.token != null){
             if(props.user===Users.TRADUTTORE) return <Redirect to={RoutesTraduttore.HOME}/>
             else return <Redirect to={RoutesRistoratore.HOME}/>
-      } else if(!request.isLoaded){
-            return <></>
       }
 
       return <>

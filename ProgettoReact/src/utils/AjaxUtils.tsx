@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 import { CustomMenuDaTradurre } from "../model/CustomMenuDaTradurre";
 import { CustomTraduzione } from "../model/CustomTraduzione";
 import { FilterMenu } from "../model/FilterMenu";
+import { Restaurant } from "../model/Restaurant";
 import { API_SERVER } from "./AppConstants";
 import { RouterUtils } from "./RouterUtils";
 import { StorageUtils } from "./StorageUtils";
@@ -50,7 +51,7 @@ export class AjaxUtils {
         })
     }
 
-    static async register(user: Users, email: string, password: string, nome: string, cognome: string){
+    static async register(user: Users, email: string, password: string, nome: string, cognome: string) {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
@@ -72,7 +73,7 @@ export class AjaxUtils {
         })
     }
 
-    static async requestOtp(user: Users, email: string){
+    static async requestOtp(user: Users, email: string) {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
@@ -91,7 +92,7 @@ export class AjaxUtils {
         })
     }
 
-    static async verifyOtp(user: Users, value: string){
+    static async verifyOtp(user: Users, value: string) {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
@@ -110,7 +111,7 @@ export class AjaxUtils {
         })
     }
 
-    static async getUser(user: Users){
+    static async getUser(user: Users) {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
@@ -128,7 +129,7 @@ export class AjaxUtils {
         })
     }
 
-    static async updateUser(user: Users, nome: string, cognome: string){
+    static async updateUser(user: Users, nome: string, cognome: string) {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
@@ -148,7 +149,7 @@ export class AjaxUtils {
         })
     }
 
-    static async changeEmail(user: Users, email: string){
+    static async changeEmail(user: Users, email: string) {
         let url = API_SERVER;
         switch (user) {
             case Users.TRADUTTORE:
@@ -167,21 +168,21 @@ export class AjaxUtils {
         })
     }
 
-    static async getAllLanguagesUnknown(){
+    static async getAllLanguagesUnknown() {
         let url = API_SERVER + "/traduttori/profile/languages/unknown";
         return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async getAllLanguagesKnown(){
+    static async getAllLanguagesKnown() {
         let url = API_SERVER + "/traduttori/profile/languages/known";
         return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async setLanguageForTranslator(id_lingua: number){
+    static async setLanguageForTranslator(id_lingua: number) {
         let url = API_SERVER + "/traduttori/profile/languages/add";
         return axios.post(url, {
             lingua: id_lingua,
@@ -189,7 +190,7 @@ export class AjaxUtils {
         })
     }
 
-    static async removeLanguageForTranslator(id_lingua: number){
+    static async removeLanguageForTranslator(id_lingua: number) {
         let url = API_SERVER + "/traduttori/profile/languages/remove";
         return axios.post(url, {
             lingua: id_lingua,
@@ -197,28 +198,28 @@ export class AjaxUtils {
         })
     }
 
-    static async getAllTranslations(){
+    static async getAllTranslations() {
         let url = API_SERVER + "/traduttori/profile/translations/all";
         return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async getAllTranslationsInProgress(){
+    static async getAllTranslationsInProgress() {
         let url = API_SERVER + "/traduttori/home/translations/progress/all";
         return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async getTranslationsToReview(){
+    static async getTranslationsToReview() {
         let url = API_SERVER + "/traduttori/home/translations/review";
         return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async sendTranslation(id_translation: number, text_translated: string){
+    static async sendTranslation(id_translation: number, text_translated: string) {
         let url = API_SERVER + "/traduttori/home/translations/update";
         return axios.post(url, {
             id_translation: id_translation,
@@ -227,7 +228,7 @@ export class AjaxUtils {
         })
     }
 
-    static async approveTranslation(id_translation: number){
+    static async approveTranslation(id_translation: number) {
         let url = API_SERVER + "/traduttori/home/translations/approve";
         return axios.post(url, {
             id_translation: id_translation,
@@ -235,7 +236,7 @@ export class AjaxUtils {
         })
     }
 
-    static async discardTranslation(id_translation: number){
+    static async discardTranslation(id_translation: number) {
         let url = API_SERVER + "/traduttori/home/translations/discard";
         return axios.post(url, {
             id_translation: id_translation,
@@ -243,22 +244,44 @@ export class AjaxUtils {
         })
     }
 
-    static async getProvinces(){
-        let url = API_SERVER + "/traduttori/translations/provinces/all";
+    static async getProvinces(user: Users) {
+        let url = API_SERVER;
+        switch (user) {
+            case Users.TRADUTTORE:
+                url += "/traduttori/translations/provinces/all";
+                break;
+            case Users.RISTORATORE:
+                url += "/ristoratori/home/provinces/all";
+                break;
+            case Users.AMMINISTRATORE:
+                break;
+            default: break;
+        }
         return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async getCitiesByProvinceId(id_provincia: number){
-        let url = API_SERVER + "/traduttori/translations/province/cities/all";
+    static async getCitiesByProvinceId(user: Users, id_provincia: number) {
+        let url = API_SERVER;
+        switch (user) {
+            case Users.TRADUTTORE:
+                url += "/traduttori/translations/province/cities/all";
+                break;
+            case Users.RISTORATORE:
+                url += "/ristoratori/home/province/cities/all";
+                break;
+            case Users.AMMINISTRATORE:
+                break;
+            default: break;
+        }
         return axios.post(url, {
             id_provincia: id_provincia,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async getRestaurantsByCityId(id_citta: number){
+    static async getRestaurantsByCityId(id_citta: number) {
         let url = API_SERVER + "/traduttori/translations/province/city/restaurants";
         return axios.post(url, {
             id_citta: id_citta,
@@ -266,7 +289,7 @@ export class AjaxUtils {
         })
     }
 
-    static async getMenus(filtermenu: FilterMenu){
+    static async getMenus(filtermenu: FilterMenu) {
         let url = API_SERVER + "/traduttori/translations/menu";
         return axios.post(url, {
             id_ristorante: filtermenu.restaurant_id,
@@ -276,7 +299,7 @@ export class AjaxUtils {
         })
     }
 
-    static async setStringsToTranslate(menu: CustomMenuDaTradurre){
+    static async setStringsToTranslate(menu: CustomMenuDaTradurre) {
         let url = API_SERVER + "/traduttori/translations/menu/strings-to-translate";
         return axios.post(url, {
             id_menu: menu.id_menu,
@@ -285,9 +308,44 @@ export class AjaxUtils {
         })
     }
 
-    static async getRestaurants(){
+    static async getRestaurants() {
         let url = API_SERVER + "/ristoratori/restaurants/all";
         return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async createRestaurant(ristorante: Restaurant) {
+        let url = API_SERVER + "/ristoratori/restaurants/add";
+        return axios.post(url, {
+            id_citta: ristorante.id_citta,
+            indirizzo: ristorante.indirizzo,
+            civico: ristorante.civico,
+            nome: ristorante.nome,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async updateRestaurant(ristorante: Restaurant) {
+        let url = API_SERVER + "/ristoratori/restaurants/update";
+        return axios.post(url, {
+            id: ristorante.id,
+            id_citta: ristorante.id_citta,
+            indirizzo: ristorante.indirizzo,
+            civico: ristorante.civico,
+            nome: ristorante.nome,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async deleteRestaurant(ristorante: Restaurant) {
+        let url = API_SERVER + "/ristoratori/restaurants/delete";
+        return axios.post(url, {
+            id: ristorante.id,
+            id_citta: ristorante.id_citta,
+            indirizzo: ristorante.indirizzo,
+            civico: ristorante.civico,
+            nome: ristorante.nome,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }

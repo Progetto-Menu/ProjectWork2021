@@ -1,3 +1,5 @@
+import { CittaController } from "../controller/CittaController";
+import { ProvinciaController } from "../controller/ProvinciaController";
 import { RistoranteController } from "../controller/RistoranteController";
 import { RistoratoreController } from "../controller/RistoratoreController";
 import { OtpRistoratore } from "../model/OtpRistoratore";
@@ -12,6 +14,8 @@ module.exports = router;
 
 const ristoratoreController: RistoratoreController = new RistoratoreController();
 const ristoranteController = new RistoranteController();
+const provinceController = new ProvinciaController();
+const cittaController = new CittaController();
 
 router.post("/login", async (req: any, res: any) => {
     const json = req.body;
@@ -288,6 +292,189 @@ router.post("/restaurants/all", async (req: any, res: any) => {
             .then((result) => {
                 return Promise.resolve(ristoranteController.getRestaurantsByRestaurateurId(result.id)).then((result) => {
                     return res.send({ "result": result });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/home/provinces/all", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(provinceController.getAll()).then((result) => {
+                    return res.send({ "result": result });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/home/province/cities/all", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_provincia = JSONUtils.getProperty(json, "id_provincia", "");
+
+    if(!Number.isInteger(id_provincia)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(cittaController.getCitiesByProvinceId(id_provincia)).then((result) => {
+                    return res.send({ "result": result });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+
+router.post("/restaurants/add", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_citta = JSONUtils.getProperty(json, "id_citta", "");
+    const indirizzo = JSONUtils.getProperty(json, "indirizzo", "");
+    const civico = JSONUtils.getProperty(json, "civico", "");
+    const nome = JSONUtils.getProperty(json, "nome", "");
+
+    if(!Number.isInteger(id_citta)) return res.send({ "result": "error" }); 
+    if(indirizzo == "") return res.send({ "result": "error" }); 
+    if(civico == "") return res.send({ "result": "error" }); 
+    if(nome == "") return res.send({ "result": "error" }); 
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(ristoranteController.create({
+                    id: 0,
+                    indirizzo: indirizzo,
+                    civico: civico,
+                    id_citta: id_citta,
+                    id_ristoratore: result.id,
+                    nome: nome
+                })).then((result) => {
+                    return res.send({ "result": "OK" });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+
+router.post("/restaurants/update", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_citta = JSONUtils.getProperty(json, "id_citta", "");
+    const indirizzo = JSONUtils.getProperty(json, "indirizzo", "");
+    const civico = JSONUtils.getProperty(json, "civico", "");
+    const nome = JSONUtils.getProperty(json, "nome", "");
+    const id = JSONUtils.getProperty(json, "id", "");
+
+    if(!Number.isInteger(id_citta)) return res.send({ "result": "error" }); 
+    if(!Number.isInteger(id)) return res.send({ "result": "error" }); 
+    if(indirizzo == "") return res.send({ "result": "error" }); 
+    if(civico == "") return res.send({ "result": "error" }); 
+    if(nome == "") return res.send({ "result": "error" }); 
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(ristoranteController.update({
+                    id: id,
+                    indirizzo: indirizzo,
+                    civico: civico,
+                    id_citta: id_citta,
+                    id_ristoratore: result.id,
+                    nome: nome
+                })).then((result) => {
+                    return res.send({ "result": "OK" });
+                }).catch((error) => {
+                    console.error(error);
+                    return res.send({ "result": "error" });
+                })
+
+            }).catch((error) => {
+                console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+
+router.post("/restaurants/delete", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id = JSONUtils.getProperty(json, "id", "");
+    const id_citta = JSONUtils.getProperty(json, "id_citta", "");
+    const indirizzo = JSONUtils.getProperty(json, "indirizzo", "");
+    const civico = JSONUtils.getProperty(json, "civico", "");
+    const nome = JSONUtils.getProperty(json, "nome", "");
+ 
+    if(!Number.isInteger(id_citta)) return res.send({ "result": "error" }); 
+    if(!Number.isInteger(id)) return res.send({ "result": "error" }); 
+    if(indirizzo == "") return res.send({ "result": "error" }); 
+    if(civico == "") return res.send({ "result": "error" }); 
+    if(nome == "") return res.send({ "result": "error" }); 
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(ristoranteController.delete({
+                    id: id,
+                    indirizzo: indirizzo,
+                    civico: civico,
+                    id_citta: id_citta,
+                    id_ristoratore: result.id,
+                    nome: nome
+                })).then((result) => {
+                    return res.send({ "result": "OK" });
                 }).catch((error) => {
                     console.error(error);
                     return res.send({ "result": "error" });

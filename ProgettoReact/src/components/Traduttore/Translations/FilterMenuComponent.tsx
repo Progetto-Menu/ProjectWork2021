@@ -6,6 +6,7 @@ import { Provincia } from "../../../model/Provincia";
 import { Restaurant } from "../../../model/Restaurant";
 import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
+import { Users } from "../../../utils/Users";
 
 interface FilterMenuProps {
   onClickSearch: OnClickSearch
@@ -26,7 +27,7 @@ export const FilterMenuComponent: React.FunctionComponent<FilterMenuProps> = (pr
   const [selectedRestaturant, setSelectedRestaurant] = useState<string>("");
 
   const getProvinces = () => {
-    AjaxUtils.getProvinces().then((result) => {
+    AjaxUtils.getProvinces(Users.TRADUTTORE).then((result) => {
       const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
       if (ajaxResult !== "error") {
         setProvinces(ajaxResult);
@@ -36,7 +37,7 @@ export const FilterMenuComponent: React.FunctionComponent<FilterMenuProps> = (pr
   }
 
   const getCitiesByProvinceId = (id_provincia: number) => {
-    AjaxUtils.getCitiesByProvinceId(id_provincia).then((result) => {
+    AjaxUtils.getCitiesByProvinceId(Users.TRADUTTORE, id_provincia).then((result) => {
       const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
       if (ajaxResult !== "error") {
         setSelectedCity("");

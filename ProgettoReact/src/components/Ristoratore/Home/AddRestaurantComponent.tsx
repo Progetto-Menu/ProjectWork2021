@@ -7,25 +7,20 @@ import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
 import { Users } from "../../../utils/Users";
 
-interface RestaurantComponentProps {
-    restaurant: Restaurant
-    onClickSave: OnClick
-    onClickDelete: OnClick
+interface AddRestaurantComponentProps {
+    onClickSave: OnClickSave
 }
 
-interface OnClick {
+interface OnClickSave {
     (restaurant: Restaurant): void
 }
 
-export const RestaurantComponent: React.FunctionComponent<RestaurantComponentProps> = (props) => {
-
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [id, setId] = useState(props.restaurant.id);
-    const [name, setName] = useState(props.restaurant.nome);
-    const [address, setAddress] = useState(props.restaurant.indirizzo);
-    const [houseNumber, setHouseNumber] = useState(props.restaurant.civico);
-    const [province, setProvince] = useState<string>(props.restaurant.id_provincia.toString());
-    const [city, setCity] = useState<string>(props.restaurant.id_citta.toString());
+export const AddRestaurantComponent: React.FunctionComponent<AddRestaurantComponentProps> = (props) => {
+    const [name, setName] = useState("");
+    const [address, setAddress] = useState("");
+    const [houseNumber, setHouseNumber] = useState("");
+    const [province, setProvince] = useState<string>("");
+    const [city, setCity] = useState<string>("");
 
     const [provinces, setProvinces] = useState<Provincia[]>([]);
     const [cities, setCities] = useState<Citta[]>([]);
@@ -59,41 +54,32 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
         getCitiesByProvinceId(parseInt(province))
     }, [province])
 
-    useEffect(() => {
-        setId(props.restaurant.id)
-        setName(props.restaurant.nome);
-        setAddress(props.restaurant.indirizzo);
-        setHouseNumber(props.restaurant.civico);
-        setProvince(props.restaurant.id_provincia.toString());
-        setCity(props.restaurant.id_citta.toString());
-    }, [props.restaurant])
-
-    return <Card className="my-3">
+    return <Card>
         <Card.Header>Ristorante</Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
                 <Form.Label>Nome</Form.Label>
-                <Form.Control type="text" placeholder="Nome" readOnly={!isEditing} value={name} onChange={(e) => {
+                <Form.Control type="text" placeholder="Nome" value={name} onChange={(e) => {
                     setName(e.target.value);
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
                 <Form.Label>Indirizzo</Form.Label>
-                <Form.Control type="text" placeholder="Indirizzo" readOnly={!isEditing} value={address} onChange={(e) => {
+                <Form.Control type="text" placeholder="Indirizzo" value={address} onChange={(e) => {
                     setAddress(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="col-12">
                 <Form.Label>Civico</Form.Label>
-                <Form.Control type="text" placeholder="Civico" readOnly={!isEditing} value={houseNumber} onChange={(e) => {
+                <Form.Control type="text" placeholder="Civico" value={houseNumber} onChange={(e) => {
                     setHouseNumber(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="col-12">
                 <Form.Label>Provincia</Form.Label>
-                <Form.Control as="select" readOnly={!isEditing} value={province} onChange={(e) => {
+                <Form.Control as="select" value={province} onChange={(e) => {
                     setProvince(e.target.value)
                 }}>
                     {provinces.map((value, index) => {
@@ -104,7 +90,7 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
 
             <Form.Group className="col-12">
                 <Form.Label>Citta</Form.Label>
-                <Form.Control as="select" readOnly={!isEditing} value={city} onChange={(e) => {
+                <Form.Control as="select" value={city} onChange={(e) => {
                     setCity(e.target.value);
                 }}>
                     {cities.map((value, index) => {
@@ -114,35 +100,18 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
             </Form.Group>
 
             <div className="col-12 text-right">
-                {!isEditing && <button className="btn btn-danger mr-2" type="button" onClick={() => {
-                    props.onClickDelete({
+                <button className="btn btn-primary" type="submit" onClick={() => {
+                    const restaurant: Restaurant = {
+                        id: 0,
+                        nome: name,
                         civico: houseNumber,
                         indirizzo: address,
-                        id: id,
                         id_citta: parseInt(city),
                         id_provincia: parseInt(province),
-                        id_ristoratore: 0,
-                        nome: name
-                    })
-                }}> Elimina </button>}
-
-                <button className="btn btn-primary" type="button" onClick={() => {
-                    if (isEditing) {
-                        props.onClickSave({
-                            civico: houseNumber,
-                            indirizzo: address,
-                            id: id,
-                            id_citta: parseInt(city),
-                            id_provincia: parseInt(province),
-                            id_ristoratore: 0,
-                            nome: name
-                        })
-                        setIsEditing(false)
+                        id_ristoratore: 0
                     }
-                    else {
-                        setIsEditing(true);
-                    }
-                }}> {isEditing ? <>Salva</> : <>Modifica</>}  </button>
+                    props.onClickSave(restaurant)
+                }}> Salva </button>
 
             </div>
 
