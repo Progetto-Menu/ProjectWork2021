@@ -88,7 +88,7 @@ export class Ristorante {
             transaction.begin(async (err: any) => {
                 const request: any = await transaction.request()
                     .input(Ristorante.db_id_ristoratore, id_ristoratore)
-                    .query(`SELECT ${Ristorante.db_table_name}.*, ${Citta.db_table_name}.${Citta.db_id_provincia} FROM ${Ristorante.db_table_name}
+                    .query(`SELECT ${Ristorante.db_table_name}.*, ${Citta.db_table_name}.${Citta.db_id_provincia}, ${Citta.db_table_name}.${Citta.db_nome} as Citta, ${Provincia.db_sigla} FROM ${Ristorante.db_table_name}
                         INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
                         INNER JOIN ${Provincia.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id_provincia} = ${Provincia.db_table_name}.${Provincia.db_id}
                         where ${Ristorante.db_id_ristoratore} = @${Ristorante.db_id_ristoratore};`,
@@ -110,7 +110,9 @@ export class Ristorante {
                                                 id_citta: record[Ristorante.db_id_citta],
                                                 id_ristoratore: record[Ristorante.db_id_ristoratore],
                                                 indirizzo: record[Ristorante.db_indirizzo],
-                                                id_provincia: record[Citta.db_id_provincia]
+                                                id_provincia: record[Citta.db_id_provincia],
+                                                provincia: record[Provincia.db_sigla],
+                                                citta: record["Citta"]
                                             });
                                         }
 

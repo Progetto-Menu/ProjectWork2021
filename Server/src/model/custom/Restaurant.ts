@@ -1,5 +1,3 @@
-import { Address } from "./Address";
-
 export interface Restaurant{
     readonly id: number;
     readonly nome: string;

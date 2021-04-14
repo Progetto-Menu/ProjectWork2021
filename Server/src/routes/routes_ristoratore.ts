@@ -1,4 +1,5 @@
 import { CittaController } from "../controller/CittaController";
+import { MenuController } from "../controller/MenuController";
 import { ProvinciaController } from "../controller/ProvinciaController";
 import { RistoranteController } from "../controller/RistoranteController";
 import { RistoratoreController } from "../controller/RistoratoreController";
@@ -16,6 +17,7 @@ const ristoratoreController: RistoratoreController = new RistoratoreController()
 const ristoranteController = new RistoranteController();
 const provinceController = new ProvinciaController();
 const cittaController = new CittaController();
+const menuController = new MenuController();
 
 router.post("/login", async (req: any, res: any) => {
     const json = req.body;
@@ -482,6 +484,82 @@ router.post("/restaurants/delete", async (req: any, res: any) => {
 
             }).catch((error) => {
                 console.error(error);
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/menus/languages/can-be-translated", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_menu = JSONUtils.getProperty(json, "id_menu", "");
+
+    if(!Number.isInteger(id_menu)) return res.send({ "result": "error" }); 
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(menuController.getAllLanguagesInWhichMenuCanBeTranslated(id_menu)).then((result)=>{
+                    console.log(result);
+                    return res.send({ "result": result });
+                }).catch(()=>{
+                    return res.send({ "result": "error" });
+                })
+            }).catch((error) => {
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+
+router.post("/menus/add", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const menu = JSONUtils.getProperty(json, "menu", "");
+
+    if(menu === "") return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(menuController.insert(menu)).then((result)=>{
+                    console.log(result);
+                    return res.send({ "result": "OK" });
+                }).catch(()=>{
+                    return res.send({ "result": "error" });
+                })
+            }).catch((error) => {
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
+router.post("/menus/all", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(menuController.getMenusByRestaurateurId(result.id)).then((result)=>{
+                    console.log(result);
+                    return res.send({ "result": result });
+                }).catch(()=>{
+                    return res.send({ "result": "error" });
+                })
+            }).catch((error) => {
                 return res.send({ "result": "error" });
             });
     });

@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 import { CustomMenuDaTradurre } from "../model/CustomMenuDaTradurre";
 import { CustomTraduzione } from "../model/CustomTraduzione";
 import { FilterMenu } from "../model/FilterMenu";
+import { Menu } from "../model/Menu";
 import { Restaurant } from "../model/Restaurant";
 import { API_SERVER } from "./AppConstants";
 import { RouterUtils } from "./RouterUtils";
@@ -346,6 +347,37 @@ export class AjaxUtils {
             indirizzo: ristorante.indirizzo,
             civico: ristorante.civico,
             nome: ristorante.nome,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getAllLanguagesInWhichMenuCanBeTranslated(id_menu: number) {
+        let url = API_SERVER + "/ristoratori/menus/languages/can-be-translated";
+        return axios.post(url, {
+            id_menu: id_menu,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getAllLanguagesInWhichMenuMustBeTranslated(id_menu: number) {
+        let url = API_SERVER + "/traduttori/profile/languages/must-be-translated";
+        return axios.post(url, {
+            id_menu: id_menu,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async createMenu(menu: Menu) {
+        let url = API_SERVER + "/ristoratori/menus/add";
+        return axios.post(url, {
+            menu: menu,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getMenusRestaurateur() {
+        let url = API_SERVER + "/ristoratori/menus/all";
+        return axios.post(url, {
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }

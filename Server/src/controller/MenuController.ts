@@ -1,4 +1,6 @@
+import { CustomMenu } from "../model/custom/CustomMenu";
 import { Menu } from "../model/Menu";
+import { MenuLingua } from "../model/MenuLingua";
 import { BasePresenter } from "./BaseController";
 
 export class MenuController implements BasePresenter<Menu>{
@@ -32,6 +34,18 @@ export class MenuController implements BasePresenter<Menu>{
 
     async setStringsToTranslate(id_menu: number, id_lingua: number, id_traduttore: number){
         return await Menu.setStringsToTranslate(id_menu, id_lingua, id_traduttore);
+    }
+
+    async getAllLanguagesInWhichMenuCanBeTranslated(id_menu: number){
+        return await MenuLingua.getAllLanguagesInWhichMenuCanBeTranslated(id_menu)
+    }
+
+    async insert(menu: CustomMenu){
+        return await Menu.insert(menu);
+    }
+
+    async getMenusByRestaurateurId(id_restaurateur: number){
+        return await Menu.getMenusByRestaurateurId(id_restaurateur);
     }
 
 }

@@ -93,7 +93,7 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
 
             <Form.Group className="col-12">
                 <Form.Label>Provincia</Form.Label>
-                <Form.Control as="select" readOnly={!isEditing} value={province} onChange={(e) => {
+                <Form.Control as="select" readOnly={!isEditing} disabled={!isEditing} value={province} onChange={(e) => {
                     setProvince(e.target.value)
                 }}>
                     {provinces.map((value, index) => {
@@ -104,7 +104,7 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
 
             <Form.Group className="col-12">
                 <Form.Label>Citta</Form.Label>
-                <Form.Control as="select" readOnly={!isEditing} value={city} onChange={(e) => {
+                <Form.Control as="select" readOnly={!isEditing} disabled={!isEditing} value={city} onChange={(e) => {
                     setCity(e.target.value);
                 }}>
                     {cities.map((value, index) => {

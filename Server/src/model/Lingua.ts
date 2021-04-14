@@ -43,24 +43,18 @@ export class Lingua {
     static async getAllLanguages() {
         const pool = await sql.connect(config);
         const transaction = await pool.transaction();
-        return new Promise<any>((resolve, reject) => {
-            transaction.begin(async (err: any) => {
-                await transaction.request()
-                    .query(`SELECT * FROM ${Lingua.db_table_name};`,
-                        (err: any, result: any) => {
-                            if (err) {
-                                transaction.rollback();
-                                reject(err);
-                            }
-                            else {
-                                transaction.commit((err: any) => {
-                                    if (!err) {
-                                        resolve(this.convertToArrayOfLanguages(result.recordset));
-                                    }
-                                });
-                            }
-                        });
-            });
+        return new Promise<any>(async (resolve, reject) => {
+            try{
+                await transaction.begin();
+                const req = transaction.request();
+                const results = await req.query(`SELECT * FROM ${Lingua.db_table_name};`);
+    
+                await transaction.commit();
+                resolve(this.convertToArrayOfLanguages(results.recordset));
+            }catch(err){
+                await transaction.rollback();
+                reject(err);
+            }
         });
     }
 

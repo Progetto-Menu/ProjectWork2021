@@ -5,5 +5,6 @@ export enum RoutesRistoratore{
     OTP = "/ristoratori/otp",
     PROFILE = "/ristoratori/profile",
     MENUS = "/ristoratori/menus",
-    ADD_RESTAURANT = "/ristoratori/home/create"
+    ADD_RESTAURANT = "/ristoratori/home/create",
+    ADD_MENU = "/ristoratori/menus/add"
 }

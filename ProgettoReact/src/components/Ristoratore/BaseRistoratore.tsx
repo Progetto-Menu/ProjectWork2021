@@ -25,6 +25,9 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
             case RoutesRistoratore.ADD_RESTAURANT:
                 setPage("Add Restaurant");
                 break;
+            case RoutesRistoratore.ADD_MENU:
+                setPage("Add Menu");
+                break;
             case RoutesRistoratore.MENUS:
                 setPage("Menus");
                 break;
@@ -45,7 +48,7 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
                 }
             }, {
                 label: "Menu",
-                selected: props.route === RoutesRistoratore.MENUS,
+                selected: props.route === RoutesRistoratore.MENUS || props.route === RoutesRistoratore.ADD_MENU,
                 onClick: () => {
                     history.replace(RoutesRistoratore.MENUS);
                 }
@@ -63,7 +66,7 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
         <TopBar text={page} />
         <div className="container py-5 my-5">
             {(props.route === RoutesRistoratore.HOME || props.route === RoutesRistoratore.ADD_RESTAURANT) && <HomeRistoratore route={props.route} />}
-            {props.route === RoutesRistoratore.MENUS && <PageMenu />}
+            {(props.route === RoutesRistoratore.MENUS || props.route === RoutesRistoratore.ADD_MENU) && <PageMenu route={props.route} />}
             {props.route === RoutesRistoratore.PROFILE && <PageProfileRistoratore />}
         </div>
         <BottomNavBarComponent actions={bottombarprops.actions} />

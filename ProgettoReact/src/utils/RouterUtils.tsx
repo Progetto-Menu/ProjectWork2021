@@ -89,6 +89,7 @@ export class RouterUtils {
             case RoutesRistoratore.PROFILE:
             case RoutesRistoratore.MENUS:
             case RoutesRistoratore.ADD_RESTAURANT:
+            case RoutesRistoratore.ADD_MENU:
                 return Users.RISTORATORE;
             default:
                 return Users.NON_IMPOSTATO;
