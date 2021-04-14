@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
-import { Citta } from "../../../model/Citta";
-import { FilterMenu } from "../../../model/FilterMenu";
-import { Provincia } from "../../../model/Provincia";
-import { Restaurant } from "../../../model/Restaurant";
-import { AjaxUtils } from "../../../utils/AjaxUtils";
-import { JSONUtils } from "../../../utils/JSONUtils";
-import { Users } from "../../../utils/Users";
+import { Citta } from "../../model/Citta";
+import { FilterMenu } from "../../model/FilterMenu";
+import { Provincia } from "../../model/Provincia";
+import { Restaurant } from "../../model/Restaurant";
+import { AjaxUtils } from "../../utils/AjaxUtils";
+import { JSONUtils } from "../../utils/JSONUtils";
+import { Users } from "../../utils/Users";
 
 interface FilterMenuProps {
   onClickSearch: OnClickSearch
@@ -27,7 +27,7 @@ export const FilterMenuComponent: React.FunctionComponent<FilterMenuProps> = (pr
   const [selectedRestaturant, setSelectedRestaurant] = useState<string>("");
 
   const getProvinces = () => {
-    AjaxUtils.getProvinces(Users.TRADUTTORE).then((result) => {
+    AjaxUtils.getProvinces(Users.CLIENTE).then((result) => {
       const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
       if (ajaxResult !== "error") {
         setProvinces(ajaxResult);
@@ -37,7 +37,7 @@ export const FilterMenuComponent: React.FunctionComponent<FilterMenuProps> = (pr
   }
 
   const getCitiesByProvinceId = (id_provincia: number) => {
-    AjaxUtils.getCitiesByProvinceId(Users.TRADUTTORE, id_provincia).then((result) => {
+    AjaxUtils.getCitiesByProvinceId(Users.CLIENTE, id_provincia).then((result) => {
       const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
       if (ajaxResult !== "error") {
         setSelectedCity("");
@@ -48,7 +48,7 @@ export const FilterMenuComponent: React.FunctionComponent<FilterMenuProps> = (pr
   }
 
   const getRestaurantsByCityId = (id_citta: number) => {
-    AjaxUtils.getRestaurantsByCityId(Users.TRADUTTORE, id_citta).then((result) => {
+    AjaxUtils.getRestaurantsByCityId(Users.CLIENTE, id_citta).then((result) => {
       const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
       if (ajaxResult !== "error") {
         setSelectedRestaurant("");

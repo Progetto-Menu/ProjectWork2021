@@ -183,7 +183,8 @@ export const AddMenuComponent: React.FunctionComponent = () => {
             <div className="col-12 text-right">
                 <Button type="button" className="btn-lg" variant="success" onClick={
                     () => {
-                        if(Number.isInteger(ristoranteSelezionato) && ristoranti.find((x)=>x.id === parseInt(ristoranteSelezionato)) != null){
+                        console.log(ristoranteSelezionato);
+                        if(!Number.isNaN(ristoranteSelezionato)){
                             const menu: Menu = {
                                 id: 0,
                                 languages: languagesForMenu,

@@ -15,6 +15,8 @@ import { PageTranslations } from './Traduttore/Translations/pageTranslations';
 import { PageProfile } from './Traduttore/Profile/pageProfile';
 import { BaseTraduttore } from './Traduttore/Base/BaseTraduttore';
 import { BaseRistoratore } from './Ristoratore/BaseRistoratore';
+import { RoutesUtente } from '../routes/Cliente';
+import { HomeUtente } from './Utente/HomeUtente';
 
 export interface AppRequest {
     token: string | null,
@@ -29,7 +31,7 @@ export const App: React.FunctionComponent = () => {
     useEffect(() => {
         try {
             const userType = parseInt(StorageUtils.get(StorageUtils.user_type) ?? Users.NON_IMPOSTATO.toString());
-            if (userType >= 0 && userType <= 3) setUser(userType);
+            if (userType >= 0 && userType <= 4) setUser(userType);
             else setUser(Users.NON_IMPOSTATO);
         } catch {
             setUser(Users.NON_IMPOSTATO);
@@ -109,6 +111,22 @@ export const App: React.FunctionComponent = () => {
             <PrivateRoute path={RoutesRistoratore.PROFILE} exact>
                 <BaseRistoratore route={RoutesRistoratore.PROFILE} />
             </PrivateRoute>
+        </Switch>
+    } else if (user === Users.CLIENTE) {
+        return <Switch>
+            <Route path="/" exact>
+                <Redirect to={RoutesUtente.HOME} />
+            </Route>
+            <Route path={RoutesUtente.HOME} exact>
+                <HomeUtente route={RoutesUtente.HOME} onClickLogout={()=>{
+                    StorageUtils.remove(StorageUtils.user_type);
+                    setUser(Users.NON_IMPOSTATO)
+                    history.replace("/")
+                }} />
+            </Route>
+            <Route path={RoutesUtente.LOGOUT} exact>
+                
+            </Route>
         </Switch>
     } else return <></>
 

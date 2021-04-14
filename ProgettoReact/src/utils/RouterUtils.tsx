@@ -4,6 +4,7 @@ import { Redirect, Route, RouteProps, useHistory } from 'react-router';
 import { AppRequest } from '../components/App';
 import { RoutesRistoratore } from '../routes/Ristoratore';
 import { RoutesTraduttore } from '../routes/Traduttore';
+import { RoutesUtente } from '../routes/Cliente';
 import { AjaxUtils } from './AjaxUtils';
 import { JSONUtils } from './JSONUtils';
 import { StorageUtils } from './StorageUtils';
@@ -91,6 +92,9 @@ export class RouterUtils {
             case RoutesRistoratore.ADD_RESTAURANT:
             case RoutesRistoratore.ADD_MENU:
                 return Users.RISTORATORE;
+            case RoutesUtente.HOME:
+            case RoutesUtente.LOGOUT:
+                return Users.CLIENTE;
             default:
                 return Users.NON_IMPOSTATO;
         }

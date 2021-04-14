@@ -48,4 +48,16 @@ export class MenuController implements BasePresenter<Menu>{
         return await Menu.getMenusByRestaurateurId(id_restaurateur);
     }
 
+    async getMenusByProvinceId(id_provincia: number, cod_lingua: string){
+        return await Menu.getMenusByProvinceId(id_provincia, cod_lingua);
+    }
+
+    async getMenusByCityId(id_citta: number, cod_lingua: string){
+        return await Menu.getMenusByCityId(id_citta, cod_lingua);
+    }
+
+    async getMenusByRestaurantId(id_ristorante: number, cod_lingua: string){
+        return await Menu.getMenusByRestaurantId(id_ristorante, cod_lingua);
+    }
+
 }

@@ -6,6 +6,7 @@ import { CreateMenuCallBack, Menu } from '../../../model/Menu';
 import { RoutesTraduttore } from '../../../routes/Traduttore';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
+import { Users } from '../../../utils/Users';
 import { BottomNavBarComponent, BottomNavBarProps } from '../../shared/BottomNavBarComponent';
 import { TopBar } from '../../shared/TopBar';
 import { FilterMenuComponent } from './FilterMenuComponent';
@@ -19,7 +20,7 @@ export const PageTranslations: React.FunctionComponent = () => {
 
 
     const getMenus = (filtermenu: FilterMenu) =>{
-        AjaxUtils.getMenus(filtermenu).then((result)=>{
+        AjaxUtils.getMenus(Users.TRADUTTORE, filtermenu).then((result)=>{
             const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
             if(ajaxResult !== "error"){
                 setMenuDaTradurre(ajaxResult)

@@ -8,6 +8,7 @@ import { Restaurant } from "../model/Restaurant";
 import { API_SERVER } from "./AppConstants";
 import { RouterUtils } from "./RouterUtils";
 import { StorageUtils } from "./StorageUtils";
+import { strings } from "./Strings";
 import { Users } from "./Users";
 
 export class AjaxUtils {
@@ -256,6 +257,9 @@ export class AjaxUtils {
                 break;
             case Users.AMMINISTRATORE:
                 break;
+            case Users.CLIENTE:
+                url += "/utenti/home/provinces/all";
+                break;
             default: break;
         }
         return axios.post(url, {
@@ -274,6 +278,9 @@ export class AjaxUtils {
                 break;
             case Users.AMMINISTRATORE:
                 break;
+            case Users.CLIENTE:
+                url += "/utenti/home/province/cities/all";
+                break;
             default: break;
         }
         return axios.post(url, {
@@ -282,20 +289,47 @@ export class AjaxUtils {
         })
     }
 
-    static async getRestaurantsByCityId(id_citta: number) {
-        let url = API_SERVER + "/traduttori/translations/province/city/restaurants";
+    static async getRestaurantsByCityId(user: Users, id_citta: number) {
+        let url = API_SERVER; 
+        switch (user) {
+            case Users.TRADUTTORE:
+                url += "/traduttori/translations/province/city/restaurants";
+                break;
+            case Users.RISTORATORE:
+                break;
+            case Users.AMMINISTRATORE:
+                break;
+            case Users.CLIENTE:
+                url += "/utenti/home/province/city/restaurants";
+                break;
+            default: break;
+        }
         return axios.post(url, {
             id_citta: id_citta,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
 
-    static async getMenus(filtermenu: FilterMenu) {
-        let url = API_SERVER + "/traduttori/translations/menu";
+    static async getMenus(user: Users, filtermenu: FilterMenu) {
+        let url = API_SERVER; 
+        switch (user) {
+            case Users.TRADUTTORE:
+                url += "/traduttori/translations/menu";
+                break;
+            case Users.RISTORATORE:
+                break;
+            case Users.AMMINISTRATORE:
+                break;
+            case Users.CLIENTE:
+                url += "/utenti/translations/menu";
+                break;
+            default: break;
+        }
         return axios.post(url, {
             id_ristorante: filtermenu.restaurant_id,
             id_citta: filtermenu.city_id,
             id_provincia: filtermenu.province_id,
+            cod_lingua: strings.getLanguage(),
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }
