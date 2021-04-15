@@ -167,7 +167,7 @@ export const strings = new LocalizedStrings({
         server_error_communication: "Errore di comunicazione con il server",
         login: "Login",
         register: "Registrati",
-        go_back: "indietro",
+        go_back: "Indietro",
         choose_the_user: "Scegli l'utente",
         translator: "Traduttore",
         restaurateur: "Ristoratore",

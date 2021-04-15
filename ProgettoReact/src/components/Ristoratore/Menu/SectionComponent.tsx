@@ -8,10 +8,15 @@ import { DishComponent } from "./DishComponent"
 interface SectionComponentProps {
     section: Section
     onChange: OnChange
+    onClickRemove: OnClickRemove
 }
 
 interface OnChange {
     (section: Section): void
+}
+
+interface OnClickRemove{
+    (section: Section):void
 }
 
 export const SectionComponent: React.FunctionComponent<SectionComponentProps> = (props) => {
@@ -30,7 +35,11 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
 
     return <Card className="my-3" bg="warning">
         <Card.Header>
-            {titolo === "" ? strings.section: titolo}
+        <div className="d-flex flex-row justify-content-between align-items-center">
+                <div>{titolo === "" ? strings.section: titolo}</div>
+                <div><Button variant="danger" onClick={()=> props.onClickRemove(props.section)}>{strings.remove}</Button></div>
+            </div>
+            
         </Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
@@ -67,6 +76,14 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
                         dishes: props.section.dishes.map((val, i) => i === index ? dish : val),
                         id: props.section.id
                     })
+                }} onClickRemove={(dish)=>{
+                    setDishes(props.section.dishes.filter(x => x.id !== dish.id))
+                    props.onChange({
+                        name: titolo,
+                        subtitle: sottotitolo,
+                        dishes: props.section.dishes.filter(x => x.id !== dish.id),
+                        id: props.section.id
+                    })
                 }} />
             })}
 
@@ -89,7 +106,7 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
                                     name: titolo,
                                     subtitle: sottotitolo,
                                     dishes: dishes.concat({
-                                        id: 0,
+                                        id: dishes.length + 1,
                                         name: nomePiatto,
                                         price: 0,
                                         description: ""

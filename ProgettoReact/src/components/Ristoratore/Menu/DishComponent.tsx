@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { Card, Form } from "react-bootstrap"
+import { Button, Card, Form } from "react-bootstrap"
 import { Dish } from "../../../model/Dish"
 import { strings } from "../../../utils/Strings";
 
 interface DishComponentProps {
     dish: Dish
     onChange: OnChange
+    onClickRemove: OnClickRemove
 }
 
 interface OnChange{
     (dish: Dish): void
 }
 
+interface OnClickRemove{
+    (dish: Dish): void
+}
 export const DishComponent: React.FunctionComponent<DishComponentProps> = (props) => {
 
     const [titolo, setTitolo] = useState<string>(props.dish.name);
@@ -26,7 +30,11 @@ export const DishComponent: React.FunctionComponent<DishComponentProps> = (props
 
     return <Card className="my-3" bg="success" text="white">
         <Card.Header>
-            {titolo === "" ? strings.dish : titolo}
+            <div className="d-flex flex-row justify-content-between align-items-center">
+                <div>{titolo === "" ? strings.dish : titolo}</div>
+                <Button variant="danger" onClick={()=> props.onClickRemove(props.dish)}>{strings.remove}</Button>
+            </div>
+            
     </Card.Header>
         <Card.Body>
             <Form.Group className="col-12">

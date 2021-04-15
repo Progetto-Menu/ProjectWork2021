@@ -92,7 +92,9 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                         return i === index ? section : val
                     }))
                 }
-                } />
+                } onClickRemove={(section)=>{
+                    setSezioni(sezioni.filter((x) => x.id !== section.id))
+                }} />
             })}
 
             <Card className="mb-3">
@@ -111,7 +113,7 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                         <Button type="button" variant="success" onClick={
                             () => {
                                 setSezioni(sezioni.concat({
-                                    id: 0,
+                                    id: sezioni.length + 1,
                                     dishes: [],
                                     subtitle: "",
                                     name: nomeSezione
@@ -172,10 +174,6 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                                         }}>{strings.remove}</Button></td>
                                     </tr>
                                 })}
-
-                                <tr>
-
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -184,7 +182,6 @@ export const AddMenuComponent: React.FunctionComponent = () => {
             <div className="col-12 text-right">
                 <Button type="button" className="btn-lg" variant="success" onClick={
                     () => {
-                        console.log(ristoranteSelezionato);
                         if(!Number.isNaN(ristoranteSelezionato)){
                             const menu: Menu = {
                                 id: 0,
