@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Alert, FormControl } from 'react-bootstrap';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import Logo from '../../img/logo_google_translate.svg';
-import { Users } from '../../utils/Users';
-import axios from 'axios';
+import { RoutesRistoratore } from '../../routes/Ristoratore';
+import { RoutesTraduttore } from '../../routes/Traduttore';
+import { AjaxUtils } from '../../utils/AjaxUtils';
 import { JSONUtils } from '../../utils/JSONUtils';
 import { StorageUtils } from '../../utils/StorageUtils';
-import { Alert, FormControl } from 'react-bootstrap';
-import { AjaxUtils } from '../../utils/AjaxUtils';
+import { strings } from '../../utils/Strings';
+import { Users } from '../../utils/Users';
 import { AppRequest } from '../App';
-import { RoutesTraduttore } from '../../routes/Traduttore';
-import { RoutesRistoratore } from '../../routes/Ristoratore';
 import { TopBar } from '../shared/TopBar';
 
 
@@ -61,7 +61,7 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
       }
 
       return <>
-            <TopBar text="Login"/>
+            <TopBar text={strings.login}/>
             <div className="container py-5">
                  
 
@@ -70,18 +70,18 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                         <div className="col-0 col-md-3" />
                         <div className="col-12 col-md-6">
                               <Alert className="mb-3" variant="danger" show={isVisibleAlertError} onClose={() => { setIsVisibleAlertError(false) }} dismissible>{errorMessage}</Alert>
-                              <FormControl className="mb-3" type="email" placeholder="Email" value={email} onChange={(e) => {
+                              <FormControl className="mb-3" type="email" placeholder={strings.your_personal_data_email} value={email} onChange={(e) => {
                                     setEmail(e.target.value);
                               }} />
-                              <FormControl type="password" placeholder="Password" value={password} onChange={(e) => {
+                              <FormControl type="password" placeholder={strings.your_personal_data_password} value={password} onChange={(e) => {
                                     setPassword(e.target.value);
                               }} />
                               <div className="col-12 my-3 text-center">
-                                    <a href="#" className="link-primary m-4" > Dimenticato la Password? </a>
+                                    {/* <a href="#" className="link-primary m-4" > {strings.forgot_password} </a> */}
                               </div>
                               <div className="row no-gutters my-5 ">
                                     <div className="col-12 text-right">
-                                          <button className="btn btn-secondary mr-2" onClick={() => props.onClickBack()}>Indietro</button>
+                                          <button className="btn btn-secondary mr-2" onClick={() => props.onClickBack()}>{strings.go_back}</button>
                                           <button className="btn btn-primary mr-2" type="submit" onClick={() => {
                                                 if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
                                                 AjaxUtils.login(props.user, email, password).then(res => {
@@ -92,16 +92,16 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                                                             else history.push(RoutesRistoratore.HOME);
                                                       }
                                                       else {
-                                                            setErrorMessage("Credenziali Sbagliate")
+                                                            setErrorMessage(strings.wrong_credentials)
                                                             setIsVisibleAlertError(true);
                                                       }
                                                 }).catch((error) => {
-                                                      setErrorMessage("Errore di comunicazione con il server")
+                                                      setErrorMessage(strings.server_error_communication)
                                                       setIsVisibleAlertError(true);
                                                 })
-                                          }}> Login </button>
-                                          {props.user === Users.RISTORATORE && <Link to={RoutesRistoratore.REGISTER} className="btn btn-primary">Registrati</Link>}
-                                          {props.user === Users.TRADUTTORE && <Link to={RoutesTraduttore.REGISTER} className="btn btn-primary">Registrati</Link>}
+                                          }}> {strings.login} </button>
+                                          {props.user === Users.RISTORATORE && <Link to={RoutesRistoratore.REGISTER} className="btn btn-primary">{strings.register}</Link>}
+                                          {props.user === Users.TRADUTTORE && <Link to={RoutesTraduttore.REGISTER} className="btn btn-primary">{strings.register}</Link>}
                                     </div>
 
                               </div>

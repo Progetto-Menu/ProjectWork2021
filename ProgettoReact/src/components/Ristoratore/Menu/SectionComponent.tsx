@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap"
 import { Dish } from "../../../model/Dish";
 import { Section } from "../../../model/Section"
+import { strings } from "../../../utils/Strings";
 import { DishComponent } from "./DishComponent"
 
 interface SectionComponentProps {
@@ -29,12 +30,12 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
 
     return <Card className="my-3" bg="warning">
         <Card.Header>
-            {titolo === "" ? "Sezione": titolo}
+            {titolo === "" ? strings.section: titolo}
         </Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
-                <Form.Label>Titolo</Form.Label>
-                <Form.Control type="text" placeholder="Titolo" value={titolo} onChange={(e) => {
+                <Form.Label>{strings.title}</Form.Label>
+                <Form.Control type="text" placeholder={strings.title} value={titolo} onChange={(e) => {
                     setTitolo(e.target.value);
                     props.onChange({
                         name: e.target.value,
@@ -46,8 +47,8 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Sottotitolo</Form.Label>
-                <Form.Control type="text" placeholder="Sottotitolo" value={sottotitolo} onChange={(e) => {
+                <Form.Label>{strings.subtitle}</Form.Label>
+                <Form.Control type="text" placeholder={strings.subtitle} value={sottotitolo} onChange={(e) => {
                     setSottotitolo(e.target.value);
                     props.onChange({
                         name: titolo,
@@ -71,11 +72,11 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
 
             <Card>
                 <Card.Header>
-                    Aggiungi Piatto
+                {strings.add_dish}
                 </Card.Header>
                 <Card.Body>
                     <Form.Group className="col-12">
-                        <Form.Label>Nome Piatto</Form.Label>
+                        <Form.Label>{strings.dish_name}</Form.Label>
                         <Form.Control type="text" placeholder="Titolo" value={nomePiatto} onChange={(e) => {
                             setNomePiatto(e.target.value);
                         }} />
@@ -98,7 +99,7 @@ export const SectionComponent: React.FunctionComponent<SectionComponentProps> = 
 
                                 setNomePiatto("");
                             }
-                        }>Aggiungi Piatto</Button>
+                        }>{strings.add_dish}</Button>
                     </div>
                 </Card.Body>
             </Card>

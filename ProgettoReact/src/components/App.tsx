@@ -1,21 +1,17 @@
 import { useEffect, useState } from 'react';
-import { MemoryRouter as Router, Redirect, Route, Switch, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { RoutesUtente } from '../routes/Cliente';
 import { RoutesRistoratore } from '../routes/Ristoratore';
 import { RoutesTraduttore } from '../routes/Traduttore';
+import { PrivateRoute } from '../utils/RouterUtils';
+import { StorageUtils } from '../utils/StorageUtils';
 import { Users } from '../utils/Users';
 import { LoginComponent } from './Login/LoginComponent';
 import { OTPComponent } from './Login/OTPComponent';
 import { RegisterComponent } from './Login/RegisterComponent';
 import { SwitchLoginComponent } from './Login/SwitchLoginComponent';
-import { HomeTraduttore } from './Traduttore/Home/HomeTraduttore';
-import { HomeRistoratore } from './Ristoratore/Home/HomeRistoratore';
-import { StorageUtils } from '../utils/StorageUtils';
-import { PrivateRoute } from '../utils/RouterUtils';
-import { PageTranslations } from './Traduttore/Translations/pageTranslations';
-import { PageProfile } from './Traduttore/Profile/pageProfile';
-import { BaseTraduttore } from './Traduttore/Base/BaseTraduttore';
 import { BaseRistoratore } from './Ristoratore/BaseRistoratore';
-import { RoutesUtente } from '../routes/Cliente';
+import { BaseTraduttore } from './Traduttore/Base/BaseTraduttore';
 import { HomeUtente } from './Utente/HomeUtente';
 
 export interface AppRequest {

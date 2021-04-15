@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Alert, Form } from "react-bootstrap";
-import { Users } from "../../utils/Users";
-import axios from "axios";
-import { JSONUtils } from "../../utils/JSONUtils";
 import { useHistory } from "react-router";
-import { RoutesTraduttore } from "../../routes/Traduttore";
 import { RoutesRistoratore } from "../../routes/Ristoratore";
-import { StorageUtils } from "../../utils/StorageUtils";
-import { TopBar } from "../shared/TopBar";
+import { RoutesTraduttore } from "../../routes/Traduttore";
 import { AjaxUtils } from "../../utils/AjaxUtils";
+import { JSONUtils } from "../../utils/JSONUtils";
+import { StorageUtils } from "../../utils/StorageUtils";
+import { strings } from "../../utils/Strings";
+import { Users } from "../../utils/Users";
+import { TopBar } from "../shared/TopBar";
 
 interface RegisterProps {
     user: Users
@@ -28,49 +28,49 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
 
     return <>
         <div className="container py-5">
-            <TopBar text="Registrati"/>
+            <TopBar text={strings.register}/>
 
             <div className="row">
                 <div className="col-12 my-3 mx-auto text-center h5 col-10">
-                    {props.user === Users.TRADUTTORE && <>Compila il seguente Form per Registrarti come Traduttore:</>}
-                    {props.user === Users.RISTORATORE && <>Compila il seguente Form per Registrarti come Ristoratore:</>}
+                    {props.user === Users.TRADUTTORE && <>{strings.compile_the_form_to_regiter_as_translator}</>}
+                    {props.user === Users.RISTORATORE && <>{strings.compile_the_form_to_regiter_as_restaurateur}</>}
                 </div>
                 
                 <div className="col-0 col-md-3" />
                 <div className="col-12 col-md-6">
                 <Alert className="col-12" variant="danger" show={isVisibleAlertError} onClose={() => { setIsVisibleAlertError(false) }} dismissible>{errorMessage}</Alert>
                     <Form.Group className="col-12">
-                        <Form.Label>Nome</Form.Label>
-                        <Form.Control type="text" placeholder="Nome" value={nome} onChange={(e) => {
+                        <Form.Label>{strings.your_personal_data_name}</Form.Label>
+                        <Form.Control type="text" placeholder={strings.your_personal_data_name} value={nome} onChange={(e) => {
                             setNome(e.target.value);
                         }} />
                     </Form.Group>
                     <Form.Group className="col-12">
-                        <Form.Label>Cognome</Form.Label>
-                        <Form.Control type="text" placeholder="Cognome" value={cognome} onChange={(e) => {
+                        <Form.Label>{strings.your_personal_data_surname}</Form.Label>
+                        <Form.Control type="text" placeholder={strings.your_personal_data_surname} value={cognome} onChange={(e) => {
                             setCognome(e.target.value);
                         }} />
                     </Form.Group>
                     <Form.Group className="col-12">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Email" value={email} onChange={(e) => {
+                        <Form.Label>{strings.your_personal_data_email}</Form.Label>
+                        <Form.Control type="email" placeholder={strings.your_personal_data_email} value={email} onChange={(e) => {
                             setEmail(e.target.value);
                         }} />
                     </Form.Group>
                     <Form.Group className="col-12">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {
+                        <Form.Label>{strings.your_personal_data_password}</Form.Label>
+                        <Form.Control type="password" placeholder={strings.your_personal_data_password} value={password} onChange={(e) => {
                             setPassword(e.target.value);
                         }} />
                     </Form.Group>
                     <Form.Group className="col-12">
-                        <Form.Label>Conferma password</Form.Label>
-                        <Form.Control type="password" placeholder="Conferma Password" value={confermaPassword} onChange={(e) => {
+                        <Form.Label>{strings.your_personal_data_confirm_password}</Form.Label>
+                        <Form.Control type="password" placeholder={strings.your_personal_data_confirm_password} value={confermaPassword} onChange={(e) => {
                             setConfermaPassword(e.target.value);
                         }} />
                     </Form.Group>
                     <Form.Group className="col-12 col-md-6" controlId="ckbAccetto">
-                        <Form.Check type="checkbox" label="Accetto" onChange={(e) => {
+                        <Form.Check type="checkbox" label={strings.agree} onChange={(e) => {
                             setAccetto(e.target.checked)
                         }} checked={accetto} />
                     </Form.Group>
@@ -78,20 +78,20 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
                         <button className="btn btn-secondary mr-2" onClick={()=>{
                             if(props.user === Users.TRADUTTORE) history.replace(RoutesTraduttore.LOGIN);
                             else if(props.user=== Users.RISTORATORE) history.replace(RoutesRistoratore.LOGIN);
-                        }}> Indietro </button>
+                        }}> {strings.go_back} </button>
                         <button className="btn btn-primary" type="button" onClick={() => {
                             if(nome === "" || cognome === "" || email === "" || password === "" || confermaPassword === ""){
-                                setErrorMessage("Compilare tutti i campi")
+                                setErrorMessage(strings.compile_all_fields)
                                 setIsVisibleAlertError(true);
                                 return;
                             }
                             if(password !== confermaPassword) {
-                                setErrorMessage("Le due password non coincidono")
+                                setErrorMessage(strings.the_two_passwords_are_not_equal)
                                 setIsVisibleAlertError(true);
                                 return;
                             }
                             if(accetto === false) {
-                                setErrorMessage("Spuntare accetto per proseguire")
+                                setErrorMessage(strings.check_i_agree_to_continue)
                                 setIsVisibleAlertError(true);
                                 return;
                             }
@@ -108,10 +108,10 @@ export const RegisterComponent: React.FunctionComponent<RegisterProps> = (props)
                                     //setIsVisibleAlertError(true);
                                 }
                             }).catch((error) => {
-                                setErrorMessage("Errore di comunicazione con il server")
+                                setErrorMessage(strings.server_error_communication)
                                 setIsVisibleAlertError(true);
                             })
-                        }}> Registrati </button>
+                        }}> {strings.register} </button>
                     </div>
                 </div>
 

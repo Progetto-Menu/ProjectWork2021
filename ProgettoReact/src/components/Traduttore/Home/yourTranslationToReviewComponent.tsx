@@ -1,9 +1,7 @@
-import ReactDOM from "react-dom";
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Traduttore } from "../../../model/Traduttore";
+import React from 'react';
 import { Button, Card } from "react-bootstrap";
 import { CustomTraduzione } from "../../../model/CustomTraduzione";
+import { strings } from "../../../utils/Strings";
 
 
 interface YourTranslationToReviewProps {
@@ -23,21 +21,21 @@ interface OnClickDiscard{
 export const YourTranslationToReviewComponent: React.FunctionComponent<YourTranslationToReviewProps> = (props) => {
     return <Card>
         <Card.Header>
-            Traduzioni da revisionare
+           {strings.translation_to_review}
         </Card.Header>
         <Card.Body>
             <div className="table-responsive">
                 <table className="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Testo</th>
-                            <th>Lingua di Traduzione</th>
-                            <th>Testo Tradotto</th>
+                            <th>{strings.text}</th>
+                            <th>{strings.translation_language}</th>
+                            <th>{strings.translated_text}</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {props.translations.length === 0 && <tr><td colSpan={4} className="text-center align-middle">Nessun Elemento Presente nella Tabella</td></tr>}
+                        {props.translations.length === 0 && <tr><td colSpan={4} className="text-center align-middle">{strings.no_elements_prensent_in_the_table}</td></tr>}
                         {props.translations.map((value, index) => {
                             return <tr>
                                 <td className="align-middle">
@@ -50,8 +48,8 @@ export const YourTranslationToReviewComponent: React.FunctionComponent<YourTrans
                                     {value.testoTradotto}
                                 </td>
                                 <td className="align-middle text-center">
-                                    <Button variant="success" className="mr-2" onClick={()=> props.onClickApprove(value)}>Approva</Button>
-                                    <Button variant="danger" onClick={()=>props.onClickDiscard(value)}>Scarta</Button>
+                                    <Button variant="success" className="mr-2" onClick={()=> props.onClickApprove(value)}>{strings.approve}</Button>
+                                    <Button variant="danger" onClick={()=>props.onClickDiscard(value)}>{strings.discard}</Button>
                                 </td>
                             </tr>
                         })}

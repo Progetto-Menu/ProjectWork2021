@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Redirect, useHistory } from "react-router";
+import { useHistory } from "react-router";
 import { FilterMenu } from "../../model/FilterMenu";
 import { Menu } from "../../model/Menu";
 import { RoutesUtente } from "../../routes/Cliente";
 import { AjaxUtils } from "../../utils/AjaxUtils";
 import { JSONUtils } from "../../utils/JSONUtils";
-import { StorageUtils } from "../../utils/StorageUtils";
+import { strings } from "../../utils/Strings";
 import { Users } from "../../utils/Users";
 import { BottomNavBarComponent, BottomNavBarProps } from "../shared/BottomNavBarComponent";
 import { TopBar } from "../shared/TopBar";
@@ -42,10 +42,10 @@ export const HomeUtente: React.FunctionComponent<HomeUtenteProps> = (props) => {
     useEffect(() => {
         switch (props.route) {
             case RoutesUtente.HOME:
-                setPage("Home");
+                setPage(strings.home);
                 break;
             case RoutesUtente.LOGOUT:
-                setPage("Logout");
+                setPage(strings.logout);
                 break;
             default: break;
         }
@@ -54,13 +54,13 @@ export const HomeUtente: React.FunctionComponent<HomeUtenteProps> = (props) => {
     const bottombarprops: BottomNavBarProps = {
         actions: [
             {
-                label: "Home",
+                label: strings.home,
                 selected: props.route === RoutesUtente.HOME,
                 onClick: () => {
                     history.replace(RoutesUtente.HOME);
                 }
             }, {
-                label: "Logout",
+                label: strings.logout,
                 selected: props.route === RoutesUtente.LOGOUT,
                 onClick: () => {
                     props.onClickLogout();
@@ -74,7 +74,7 @@ export const HomeUtente: React.FunctionComponent<HomeUtenteProps> = (props) => {
         {props.route === RoutesUtente.HOME && <div className="container py-5 my-5">
             <FilterMenuComponent onClickSearch={getMenus} />
             {menus.map((value, index)=>{
-                return <MenuComponent menu={value} />
+                return <MenuComponent key={index} menu={value} />
             })}
         </div>}
         

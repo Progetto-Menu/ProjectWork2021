@@ -5,6 +5,7 @@ import { Provincia } from "../../../model/Provincia";
 import { Restaurant } from "../../../model/Restaurant";
 import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
+import { strings } from "../../../utils/Strings";
 import { Users } from "../../../utils/Users";
 
 interface AddRestaurantComponentProps {
@@ -55,30 +56,30 @@ export const AddRestaurantComponent: React.FunctionComponent<AddRestaurantCompon
     }, [province])
 
     return <Card>
-        <Card.Header>Ristorante</Card.Header>
+        <Card.Header>{strings.restaurant}</Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
-                <Form.Label>Nome</Form.Label>
-                <Form.Control type="text" placeholder="Nome" value={name} onChange={(e) => {
+                <Form.Label>{strings.name}</Form.Label>
+                <Form.Control type="text" placeholder={strings.name} value={name} onChange={(e) => {
                     setName(e.target.value);
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Indirizzo</Form.Label>
-                <Form.Control type="text" placeholder="Indirizzo" value={address} onChange={(e) => {
+                <Form.Label>{strings.address}</Form.Label>
+                <Form.Control type="text" placeholder={strings.address} value={address} onChange={(e) => {
                     setAddress(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="col-12">
-                <Form.Label>Civico</Form.Label>
-                <Form.Control type="text" placeholder="Civico" value={houseNumber} onChange={(e) => {
+                <Form.Label>{strings.street_number}</Form.Label>
+                <Form.Control type="text" placeholder={strings.street_number} value={houseNumber} onChange={(e) => {
                     setHouseNumber(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="col-12">
-                <Form.Label>Provincia</Form.Label>
+                <Form.Label>{strings.province}</Form.Label>
                 <Form.Control as="select" value={province} onChange={(e) => {
                     setProvince(e.target.value)
                 }}>
@@ -89,7 +90,7 @@ export const AddRestaurantComponent: React.FunctionComponent<AddRestaurantCompon
             </Form.Group>
 
             <Form.Group className="col-12">
-                <Form.Label>Citta</Form.Label>
+                <Form.Label>{strings.city}</Form.Label>
                 <Form.Control as="select" value={city} onChange={(e) => {
                     setCity(e.target.value);
                 }}>
@@ -111,7 +112,7 @@ export const AddRestaurantComponent: React.FunctionComponent<AddRestaurantCompon
                         id_ristoratore: 0
                     }
                     props.onClickSave(restaurant)
-                }}> Salva </button>
+                }}> {strings.save} </button>
 
             </div>
 

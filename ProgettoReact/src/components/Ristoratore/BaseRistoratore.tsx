@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { RoutesRistoratore } from "../../routes/Ristoratore";
+import { strings } from "../../utils/Strings";
 import { BottomNavBarComponent, BottomNavBarProps } from "../shared/BottomNavBarComponent";
 import { TopBar } from "../shared/TopBar";
-import { AddRestaurantComponent } from "./Home/AddRestaurantComponent";
 import { HomeRistoratore } from "./Home/HomeRistoratore";
 import { PageMenu } from "./Menu/PageMenu";
 import { PageProfileRistoratore } from "./Profilo/PageProfileRistoratore";
@@ -20,19 +20,19 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
     useEffect(() => {
         switch (props.route) {
             case RoutesRistoratore.HOME:
-                setPage("Home");
+                setPage(strings.home);
                 break;
             case RoutesRistoratore.ADD_RESTAURANT:
-                setPage("Add Restaurant");
+                setPage(strings.add_restaurant);
                 break;
             case RoutesRistoratore.ADD_MENU:
-                setPage("Add Menu");
+                setPage(strings.add_menu);
                 break;
             case RoutesRistoratore.MENUS:
-                setPage("Menus");
+                setPage(strings.menus);
                 break;
             case RoutesRistoratore.PROFILE:
-                setPage("Profile");
+                setPage(strings.profile);
                 break;
             default: break;
         }
@@ -41,19 +41,19 @@ export const BaseRistoratore: React.FunctionComponent<BaseTraduttoreProps> = (pr
     const bottombarprops: BottomNavBarProps = {
         actions: [
             {
-                label: "Home",
+                label: strings.home,
                 selected: props.route === RoutesRistoratore.HOME || props.route === RoutesRistoratore.ADD_RESTAURANT,
                 onClick: () => {
                     history.replace(RoutesRistoratore.HOME);
                 }
             }, {
-                label: "Menu",
+                label: strings.menus,
                 selected: props.route === RoutesRistoratore.MENUS || props.route === RoutesRistoratore.ADD_MENU,
                 onClick: () => {
                     history.replace(RoutesRistoratore.MENUS);
                 }
             }, {
-                label: "Profile",
+                label: strings.profile,
                 selected: props.route === RoutesRistoratore.PROFILE,
                 onClick: () => {
                     history.replace(RoutesRistoratore.PROFILE);

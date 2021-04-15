@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Switch from "react-bootstrap/esm/Switch";
 import { useHistory } from "react-router";
 import { RoutesTraduttore } from "../../../routes/Traduttore";
+import { strings } from "../../../utils/Strings";
 import { BottomNavBarComponent, BottomNavBarProps } from "../../shared/BottomNavBarComponent";
 import { TopBar } from "../../shared/TopBar";
 import { HomeTraduttore } from "../Home/HomeTraduttore";
@@ -20,13 +20,13 @@ export const BaseTraduttore: React.FunctionComponent<BaseTraduttoreProps> = (pro
     useEffect(() => {
         switch (props.route) {
             case RoutesTraduttore.HOME:
-                setPage("Home");
+                setPage(strings.home);
                 break;
             case RoutesTraduttore.TRANSLATIONS:
-                setPage("Translation");
+                setPage(strings.translations);
                 break;
             case RoutesTraduttore.PROFILE:
-                setPage("Profile");
+                setPage(strings.profile);
                 break;
             default: break;
         }
@@ -35,19 +35,19 @@ export const BaseTraduttore: React.FunctionComponent<BaseTraduttoreProps> = (pro
     const bottombarprops: BottomNavBarProps = {
         actions: [
             {
-                label: "Home",
+                label: strings.home,
                 selected: props.route === RoutesTraduttore.HOME,
                 onClick: () => {
                     history.replace(RoutesTraduttore.HOME);
                 }
             }, {
-                label: "Translations",
+                label: strings.translations,
                 selected: props.route === RoutesTraduttore.TRANSLATIONS,
                 onClick: () => {
                     history.replace(RoutesTraduttore.TRANSLATIONS);
                 }
             }, {
-                label: "Profile",
+                label: strings.profile,
                 selected: props.route === RoutesTraduttore.PROFILE,
                 onClick: () => {
                     history.replace(RoutesTraduttore.PROFILE);

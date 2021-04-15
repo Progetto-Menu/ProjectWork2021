@@ -1,22 +1,17 @@
-import ReactDOM from "react-dom";
-import React, { Component, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Logo from '../img/logo_menu.png';
-import { UserBarComponent } from "./userBarComponent";
-import { MyTranslationsComponent } from "./myTranslationsComponent";
-import { YourLanguagesComponent } from "./yourLanguagesComponent";
-import { BottomNavBarComponent, BottomNavBarProps } from "../../shared/BottomNavBarComponent";
-import { RoutesTraduttore } from "../../../routes/Traduttore";
-import { TopBar } from "../../shared/TopBar";
-import defaultProfile from "../../img/defaultProfile.jpg";
-import { StorageUtils } from "../../../utils/StorageUtils";
-import axios from "axios";
-import { JSONUtils } from "../../../utils/JSONUtils";
-import { AjaxUtils } from "../../../utils/AjaxUtils";
-import { Users } from "../../../utils/Users";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { CustomTraduzione } from "../../../model/CustomTraduzione";
 import { Language } from "../../../model/Language";
 import { Traduttore } from "../../../model/Traduttore";
-import { CustomTraduzione } from "../../../model/CustomTraduzione";
+import { RoutesTraduttore } from "../../../routes/Traduttore";
+import { AjaxUtils } from "../../../utils/AjaxUtils";
+import { JSONUtils } from "../../../utils/JSONUtils";
+import { StorageUtils } from "../../../utils/StorageUtils";
+import { strings } from "../../../utils/Strings";
+import { Users } from "../../../utils/Users";
+import { MyTranslationsComponent } from "./myTranslationsComponent";
+import { UserBarComponent } from "./userBarComponent";
+import { YourLanguagesComponent } from "./yourLanguagesComponent";
 
 export const PageProfile: React.FunctionComponent = () => {
 
@@ -128,7 +123,7 @@ export const PageProfile: React.FunctionComponent = () => {
 
 
     return <>
-        <div className="row mt-5">
+        <div className="row">
             <div className="col-12">
                 <UserBarComponent user={user} />
             </div>
@@ -148,7 +143,7 @@ export const PageProfile: React.FunctionComponent = () => {
 
         <div className="row my-5">
             <div className="col-12 text-center">
-                <button className="btn btn-primary w-100" onClick={logout}>Logout</button>
+                <button className="btn btn-primary w-100" onClick={logout}>{strings.logout}</button>
             </div>
         </div>
     </>

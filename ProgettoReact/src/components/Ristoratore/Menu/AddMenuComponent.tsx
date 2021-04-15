@@ -8,6 +8,7 @@ import { Section } from "../../../model/Section";
 import { RoutesRistoratore } from "../../../routes/Ristoratore";
 import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
+import { strings } from "../../../utils/Strings";
 import { SectionComponent } from "./SectionComponent";
 
 export const AddMenuComponent: React.FunctionComponent = () => {
@@ -59,27 +60,27 @@ export const AddMenuComponent: React.FunctionComponent = () => {
 
     return <Card>
         <Card.Header>
-            {titolo === "" ? "Menù" : titolo}
+            {titolo === "" ? strings.menu : titolo}
         </Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
-                <Form.Label>Titolo</Form.Label>
-                <Form.Control type="text" placeholder="Titolo" value={titolo} onChange={(e) => {
+                <Form.Label>{strings.title}</Form.Label>
+                <Form.Control type="text" placeholder={strings.title} value={titolo} onChange={(e) => {
                     setTitolo(e.target.value);
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Sottotitolo</Form.Label>
-                <Form.Control type="text" placeholder="Sottotitolo" value={sottotitolo} onChange={(e) => {
+                <Form.Label>{strings.subtitle}</Form.Label>
+                <Form.Control type="text" placeholder={strings.subtitle} value={sottotitolo} onChange={(e) => {
                     setSottotitolo(e.target.value);
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Ristorante</Form.Label>
-                <Form.Control type="text" as="select" placeholder="Sottotitolo" value={ristoranteSelezionato} onChange={(e) => {
+                <Form.Label>{strings.restaurant}</Form.Label>
+                <Form.Control type="text" as="select" placeholder={strings.restaurant} value={ristoranteSelezionato} onChange={(e) => {
                     setRistoranteSelezionato(e.target.value);
                 }}>
-                    <option value="">Scegli...</option>
+                    <option value="">{strings.select_empty_field}</option>
                     {ristoranti.map((value, index) => {
                         return <option key={index} value={value.id}>{value.nome}, {value.indirizzo} {value.citta} ({value.provincia})</option>
                     })}
@@ -96,12 +97,12 @@ export const AddMenuComponent: React.FunctionComponent = () => {
 
             <Card className="mb-3">
                 <Card.Header>
-                    Aggiungi Sezione
+                    {strings.add_section}
                 </Card.Header>
                 <Card.Body>
                     <Form.Group className="col-12">
-                        <Form.Label>Nome Sezione</Form.Label>
-                        <Form.Control type="text" placeholder="Titolo" value={nomeSezione} onChange={(e) => {
+                        <Form.Label>{strings.section_name}</Form.Label>
+                        <Form.Control type="text" placeholder={strings.section_name} value={nomeSezione} onChange={(e) => {
                             setNomeSezione(e.target.value);
                         }} />
                     </Form.Group>
@@ -118,18 +119,18 @@ export const AddMenuComponent: React.FunctionComponent = () => {
 
                                 setNomeSezione("");
                             }
-                        }>Aggiungi Sezione</Button>
+                        }>{strings.add_section}</Button>
                     </div>
                 </Card.Body>
             </Card>
 
             <Card className="mb-3">
                 <Card.Header>
-                    Le tue Lingue
+                    {strings.languages}
             </Card.Header>
                 <Card.Body>
                     <Form.Group className="col-12">
-                        <Form.Label>Lingue</Form.Label>
+                        <Form.Label>{strings.languages}</Form.Label>
                         <Form.Control as="select" value={selectedLanguage} onChange={(e) => {
                             setSelectedLanguage(e.target.value);
                         }}>
@@ -146,20 +147,20 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                                 setLanguages(languages.filter((x)=> x.id !== parseInt(selectedLanguage)))
                                 setSelectedLanguage("");
                             }
-                        }>Aggiungi</Button>
+                        }>{strings.add}</Button>
                     </div>
 
                     <div className="table-responsive">
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th className="text-center">Lingua</th>
-                                    <th className="text-center">Codice</th>
-                                    <th className="text-center">Rimuovi</th>
+                                    <th className="text-center">{strings.your_languages_language_column}</th>
+                                    <th className="text-center">{strings.your_languages_code_column}</th>
+                                    <th className="text-center">{strings.your_languages_remove_column}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {languagesForMenu.length === 0 && <tr><td colSpan={3} className="text-center align-middle">Nessun Elemento Presente nella Tabella</td></tr>}
+                                {languagesForMenu.length === 0 && <tr><td colSpan={3} className="text-center align-middle">{strings.no_elements_prensent_in_the_table}</td></tr>}
                                 {languagesForMenu.map((value, index) => {
                                     return <tr key={index}>
                                         <td className="text-center align-middle">{value.name}</td>
@@ -168,7 +169,7 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                                             setLanguages(languages.concat(value).sort((a, b) => a.id - b.id));
                                             setLanguagesForMenu(languagesForMenu.filter((x)=> x.id !== value.id));
                                             setSelectedLanguage("");
-                                        }}>Rimuovi</Button></td>
+                                        }}>{strings.remove}</Button></td>
                                     </tr>
                                 })}
 
@@ -201,7 +202,7 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                             })
                         }
                     }
-                }>Salva Menu</Button>
+                }>{strings.save_menu}</Button>
             </div>
         </Card.Body>
     </Card >

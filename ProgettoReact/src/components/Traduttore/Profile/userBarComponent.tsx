@@ -1,9 +1,9 @@
-import axios from 'axios';
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import { Traduttore } from '../../../model/Traduttore';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
+import { strings } from '../../../utils/Strings';
 import { Users } from '../../../utils/Users';
 
 interface UserBarComponentProps {
@@ -29,35 +29,35 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
 
         <Card>
             <Card.Header>
-                I tuoi dati
+                {strings.your_personal_data}
             </Card.Header>
             <Card.Body>
                 <Form.Group className="col-12">
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control type="text" placeholder="Nome" readOnly={!isEditing} value={nome} onChange={(e) => {
+                    <Form.Label>{strings.your_personal_data_name}</Form.Label>
+                    <Form.Control type="text" placeholder={strings.your_personal_data_name} readOnly={!isEditing} value={nome} onChange={(e) => {
                         setNome(e.target.value);
                     }} />
                 </Form.Group>
 
                 <Form.Group className="col-12">
-                    <Form.Label>Cognome</Form.Label>
-                    <Form.Control type="text" placeholder="Cognome" readOnly={!isEditing} value={cognome} onChange={(e) => {
+                    <Form.Label>{strings.your_personal_data_surname}</Form.Label>
+                    <Form.Control type="text" placeholder={strings.your_personal_data_surname} readOnly={!isEditing} value={cognome} onChange={(e) => {
                         setCognome(e.target.value);
                     }} />
                 </Form.Group>
 
                 <Form.Group className="col-12">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="text" placeholder="Email" readOnly value={email} />
+                    <Form.Label>{strings.your_personal_data_email}</Form.Label>
+                    <Form.Control type="text" placeholder={strings.your_personal_data_email} readOnly value={email} />
                 </Form.Group>
 
                 <Form.Group className="col-12">
-                    <Form.Label>N. Token</Form.Label>
-                    <Form.Control type="text" placeholder="Nome" readOnly value={token} />
+                    <Form.Label>{strings.your_personal_data_n_token}</Form.Label>
+                    <Form.Control type="text" placeholder={strings.your_personal_data_n_token} readOnly value={token} />
                 </Form.Group>
 
                 <div className="col-12 text-right">
-                    <button className="btn btn-primary" type="submit" onClick={() => {
+                    <button className="btn btn-primary" type="button" onClick={() => {
                         if (isEditing) {
                             AjaxUtils.updateUser(Users.TRADUTTORE, nome, cognome).then((result) => {
                                 const resultRequest = JSONUtils.getProperty(result.data, "result", "error");
@@ -79,7 +79,7 @@ export const UserBarComponent: React.FunctionComponent<UserBarComponentProps> = 
                         else{
                             setIsEditing(true);
                         }
-                    }}> {isEditing ? <>Salva</> : <>Modifica</>}  </button>
+                    }}> {isEditing ? <>{strings.save}</> : <>{strings.edit}</>}  </button>
 
                 </div>
             </Card.Body>

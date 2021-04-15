@@ -1,11 +1,7 @@
-import ReactDOM from "react-dom";
-import React, { Component, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Traduttore } from "../../../model/Traduttore";
+import React, { useEffect, useState } from 'react';
+import { Button, Card } from "react-bootstrap";
 import { CustomTraduzione } from "../../../model/CustomTraduzione";
-import { Button, Card, Form } from "react-bootstrap";
-import { AjaxUtils } from "../../../utils/AjaxUtils";
-import { JSONUtils } from "../../../utils/JSONUtils";
+import { strings } from "../../../utils/Strings";
 
 interface TranslationTakenOverProps {
     translations: CustomTraduzione[]
@@ -27,21 +23,21 @@ export const TranslationTakenOverComponent: React.FunctionComponent<TranslationT
     },[props.translations])
     return <Card>
         <Card.Header>
-            Traduzioni in carico
+            {strings.translation_in_progress}
     </Card.Header>
         <Card.Body>
             <div className="table-responsive">
                 <table className="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Testo</th>
-                            <th>Lingua di Traduzione</th>
-                            <th>Testo Tradotto</th>
+                            <th>{strings.text}</th>
+                            <th>{strings.translation_language}</th>
+                            <th>{strings.translated_text}</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {props.translations.length === 0 && <tr><td colSpan={4} className="text-center align-middle">Nessun Elemento Presente nella Tabella</td></tr>}
+                        {props.translations.length === 0 && <tr><td colSpan={4} className="text-center align-middle">{strings.no_elements_prensent_in_the_table}</td></tr>}
                         {props.translations.map((value, index) => {
                             return <tr key={index}>
                                 <td className="align-middle">
@@ -58,7 +54,7 @@ export const TranslationTakenOverComponent: React.FunctionComponent<TranslationT
                                     }}></textarea>
                                 </td>
                                 <td className="text-center align-middle">
-                                    <Button variant="success" onClick={() => props.onClickSend(value.id, translatedTexts[index])}>Invia</Button>
+                                    <Button variant="success" onClick={() => props.onClickSend(value.id, translatedTexts[index])}>{strings.submit}</Button>
                                 </td>
                             </tr>
                         })}

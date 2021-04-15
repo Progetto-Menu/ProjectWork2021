@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import Logo from '../../img/logo_menu.png';
-import { Users } from '../../utils/Users';
-import axios from 'axios';
-import { JSONUtils } from '../../utils/JSONUtils';
-import { Alert, Button, Card, Form, FormControl } from 'react-bootstrap';
-import { AjaxUtils } from '../../utils/AjaxUtils';
+import { Alert, Button, Card, Form } from 'react-bootstrap';
 import OtpInput from 'react-otp-input';
-import { StorageUtils } from '../../utils/StorageUtils';
-import { AppRequest } from '../App';
+import { useHistory } from 'react-router-dom';
 import { RoutesRistoratore } from '../../routes/Ristoratore';
 import { RoutesTraduttore } from '../../routes/Traduttore';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { RouterUtils } from '../../utils/RouterUtils';
+import { AjaxUtils } from '../../utils/AjaxUtils';
+import { JSONUtils } from '../../utils/JSONUtils';
+import { StorageUtils } from '../../utils/StorageUtils';
+import { strings } from '../../utils/Strings';
+import { Users } from '../../utils/Users';
 import { TopBar } from '../shared/TopBar';
 
 interface OtpProps {
@@ -49,7 +45,7 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
 
 
       return <div className="container py-5">
-            <TopBar text="Verifica OTP" />
+            <TopBar text={strings.verify_otp} />
             <div className="row mt-3">
 
                   <div className="col-0 col-md-3" />
@@ -59,8 +55,8 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                               <Alert variant={alertVariant} show={isVisibleAlertError} onClose={() => { setIsVisibleAlertError(false) }} dismissible>{alertMessage}</Alert>
                         </div>
                         <Form.Group className="col-12">
-                              <Form.Label>Email</Form.Label>
-                              <Form.Control type="email" placeholder="Email" value={email} readOnly={isReadOnly} onChange={(e) => setEmail(e.target.value)} />
+                              <Form.Label>{strings.your_personal_data_email}</Form.Label>
+                              <Form.Control type="email" placeholder={strings.your_personal_data_email} value={email} readOnly={isReadOnly} onChange={(e) => setEmail(e.target.value)} />
                         </Form.Group>
 
 
@@ -70,7 +66,7 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                                     StorageUtils.remove(StorageUtils.token_key);
                                     StorageUtils.remove(StorageUtils.user_type);
                                     history.replace("/")
-                              }}>Indietro</Button>
+                              }}>{strings.go_back}</Button>
                               <button className="btn btn-primary" type="button" onClick={() => {
                                     setIsReadOnly(!isReadOnly);
                                     if (!isReadOnly) {
@@ -80,26 +76,26 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
 
                                                 if (resultAjax === "OK") {
                                                       setAlertVariant("success")
-                                                      setAlertMessage("Email modificata")
+                                                      setAlertMessage(strings.email_edited)
                                                 }
                                                 else {
                                                       setAlertVariant("danger")
-                                                      setAlertMessage("Errore durante la modifica dell'email")
+                                                      setAlertMessage(strings.error_while_editing_email)
                                                 }
                                           }).catch(() => {
                                                 setIsVisibleAlertError(true)
                                                 setAlertVariant("danger")
-                                                setAlertMessage("Errore di comunicazione con il server")
+                                                setAlertMessage(strings.server_error_communication)
                                           })
                                     }
 
 
-                              }}> {isReadOnly ? <>Modifica Email</> : <>Salva Email</>} </button>
+                              }}> {isReadOnly ? <>{strings.edit}</> : <>{strings.save}</>} </button>
                         </div>
 
                         <div className="col-12">
                               <Card>
-                                    <Card.Header>Inserisci il Codice OTP</Card.Header>
+                                    <Card.Header>{strings.insert_the_otp_code}</Card.Header>
                                     <Card.Body>
                                           <div className="d-flex flex-row align-items-center justify-content-center my-5">
                                                 <OtpInput inputStyle="inputStyle form-control" isInputNum={true} value={value} onChange={(val: string) => setValue(val)} numInputs={5} separator={<span>-</span>} />
@@ -114,20 +110,20 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                                                                   setIsVisibleAlertError(true)
                                                                   if (resultAjax === "OK") {
                                                                         setAlertVariant("success")
-                                                                        setAlertMessage("Email inviata all'indirizzo email specificato")
+                                                                        setAlertMessage(strings.email_sent)
                                                                   }
                                                                   else {
                                                                         setAlertVariant("danger")
-                                                                        setAlertMessage("Errore di comunicazione con il server")
+                                                                        setAlertMessage(strings.server_error_communication)
                                                                   }
 
 
                                                             }).catch((error) => {
                                                                   setIsVisibleAlertError(true)
                                                                   setAlertVariant("danger")
-                                                                  setAlertMessage("Errore di comunicazione con il server")
+                                                                  setAlertMessage(strings.server_error_communication)
                                                             })
-                                                      }}> Richiedi </button>
+                                                      }}> {strings.request} </button>
                                                       <button className="btn btn-primary" type="button" onClick={() => {
                                                             AjaxUtils.verifyOtp(props.user, value).then((result) => {
                                                                   const resultAjax = JSONUtils.getProperty(result.data, "result", "error");
@@ -138,17 +134,17 @@ export const OTPComponent: React.FunctionComponent<OtpProps> = (props) => {
                                                                   else {
                                                                         setIsVisibleAlertError(true)
                                                                         setAlertVariant("danger")
-                                                                        setAlertMessage("Il codice inserito non è corretto")
+                                                                        setAlertMessage(strings.the_code_inserted_is_not_correctd)
                                                                   }
                                                             }).catch((error) => {
                                                                   setIsVisibleAlertError(true)
                                                                   setAlertVariant("danger")
-                                                                  setAlertMessage("Errore di comunicazione con il server")
+                                                                  setAlertMessage(strings.server_error_communication)
                                                             })
-                                                      }}> Verifica </button></>
+                                                      }}> {strings.verify} </button></>
                                                       : <>
-                                                            <button className="btn btn-secondary mr-2" type="button"> Richiedi </button>
-                                                            <button className="btn btn-secondary" type="button"> Verifica </button></>}
+                                                            <button className="btn btn-secondary mr-2" type="button"> {strings.request} </button>
+                                                            <button className="btn btn-secondary" type="button"> {strings.verify} </button></>}
 
                                           </div>
                                     </Card.Footer>

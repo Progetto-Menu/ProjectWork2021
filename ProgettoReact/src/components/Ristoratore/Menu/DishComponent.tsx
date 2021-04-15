@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Form } from "react-bootstrap"
 import { Dish } from "../../../model/Dish"
+import { strings } from "../../../utils/Strings";
 
 interface DishComponentProps {
     dish: Dish
@@ -25,12 +26,12 @@ export const DishComponent: React.FunctionComponent<DishComponentProps> = (props
 
     return <Card className="my-3" bg="success" text="white">
         <Card.Header>
-            {titolo === "" ? "Piatto" : titolo}
+            {titolo === "" ? strings.dish : titolo}
     </Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
-                <Form.Label>Titolo</Form.Label>
-                <Form.Control type="text" placeholder="Titolo" value={titolo} onChange={(e) => {
+                <Form.Label>{strings.title}</Form.Label>
+                <Form.Control type="text" placeholder={strings.title} value={titolo} onChange={(e) => {
                     setTitolo(e.target.value);
                     props.onChange({
                         id: props.dish.id,
@@ -41,8 +42,8 @@ export const DishComponent: React.FunctionComponent<DishComponentProps> = (props
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Descrizione</Form.Label>
-                <textarea rows={3} className="form-control" style={{resize: "none"}} placeholder="Descrizione" value={descrizione} onChange={(e) => {
+                <Form.Label>{strings.description}</Form.Label>
+                <textarea rows={3} className="form-control" style={{resize: "none"}} placeholder={strings.description} value={descrizione} onChange={(e) => {
                     setDescrizione(e.target.value);
                     props.onChange({
                         id: props.dish.id,
@@ -53,8 +54,8 @@ export const DishComponent: React.FunctionComponent<DishComponentProps> = (props
                 }} ></textarea>
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Prezzo</Form.Label>
-                <Form.Control type="number" placeholder="Prezzo" value={prezzo} onChange={(e) => {
+                <Form.Label>{strings.price}</Form.Label>
+                <Form.Control type="number" placeholder={strings.price} value={prezzo} onChange={(e) => {
                     if(!Number.isNaN(parseFloat(e.target.value))){
                         setPrezzo(parseFloat(e.target.value));
                         props.onChange({

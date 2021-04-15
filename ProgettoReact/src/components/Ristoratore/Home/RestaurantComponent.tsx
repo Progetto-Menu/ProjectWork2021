@@ -5,6 +5,7 @@ import { Provincia } from "../../../model/Provincia";
 import { Restaurant } from "../../../model/Restaurant";
 import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
+import { strings } from "../../../utils/Strings";
 import { Users } from "../../../utils/Users";
 
 interface RestaurantComponentProps {
@@ -69,30 +70,30 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
     }, [props.restaurant])
 
     return <Card className="my-3">
-        <Card.Header>Ristorante</Card.Header>
+        <Card.Header>{strings.restaurant}</Card.Header>
         <Card.Body>
             <Form.Group className="col-12">
-                <Form.Label>Nome</Form.Label>
-                <Form.Control type="text" placeholder="Nome" readOnly={!isEditing} value={name} onChange={(e) => {
+                <Form.Label>{strings.name}</Form.Label>
+                <Form.Control type="text" placeholder={strings.name} readOnly={!isEditing} value={name} onChange={(e) => {
                     setName(e.target.value);
                 }} />
             </Form.Group>
             <Form.Group className="col-12">
-                <Form.Label>Indirizzo</Form.Label>
-                <Form.Control type="text" placeholder="Indirizzo" readOnly={!isEditing} value={address} onChange={(e) => {
+                <Form.Label>{strings.address}</Form.Label>
+                <Form.Control type="text" placeholder={strings.address} readOnly={!isEditing} value={address} onChange={(e) => {
                     setAddress(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="col-12">
-                <Form.Label>Civico</Form.Label>
-                <Form.Control type="text" placeholder="Civico" readOnly={!isEditing} value={houseNumber} onChange={(e) => {
+                <Form.Label>{strings.street_number}</Form.Label>
+                <Form.Control type="text" placeholder={strings.street_number} readOnly={!isEditing} value={houseNumber} onChange={(e) => {
                     setHouseNumber(e.target.value);
                 }} />
             </Form.Group>
 
             <Form.Group className="col-12">
-                <Form.Label>Provincia</Form.Label>
+                <Form.Label>{strings.province}</Form.Label>
                 <Form.Control as="select" readOnly={!isEditing} disabled={!isEditing} value={province} onChange={(e) => {
                     setProvince(e.target.value)
                 }}>
@@ -103,7 +104,7 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
             </Form.Group>
 
             <Form.Group className="col-12">
-                <Form.Label>Citta</Form.Label>
+                <Form.Label>{strings.city}</Form.Label>
                 <Form.Control as="select" readOnly={!isEditing} disabled={!isEditing} value={city} onChange={(e) => {
                     setCity(e.target.value);
                 }}>
@@ -124,7 +125,7 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
                         id_ristoratore: 0,
                         nome: name
                     })
-                }}> Elimina </button>}
+                }}> {strings.remove} </button>}
 
                 <button className="btn btn-primary" type="button" onClick={() => {
                     if (isEditing) {
@@ -142,7 +143,7 @@ export const RestaurantComponent: React.FunctionComponent<RestaurantComponentPro
                     else {
                         setIsEditing(true);
                     }
-                }}> {isEditing ? <>Salva</> : <>Modifica</>}  </button>
+                }}> {isEditing ? <>{strings.save}</> : <>{strings.edit}</>}  </button>
 
             </div>
 

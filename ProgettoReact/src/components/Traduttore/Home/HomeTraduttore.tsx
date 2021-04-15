@@ -1,19 +1,9 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import { RoutesTraduttore } from '../../../routes/Traduttore';
+import { CustomTraduzione } from '../../../model/CustomTraduzione';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
-import { StorageUtils } from '../../../utils/StorageUtils';
-import { Users } from '../../../utils/Users';
-import { AppRequest } from '../../App';
-import { TopBar } from '../../shared/TopBar';
 import { TranslationTakenOverComponent } from './translationTakenOverComponent';
 import { YourTranslationToReviewComponent } from './yourTranslationToReviewComponent';
-import { BottomNavBarComponent, BottomNavBarProps } from "../../shared/BottomNavBarComponent"
-import { Traduttore } from '../../../model/Traduttore';
-import { CustomTraduzione } from '../../../model/CustomTraduzione';
-import { Button, Modal } from 'react-bootstrap';
 
 
 export const HomeTraduttore: React.FunctionComponent = () => {

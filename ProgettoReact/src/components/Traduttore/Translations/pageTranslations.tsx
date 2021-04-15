@@ -1,14 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { CustomMenuDaTradurre } from '../../../model/CustomMenuDaTradurre';
 import { FilterMenu } from '../../../model/FilterMenu';
-import { CreateMenuCallBack, Menu } from '../../../model/Menu';
 import { RoutesTraduttore } from '../../../routes/Traduttore';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
 import { Users } from '../../../utils/Users';
-import { BottomNavBarComponent, BottomNavBarProps } from '../../shared/BottomNavBarComponent';
-import { TopBar } from '../../shared/TopBar';
 import { FilterMenuComponent } from './FilterMenuComponent';
 import { MenuToTranslateComponent } from './menuToTranslateComponent';
 
@@ -42,7 +39,7 @@ export const PageTranslations: React.FunctionComponent = () => {
     return <>
             <FilterMenuComponent onClickSearch={getMenus}/>
             {menuDaTradurre.map((value, index)=>{
-                return <MenuToTranslateComponent menu={value} onClick={setStringsToTranslate} />
+                return <MenuToTranslateComponent menu={value} key={index} onClick={setStringsToTranslate} />
             })}
     </> 
 

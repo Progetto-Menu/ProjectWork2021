@@ -1,8 +1,9 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { Language } from '../../../model/Language';
 import { AjaxUtils } from '../../../utils/AjaxUtils';
 import { JSONUtils } from '../../../utils/JSONUtils';
+import { strings } from '../../../utils/Strings';
 
 interface YourLanguagesProps {
     knownLanguages: Language[],
@@ -29,11 +30,11 @@ export const YourLanguagesComponent: React.FunctionComponent<YourLanguagesProps>
     return <React.Fragment>
         <Card>
             <Card.Header>
-                Le tue Lingue
+                {strings.your_languages}
             </Card.Header>
             <Card.Body>
                 <Form.Group className="col-12">
-                    <Form.Label>Lingue</Form.Label>
+                    <Form.Label>{strings.languages}</Form.Label>
                     <Form.Control as="select" onChange={(e) => {
                         setSelectedElement(parseInt(e.target.value));
                     }}>
@@ -59,20 +60,20 @@ export const YourLanguagesComponent: React.FunctionComponent<YourLanguagesProps>
 
                             })
                         }
-                    }>Aggiungi</Button>
+                    }>{strings.add}</Button>
                 </div>
 
                 <div className="table-responsive">
                     <table className="table table-bordered">
                         <thead>
                             <tr>
-                                <th className="text-center">Lingua</th>
-                                <th className="text-center">Codice</th>
-                                <th className="text-center">Rimuovi</th>
+                                <th className="text-center">{strings.your_languages_language_column}</th>
+                                <th className="text-center">{strings.your_languages_code_column}</th>
+                                <th className="text-center">{strings.your_languages_remove_column}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {props.knownLanguages.length === 0 && <tr><td colSpan={3} className="text-center align-middle">Nessun Elemento Presente nella Tabella</td></tr>}
+                            {props.knownLanguages.length === 0 && <tr><td colSpan={3} className="text-center align-middle">{strings.no_elements_prensent_in_the_table}</td></tr>}
                             {props.knownLanguages.map((value, index) => {
                                 return <tr key={index}>
                                     <td className="text-center align-middle">{value.name}</td>
@@ -84,13 +85,9 @@ export const YourLanguagesComponent: React.FunctionComponent<YourLanguagesProps>
                                         }).catch(()=>{
 
                                         })
-                                    }}>Rimuovi</Button></td>
+                                    }}>{strings.remove}</Button></td>
                                 </tr>
                             })}
-
-                            <tr>
-
-                            </tr>
                         </tbody>
                     </table>
                 </div>

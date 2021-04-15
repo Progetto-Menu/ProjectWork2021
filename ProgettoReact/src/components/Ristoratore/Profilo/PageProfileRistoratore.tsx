@@ -5,6 +5,7 @@ import { RoutesRistoratore } from "../../../routes/Ristoratore";
 import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
 import { StorageUtils } from "../../../utils/StorageUtils";
+import { strings } from "../../../utils/Strings";
 import { Users } from "../../../utils/Users";
 import { RestaurateurBarComponent } from "./RestaurateurBarComponent";
 
@@ -57,7 +58,7 @@ export const PageProfileRistoratore : React.FunctionComponent = ()=>{
 
         <div className="row my-5">
             <div className="col-12 text-center">
-                <button className="btn btn-primary w-100" onClick={logout}>Logout</button>
+                <button className="btn btn-primary w-100" onClick={logout}>{strings.logout}</button>
             </div>
         </div>
     </>
