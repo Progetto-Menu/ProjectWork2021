@@ -6,4 +6,4 @@ import { MemoryRouter } from "react-router";
 import { BrowserRouter } from "react-router-dom";
 
 
-ReactDOM.render(<MemoryRouter><App /></MemoryRouter>, document.getElementById('root'))
+ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'))

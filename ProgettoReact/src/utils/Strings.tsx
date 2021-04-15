@@ -91,8 +91,10 @@ export const strings = new LocalizedStrings({
         error_while_editing_email: "Error while editing email",
         the_code_inserted_is_not_correctd: "The code inserted is not corrected",
         verify: "Verify",
-        insert_the_otp_code: "Insert the OTP code"
-
+        insert_the_otp_code: "Insert the OTP code",
+        your_are_not_a_revisor: "You are not a reviser contact the administrator to become one",
+        administrator: "Administrator",
+        promote: "Promote"
     },
     it: {
         profile: "Profilo",
@@ -184,6 +186,9 @@ export const strings = new LocalizedStrings({
         error_while_editing_email: "Errore durante la modifica dell'email",
         the_code_inserted_is_not_correctd: "Il codice inserito non è corretto",
         verify: "Verifica",
-        insert_the_otp_code: "Inserisci il codice OTP"
+        insert_the_otp_code: "Inserisci il codice OTP",
+        your_are_not_a_revisor: "Non sei un revisore contatta l'amministratore per diventarlo",
+        administrator: "Amministratore",
+        promote: "Promuovi"
     }
 });

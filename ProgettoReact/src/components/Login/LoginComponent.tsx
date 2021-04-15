@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Alert, FormControl } from 'react-bootstrap';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import Logo from '../../img/logo_google_translate.svg';
+import { RoutesAmministratore } from '../../routes/Amministratore';
 import { RoutesRistoratore } from '../../routes/Ristoratore';
 import { RoutesTraduttore } from '../../routes/Traduttore';
 import { AjaxUtils } from '../../utils/AjaxUtils';
@@ -52,11 +53,12 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                         setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: true });
                   })
             }
-            if (history.location.pathname === RoutesTraduttore.LOGIN || history.location.pathname === RoutesRistoratore.LOGIN) checkToken();
+            if (history.location.pathname === RoutesTraduttore.LOGIN || history.location.pathname === RoutesRistoratore.LOGIN || history.location.pathname === RoutesAmministratore.LOGIN) checkToken();
       }, [history.location.pathname, props.user])
 
       if(request.isLoaded && request.token != null){
             if(props.user===Users.TRADUTTORE) return <Redirect to={RoutesTraduttore.HOME}/>
+            else if(props.user===Users.AMMINISTRATORE) return <Redirect to={RoutesAmministratore.HOME}/>
             else return <Redirect to={RoutesRistoratore.HOME}/>
       }
 
@@ -83,13 +85,14 @@ export const LoginComponent: React.FunctionComponent<LoginProps> = (props) => {
                                     <div className="col-12 text-right">
                                           <button className="btn btn-secondary mr-2" onClick={() => props.onClickBack()}>{strings.go_back}</button>
                                           <button className="btn btn-primary mr-2" type="submit" onClick={() => {
-                                                if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE) return;
+                                                if (props.user !== Users.RISTORATORE && props.user !== Users.TRADUTTORE && props.user !== Users.AMMINISTRATORE) return;
                                                 AjaxUtils.login(props.user, email, password).then(res => {
                                                       const token = JSONUtils.getProperty(res.data, "token", null)
                                                       if (token != null) {
                                                             StorageUtils.set(StorageUtils.token_key, token);
                                                             if (props.user === Users.TRADUTTORE) history.push(RoutesTraduttore.HOME);
-                                                            else history.push(RoutesRistoratore.HOME);
+                                                            else if(props.user === Users.RISTORATORE) history.push(RoutesRistoratore.HOME);
+                                                            else if(props.user === Users.AMMINISTRATORE) history.push(RoutesAmministratore.HOME);
                                                       }
                                                       else {
                                                             setErrorMessage(strings.wrong_credentials)

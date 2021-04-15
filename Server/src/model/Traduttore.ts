@@ -61,6 +61,27 @@ export class Traduttore {
         } : null;
     }
 
+    static convertToArray(recordset: any): Traduttore[]{
+        const array : Traduttore[] = [];
+
+        for (let record of recordset) {
+            array.push({
+                id: record[Traduttore.db_id],
+                nome: record[Traduttore.db_nome],
+                cognome: record[Traduttore.db_cognome],
+                email: record[Traduttore.db_email],
+                password: record[Traduttore.db_password],
+                revisore: record[Traduttore.db_revisore],
+                numero_token: record[Traduttore.db_numero_token],
+                validato: parseInt(record[Traduttore.db_validato]) === 1,
+                creato_il: record[Traduttore.db_creato_il],
+                modificato_il: record[Traduttore.db_modificato_il],
+                cancellato_il: record[Traduttore.db_cancellato_il]
+            });
+        }
+        return array;
+    }
+
     static async insert(traduttore: Traduttore) {
         const pool = await sql.connect(config);
         const transaction = await pool.transaction();
@@ -441,6 +462,42 @@ export class Traduttore {
                             }
                         });
             });
+        });
+    }
+
+    static async getTranslatorsNotRevisers() {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>(async (resolve, reject) => {
+            try {
+                await transaction.begin();
+                const result: Traduttore[] = this.convertToArray((await transaction.request()
+                    .query(`SELECT * FROM ${Traduttore.db_table_name} WHERE ${Traduttore.db_revisore} = 0;`)).recordset)
+                await transaction.commit();
+                resolve(result);
+
+            } catch (err) {
+                transaction.rollback();
+                reject(err);
+            }
+        });
+    }
+
+
+    static async promoteTranslator(id_traduttore: number) {
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>(async (resolve, reject) => {
+            try {
+                await transaction.begin();
+                await transaction.request().input(Traduttore.db_id, id_traduttore).query(`UPDATE ${Traduttore.db_table_name} SET ${Traduttore.db_revisore} = 1 WHERE ${Traduttore.db_id} = @${Traduttore.db_id}`)
+                await transaction.commit();
+                resolve(true);
+
+            } catch (err) {
+                transaction.rollback();
+                reject(err);
+            }
         });
     }
 

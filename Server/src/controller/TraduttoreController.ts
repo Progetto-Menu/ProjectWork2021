@@ -90,4 +90,12 @@ export class TraduttoreController implements BasePresenter<Traduttore> {
         return await Traduzione.discardTranslation(id_translation, id_reviser);
     }
 
+    async getTranslatorsNotRevisers(){
+        return await Traduttore.getTranslatorsNotRevisers();
+    }
+
+    async promoteTranslator(id_traduttore: number){
+        return await Traduttore.promoteTranslator(id_traduttore);
+    }
+
 }

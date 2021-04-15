@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useHistory } from "react-router";
 import { CustomMenuDaTradurre } from "../model/CustomMenuDaTradurre";
-import { CustomTraduzione } from "../model/CustomTraduzione";
 import { FilterMenu } from "../model/FilterMenu";
 import { Menu } from "../model/Menu";
 import { Restaurant } from "../model/Restaurant";
+import { Traduttore } from "../model/Traduttore";
 import { API_SERVER } from "./AppConstants";
-import { RouterUtils } from "./RouterUtils";
 import { StorageUtils } from "./StorageUtils";
 import { strings } from "./Strings";
 import { Users } from "./Users";
@@ -412,6 +410,21 @@ export class AjaxUtils {
     static async getMenusRestaurateur() {
         let url = API_SERVER + "/ristoratori/menus/all";
         return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async getTranslatorsNotRevisers(){
+        let url = API_SERVER + "/amministratori/translators-not-revisers/all";
+        return axios.post(url, {
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
+    static async promoteTranslator(translator: Traduttore){
+        let url = API_SERVER + "/amministratori/translators-not-revisers/promote";
+        return axios.post(url, {
+            id_traduttore: translator.id,
             token: StorageUtils.get(StorageUtils.token_key)
         })
     }

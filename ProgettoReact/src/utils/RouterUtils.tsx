@@ -9,6 +9,7 @@ import { AjaxUtils } from './AjaxUtils';
 import { JSONUtils } from './JSONUtils';
 import { StorageUtils } from './StorageUtils';
 import { Users } from './Users';
+import { RoutesAmministratore } from '../routes/Amministratore';
 
 export type PrivateRouteProps = {
 } & RouteProps;
@@ -22,10 +23,10 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
         const checkToken = () => {
             setRequest({ token: StorageUtils.get(StorageUtils.token_key), isLoaded: false })
             AjaxUtils.isLoggedIn(RouterUtils.getUserByRoute(history.location.pathname)).then((result) => {
-                let isUserValid = false;
+                let isUserValid = true;
                 if (result != null) {
                     const tokenResult = JSONUtils.getProperty(result.data, "token", null);
-                    isUserValid = JSONUtils.getProperty(result.data, "uservalid", false);
+                    isUserValid = JSONUtils.getProperty(result.data, "uservalid", true);
                     StorageUtils.set(StorageUtils.token_key, tokenResult);
                 }
                 else {
@@ -47,8 +48,10 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
         if (user === Users.TRADUTTORE) {
             return <Redirect to={RoutesTraduttore.LOGIN} />
         }
-        else {
+        else if (user === Users.RISTORATORE) {
             return <Redirect to={RoutesRistoratore.LOGIN} />
+        } else {
+            return <Redirect to={RoutesAmministratore.LOGIN} />
         }
     }
     else if (request.isLoaded && request.token != null && request.isUserValid === false) {
@@ -58,8 +61,7 @@ export const PrivateRoute = ({ ...routeProps }: PrivateRouteProps) => {
         }
         else {
             return <Redirect to={RoutesRistoratore.OTP} />
-        }
-
+        } 
     }
     else if (request.isLoaded && request.token != null && request.isUserValid === true) {
         return <Route {...routeProps} />;
@@ -95,6 +97,10 @@ export class RouterUtils {
             case RoutesUtente.HOME:
             case RoutesUtente.LOGOUT:
                 return Users.CLIENTE;
+            case RoutesAmministratore.LOGIN:
+            case RoutesAmministratore.HOME:
+            case RoutesAmministratore.LOGOUT:
+                return Users.AMMINISTRATORE;
             default:
                 return Users.NON_IMPOSTATO;
         }

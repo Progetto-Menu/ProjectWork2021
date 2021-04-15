@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { RoutesAmministratore } from '../routes/Amministratore';
 import { RoutesUtente } from '../routes/Cliente';
 import { RoutesRistoratore } from '../routes/Ristoratore';
 import { RoutesTraduttore } from '../routes/Traduttore';
@@ -13,6 +14,7 @@ import { SwitchLoginComponent } from './Login/SwitchLoginComponent';
 import { BaseRistoratore } from './Ristoratore/BaseRistoratore';
 import { BaseTraduttore } from './Traduttore/Base/BaseTraduttore';
 import { HomeUtente } from './Utente/HomeUtente';
+import { HomeAmministratore } from './Amministratore/HomeAmministratore'
 
 export interface AppRequest {
     token: string | null,
@@ -108,20 +110,43 @@ export const App: React.FunctionComponent = () => {
                 <BaseRistoratore route={RoutesRistoratore.PROFILE} />
             </PrivateRoute>
         </Switch>
+    } else if (user === Users.AMMINISTRATORE) {
+        return <Switch>
+            <Route path="/" exact>
+                <Redirect to={RoutesAmministratore.LOGIN} />
+            </Route>
+            <Route path={RoutesAmministratore.LOGIN} exact>
+                <LoginComponent user={user} onClickBack={() => {
+                    StorageUtils.remove(StorageUtils.user_type);
+                    setUser(Users.NON_IMPOSTATO)
+                    history.replace("/")
+                }} />
+            </Route>
+            <PrivateRoute path={RoutesAmministratore.HOME} exact>
+                <HomeAmministratore route={RoutesAmministratore.HOME} onClickLogout={()=>{
+                    StorageUtils.remove(StorageUtils.user_type);
+                    setUser(Users.NON_IMPOSTATO)
+                    history.replace("/")
+                }} />
+            </PrivateRoute>
+            <PrivateRoute path={RoutesAmministratore.LOGOUT} exact>
+                
+            </PrivateRoute>
+        </Switch>
     } else if (user === Users.CLIENTE) {
         return <Switch>
             <Route path="/" exact>
                 <Redirect to={RoutesUtente.HOME} />
             </Route>
             <Route path={RoutesUtente.HOME} exact>
-                <HomeUtente route={RoutesUtente.HOME} onClickLogout={()=>{
+                <HomeUtente route={RoutesUtente.HOME} onClickLogout={() => {
                     StorageUtils.remove(StorageUtils.user_type);
                     setUser(Users.NON_IMPOSTATO)
                     history.replace("/")
                 }} />
             </Route>
             <Route path={RoutesUtente.LOGOUT} exact>
-                
+
             </Route>
         </Switch>
     } else return <></>

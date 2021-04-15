@@ -1,6 +1,7 @@
 import { Menu } from "./Menu";
 
 export interface Traduttore{
+    id?: number
     name: string;
     surname: string;
     email: string;
