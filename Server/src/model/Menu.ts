@@ -407,8 +407,8 @@ export class Menu {
                     .input(Menu.db_id_titolo, id_stringa_menu_titolo)
                     .input(Menu.db_id_sottotitolo, id_stringa_sottotitolo_menu)
                     .input(Menu.db_pubblico, 0)
-                    .input(Menu.db_creato_il, new Date())
-                    .input(Menu.db_modificato_il, new Date())
+                    .input(Menu.db_creato_il,sql.DateTimeOffset, new Date())
+                    .input(Menu.db_modificato_il,sql.DateTimeOffset, new Date())
                     .input(Menu.db_id_ristorante, menu.restaurant.id)
                     .query(`INSERT INTO ${Menu.db_table_name} (
                                     ${Menu.db_id_titolo},

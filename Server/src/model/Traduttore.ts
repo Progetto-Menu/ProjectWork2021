@@ -95,8 +95,8 @@ export class Traduttore {
                     .input(Traduttore.db_revisore, traduttore.revisore)
                     .input(Traduttore.db_numero_token, traduttore.numero_token)
                     .input(Traduttore.db_validato, traduttore.validato ? 1 : 0)
-                    .input(Traduttore.db_creato_il, traduttore.creato_il ?? new Date())
-                    .input(Traduttore.db_modificato_il, traduttore.modificato_il ?? new Date())
+                    .input(Traduttore.db_creato_il,sql.DateTimeOffset, traduttore.creato_il ?? new Date())
+                    .input(Traduttore.db_modificato_il,sql.DateTimeOffset, traduttore.modificato_il ?? new Date())
                     .input(Traduttore.db_cancellato_il, traduttore.cancellato_il ?? null)
                     .query(`INSERT INTO ${Traduttore.db_table_name} (
                         ${Traduttore.db_nome},
@@ -153,7 +153,7 @@ export class Traduttore {
                     .input(Traduttore.db_numero_token, traduttore.numero_token)
                     .input(Traduttore.db_validato, traduttore.validato ? 1 : 0)
                     .input(Traduttore.db_creato_il, traduttore.creato_il)
-                    .input(Traduttore.db_modificato_il, traduttore.modificato_il ?? new Date())
+                    .input(Traduttore.db_modificato_il,sql.DateTimeOffset, traduttore.modificato_il ?? new Date())
                     .input(Traduttore.db_cancellato_il, traduttore.cancellato_il ?? null)
                     .query(`UPDATE ${Traduttore.db_table_name}
                         SET ${Traduttore.db_nome} = @${Traduttore.db_nome},
@@ -244,8 +244,8 @@ export class Traduttore {
             transaction.begin(async (err: any) => {
                 await transaction.request()
                     .input(OtpTraduttore.db_valore, otp.valore)
-                    .input(OtpTraduttore.db_creato_il, otp.creato_il ?? new Date())
-                    .input(OtpTraduttore.db_scade_il, otp.scade_il ?? new Date(new Date().getTime()+(1000*60*2)))
+                    .input(OtpTraduttore.db_creato_il,sql.DateTimeOffset, otp.creato_il ?? new Date())
+                    .input(OtpTraduttore.db_scade_il,sql.DateTimeOffset, otp.scade_il ?? new Date(new Date().getTime()+(1000*60*2)))
                     .input(OtpTraduttore.db_id_traduttore, otp.id_traduttore)
                     .input(OtpTraduttore.db_valido, otp.valido)
                     .query(`
@@ -289,7 +289,7 @@ export class Traduttore {
                     .input(OtpTraduttore.db_valore, valore)
                     .input(OtpTraduttore.db_id_traduttore, id_traduttore)
                     .query(`
-                    SELECT * FROM ${OtpTraduttore.db_table_name} WHERE ${OtpTraduttore.db_valido} = 1 and ${OtpTraduttore.db_valore}=@${OtpTraduttore.db_valore} and ${OtpTraduttore.db_id_traduttore}=@${OtpTraduttore.db_id_traduttore} and DATEDIFF(second, GETDATE(), ${OtpTraduttore.db_scade_il}) < 0;`,
+                    SELECT * FROM ${OtpTraduttore.db_table_name} WHERE ${OtpTraduttore.db_valido} = 1 and ${OtpTraduttore.db_valore}=@${OtpTraduttore.db_valore} and ${OtpTraduttore.db_id_traduttore}=@${OtpTraduttore.db_id_traduttore} and DATEDIFF(second, GETDATE(), ${OtpTraduttore.db_scade_il}) > 0;`,
                         (err: any, result: any) => {
                             console.log(err,result);
                             if (err) {

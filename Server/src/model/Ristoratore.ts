@@ -62,8 +62,8 @@ export class Ristoratore {
                     .input(Ristoratore.db_email, ristoratore.email)
                     .input(Ristoratore.db_password, ristoratore.password)
                     .input(Ristoratore.db_validato, ristoratore.validato ? 1 : 0)
-                    .input(Ristoratore.db_creato_il, ristoratore.creato_il ?? new Date())
-                    .input(Ristoratore.db_modificato_il, ristoratore.modificato_il ?? new Date())
+                    .input(Ristoratore.db_creato_il,sql.DateTimeOffset, ristoratore.creato_il ?? new Date())
+                    .input(Ristoratore.db_modificato_il,sql.DateTimeOffset, ristoratore.modificato_il ?? new Date())
                     .input(Ristoratore.db_cancellato_il, ristoratore.cancellato_il ?? null)
                     .query(`INSERT INTO ${Ristoratore.db_table_name} (
                         ${Ristoratore.db_nome},
@@ -158,8 +158,8 @@ export class Ristoratore {
             transaction.begin(async (err: any) => {
                 await transaction.request()
                     .input(OtpRistoratore.db_valore, otp.valore)
-                    .input(OtpRistoratore.db_creato_il, otp.creato_il ?? new Date())
-                    .input(OtpRistoratore.db_scade_il, otp.scade_il ?? new Date(new Date().getTime()+(1000*60*2)))
+                    .input(OtpRistoratore.db_creato_il,sql.DateTimeOffset, otp.creato_il ?? new Date())
+                    .input(OtpRistoratore.db_scade_il,sql.DateTimeOffset, otp.scade_il ?? new Date(new Date().getTime()+(1000*60*2)))
                     .input(OtpRistoratore.db_id_ristoratore, otp.id_ristoratore)
                     .input(OtpRistoratore.db_valido, otp.valido)
                     .query(`
@@ -203,7 +203,7 @@ export class Ristoratore {
                     .input(OtpRistoratore.db_valore, valore)
                     .input(OtpRistoratore.db_id_ristoratore, id_ristoratore)
                     .query(`
-                    SELECT * FROM ${OtpRistoratore.db_table_name} WHERE ${OtpRistoratore.db_valido} = 1 and ${OtpRistoratore.db_valore}=@${OtpRistoratore.db_valore} and ${OtpRistoratore.db_id_ristoratore}=@${OtpRistoratore.db_id_ristoratore} and DATEDIFF(second, GETDATE(), ${OtpRistoratore.db_scade_il}) < 0;`,
+                    SELECT * FROM ${OtpRistoratore.db_table_name} WHERE ${OtpRistoratore.db_valido} = 1 and ${OtpRistoratore.db_valore}=@${OtpRistoratore.db_valore} and ${OtpRistoratore.db_id_ristoratore}=@${OtpRistoratore.db_id_ristoratore} and DATEDIFF(second, GETDATE(), ${OtpRistoratore.db_scade_il}) > 0;`,
                         (err: any, result: any) => {
                             console.log(err,result);
                             if (err) {
