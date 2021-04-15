@@ -649,14 +649,14 @@ export class Menu {
                 const menusFromDb: any[] = (await transaction.request()
                     .input(Citta.db_id_provincia, id_provincia)
                     .input("id_lingua", lingua.id)
-                    .query(`SELECT ${Menu.db_table_name}.*, titolo.Testo as titolo, sottotitolo.Testo as sottotitolo FROM ${Menu.db_table_name}
+                    .query(`SELECT ${Menu.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(sottotitoloTradotto.testo, sottotitolo.Testo) as sottotitolo FROM ${Menu.db_table_name}
                     INNER JOIN ${Ristorante.db_table_name} ON ${Ristorante.db_table_name}.${Ristorante.db_id} = ${Menu.db_table_name}.${Menu.db_id_ristorante}
                     INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Menu.db_id_titolo} = titolo.${Stringa.db_id}
-                    LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON ${Menu.db_id_titolo} = titoloTradotto.${StringaTradotta.db_id}
+                    LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
                     INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Menu.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
-                    LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON ${Menu.db_id_sottotitolo} = sottotitoloTradotto.${StringaTradotta.db_id}
+                    LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
                     INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
-                    WHERE ${Citta.db_id_provincia} = @${Citta.db_id_provincia} AND ${MenuLingua.db_id_lingua} = @id_lingua;`)).recordset;
+                    WHERE ${Citta.db_id_provincia} = @${Citta.db_id_provincia};`)).recordset;
 
                 console.log("MENU FROM DB", menusFromDb);
 
@@ -666,9 +666,12 @@ export class Menu {
 
                     let sectionsFromDb = (await transaction.request()
                         .input(Sezione.db_id_menu, menusFromDb[i][Menu.db_id])
-                        .query(`SELECT ${Sezione.db_table_name}.*, titolo.Testo as titolo, sottotitolo.Testo as sottotitolo FROM ${Sezione.db_table_name}
+                        .input("id_lingua", lingua.id)
+                        .query(`SELECT ${Sezione.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(sottotitoloTradotto.testo, sottotitolo.Testo) as sottotitolo FROM ${Sezione.db_table_name}
                             INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Sezione.db_id_titolo} = titolo.${Stringa.db_id}
+                            LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
                             INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Sezione.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
+                            LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
                             WHERE ${Sezione.db_id_menu} = @${Sezione.db_id_menu};`)).recordset
 
                     console.log(sectionsFromDb)
@@ -677,9 +680,12 @@ export class Menu {
                         let dishes: Dish[] = [];
                         let dishesFromDb: any[] = (await transaction.request()
                             .input(Piatto.db_id_sezione, sectionsFromDb[j][Sezione.db_id])
-                            .query(`SELECT ${Piatto.db_table_name}.*, titolo.Testo as titolo, descrizione.Testo as descrizione FROM ${Piatto.db_table_name}
+                            .input("id_lingua", lingua.id)
+                            .query(`SELECT ${Piatto.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(descrizioneTradotta.testo, descrizione.Testo) as descrizione FROM ${Piatto.db_table_name}
                                 INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Piatto.db_id_titolo} = titolo.${Stringa.db_id}
+                                LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
                                 INNER JOIN ${Stringa.db_table_name} AS descrizione ON ${Piatto.db_id_descrizione} = descrizione.${Stringa.db_id}
+                                LEFT JOIN ${StringaTradotta.db_table_name} as descrizioneTradotta ON descrizione.Id = descrizioneTradotta.IdStringa AND descrizioneTradotta.IdLingua = @id_lingua
                                 WHERE ${Piatto.db_id_sezione} = @${Piatto.db_id_sezione}`)).recordset
 
                         for (let k = 0; k < dishesFromDb.length; k++) {
@@ -695,7 +701,7 @@ export class Menu {
                             id: sectionsFromDb[j][Sezione.db_id],
                             dishes: dishes,
                             name: sectionsFromDb[j]["titolo"],
-                            subtitle: sectionsFromDb[i]["sottotitolo"]
+                            subtitle: sectionsFromDb[j]["sottotitolo"]
                         })
                     }
 
@@ -760,11 +766,268 @@ export class Menu {
     }
 
     static async getMenusByCityId(id_citta: number, cod_lingua: string){
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>(async (resolve, reject) => {
+            try {
+                await transaction.begin();
 
+                const menus: CustomMenu[] = [];
+
+                const lingua = Lingua.convertToLanguage((await transaction.request()
+                    .input(Lingua.db_cod_lingua, cod_lingua)
+                    .query(`SELECT * FROM ${Lingua.db_table_name} WHERE ${Lingua.db_cod_lingua} = @${Lingua.db_cod_lingua};`)).recordset[0]);
+                
+                if(lingua == null) throw new Error();
+
+                const menusFromDb: any[] = (await transaction.request()
+                    .input(Ristorante.db_id_citta, id_citta)
+                    .input("id_lingua", lingua.id)
+                    .query(`SELECT ${Menu.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(sottotitoloTradotto.testo, sottotitolo.Testo) as sottotitolo FROM ${Menu.db_table_name}
+                    INNER JOIN ${Ristorante.db_table_name} ON ${Ristorante.db_table_name}.${Ristorante.db_id} = ${Menu.db_table_name}.${Menu.db_id_ristorante}
+                    INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Menu.db_id_titolo} = titolo.${Stringa.db_id}
+                    LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
+                    INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Menu.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
+                    LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
+                    WHERE ${Ristorante.db_id_citta} = @${Ristorante.db_id_citta};`)).recordset;
+
+                console.log("MENU FROM DB", menusFromDb);
+
+                for (let i = 0; i < menusFromDb.length; i++) {
+
+                    let sections: Section[] = []
+
+                    let sectionsFromDb = (await transaction.request()
+                        .input(Sezione.db_id_menu, menusFromDb[i][Menu.db_id])
+                        .input("id_lingua", lingua.id)
+                        .query(`SELECT ${Sezione.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(sottotitoloTradotto.testo, sottotitolo.Testo) as sottotitolo FROM ${Sezione.db_table_name}
+                            INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Sezione.db_id_titolo} = titolo.${Stringa.db_id}
+                            LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
+                            INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Sezione.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
+                            LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
+                            WHERE ${Sezione.db_id_menu} = @${Sezione.db_id_menu};`)).recordset
+
+                    console.log(sectionsFromDb)
+
+                    for (let j = 0; j < sectionsFromDb.length; j++) {
+                        let dishes: Dish[] = [];
+                        let dishesFromDb: any[] = (await transaction.request()
+                            .input(Piatto.db_id_sezione, sectionsFromDb[j][Sezione.db_id])
+                            .input("id_lingua", lingua.id)
+                            .query(`SELECT ${Piatto.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(descrizioneTradotta.testo, descrizione.Testo) as descrizione FROM ${Piatto.db_table_name}
+                                INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Piatto.db_id_titolo} = titolo.${Stringa.db_id}
+                                LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
+                                INNER JOIN ${Stringa.db_table_name} AS descrizione ON ${Piatto.db_id_descrizione} = descrizione.${Stringa.db_id}
+                                LEFT JOIN ${StringaTradotta.db_table_name} as descrizioneTradotta ON descrizione.Id = descrizioneTradotta.IdStringa AND descrizioneTradotta.IdLingua = @id_lingua
+                                WHERE ${Piatto.db_id_sezione} = @${Piatto.db_id_sezione}`)).recordset
+
+                        for (let k = 0; k < dishesFromDb.length; k++) {
+                            dishes.push({
+                                id: dishesFromDb[k][Piatto.db_id],
+                                description: dishesFromDb[k]["descrizione"],
+                                name: dishesFromDb[k]["titolo"],
+                                price: dishesFromDb[k][Piatto.db_prezzo]
+                            })
+                        }
+
+                        sections.push({
+                            id: sectionsFromDb[j][Sezione.db_id],
+                            dishes: dishes,
+                            name: sectionsFromDb[j]["titolo"],
+                            subtitle: sectionsFromDb[j]["sottotitolo"]
+                        })
+                    }
+
+                    console.log(sections);
+
+                    let languages: Language[] = [];
+
+                    let languagesFromDb: any[] = (await transaction.request()
+                        .input(MenuLingua.db_id_menu, menusFromDb[i][Menu.db_id])
+                        .query(`SELECT ${Lingua.db_table_name}.* FROM ${MenuLingua.db_table_name}
+                            INNER JOIN ${Lingua.db_table_name} ON ${Lingua.db_table_name}.${Lingua.db_id} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_lingua}
+                            WHERE ${MenuLingua.db_id_menu} = @${MenuLingua.db_id_menu};`)).recordset
+
+                    for (let j = 0; j < languagesFromDb.length; j++) {
+                        languages.push({
+                            id: languagesFromDb[j][Lingua.db_id],
+                            name: languagesFromDb[j][Lingua.db_nome],
+                            sign: languagesFromDb[j][Lingua.db_cod_lingua]
+                        })
+                    }
+
+                    console.log(languages);
+
+                    let restaurant = (await transaction.request()
+                        .input(Ristorante.db_id, menusFromDb[i][Menu.db_id_ristorante])
+                        .query(`SELECT ${Ristorante.db_table_name}.*, ${Citta.db_table_name}.${Citta.db_nome} as Citta, ${Provincia.db_table_name}.${Provincia.db_nome} as Provincia FROM ${Ristorante.db_table_name}
+                                INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
+                                INNER JOIN ${Provincia.db_table_name} ON ${Provincia.db_table_name}.${Provincia.db_id} = ${Citta.db_table_name}.${Citta.db_id_provincia}
+                                WHERE ${Ristorante.db_table_name}.${Ristorante.db_id} = @${Ristorante.db_id};`)).recordset[0]
+
+                    console.log(restaurant);
+
+                    menus.push({
+                        id: menusFromDb[i][Menu.db_id],
+                        title: menusFromDb[i]["titolo"],
+                        subtitle: menusFromDb[i]["sottotitolo"],
+                        languages: languages,
+                        sections: sections,
+                        restaurant: {
+                            id: restaurant[Ristorante.db_id],
+                            civico: restaurant[Ristorante.db_civico],
+                            id_citta: restaurant[Ristorante.db_id_citta],
+                            id_provincia: restaurant[Ristorante.db_id_ristoratore],
+                            id_ristoratore: restaurant[Ristorante.db_id_ristoratore],
+                            indirizzo: restaurant[Ristorante.db_indirizzo],
+                            nome: restaurant[Ristorante.db_nome],
+                            citta: restaurant["Citta"],
+                            provincia: restaurant["Provincia"]
+                        }
+                    })
+                }
+
+                await transaction.commit();
+                resolve(menus)
+            } catch (err) {
+                console.log(err);
+                await transaction.rollback();
+                reject(err);
+            }
+
+        });
     }
 
     static async getMenusByRestaurantId(id_ristorante: number, cod_lingua: string){
-        
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>(async (resolve, reject) => {
+            try {
+                await transaction.begin();
+
+                const menus: CustomMenu[] = [];
+
+                const lingua = Lingua.convertToLanguage((await transaction.request()
+                    .input(Lingua.db_cod_lingua, cod_lingua)
+                    .query(`SELECT * FROM ${Lingua.db_table_name} WHERE ${Lingua.db_cod_lingua} = @${Lingua.db_cod_lingua};`)).recordset[0]);
+                
+                if(lingua == null) throw new Error();
+
+                const menusFromDb: any[] = (await transaction.request()
+                    .input(Menu.db_id_ristorante, id_ristorante)
+                    .input("id_lingua", lingua.id)
+                    .query(`SELECT ${Menu.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(sottotitoloTradotto.testo, sottotitolo.Testo) as sottotitolo FROM ${Menu.db_table_name}
+                    INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Menu.db_id_titolo} = titolo.${Stringa.db_id}
+                    LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
+                    INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Menu.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
+                    LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
+                    WHERE ${Menu.db_id_ristorante} = @${Menu.db_id_ristorante};`)).recordset;
+
+                console.log("MENU FROM DB", menusFromDb);
+
+                for (let i = 0; i < menusFromDb.length; i++) {
+
+                    let sections: Section[] = []
+
+                    let sectionsFromDb = (await transaction.request()
+                        .input(Sezione.db_id_menu, menusFromDb[i][Menu.db_id])
+                        .input("id_lingua", lingua.id)
+                        .query(`SELECT ${Sezione.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(sottotitoloTradotto.testo, sottotitolo.Testo) as sottotitolo FROM ${Sezione.db_table_name}
+                            INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Sezione.db_id_titolo} = titolo.${Stringa.db_id}
+                            LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
+                            INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Sezione.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
+                            LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
+                            WHERE ${Sezione.db_id_menu} = @${Sezione.db_id_menu};`)).recordset
+
+                    console.log(sectionsFromDb)
+
+                    for (let j = 0; j < sectionsFromDb.length; j++) {
+                        let dishes: Dish[] = [];
+                        let dishesFromDb: any[] = (await transaction.request()
+                            .input(Piatto.db_id_sezione, sectionsFromDb[j][Sezione.db_id])
+                            .input("id_lingua", lingua.id)
+                            .query(`SELECT ${Piatto.db_table_name}.*, ISNULL(titoloTradotto.testo, titolo.Testo) as titolo, ISNULL(descrizioneTradotta.testo, descrizione.Testo) as descrizione FROM ${Piatto.db_table_name}
+                                INNER JOIN ${Stringa.db_table_name} AS titolo ON ${Piatto.db_id_titolo} = titolo.${Stringa.db_id}
+                                LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
+                                INNER JOIN ${Stringa.db_table_name} AS descrizione ON ${Piatto.db_id_descrizione} = descrizione.${Stringa.db_id}
+                                LEFT JOIN ${StringaTradotta.db_table_name} as descrizioneTradotta ON descrizione.Id = descrizioneTradotta.IdStringa AND descrizioneTradotta.IdLingua = @id_lingua
+                                WHERE ${Piatto.db_id_sezione} = @${Piatto.db_id_sezione}`)).recordset
+
+                        for (let k = 0; k < dishesFromDb.length; k++) {
+                            dishes.push({
+                                id: dishesFromDb[k][Piatto.db_id],
+                                description: dishesFromDb[k]["descrizione"],
+                                name: dishesFromDb[k]["titolo"],
+                                price: dishesFromDb[k][Piatto.db_prezzo]
+                            })
+                        }
+
+                        sections.push({
+                            id: sectionsFromDb[j][Sezione.db_id],
+                            dishes: dishes,
+                            name: sectionsFromDb[j]["titolo"],
+                            subtitle: sectionsFromDb[j]["sottotitolo"]
+                        })
+                    }
+
+                    console.log(sections);
+
+                    let languages: Language[] = [];
+
+                    let languagesFromDb: any[] = (await transaction.request()
+                        .input(MenuLingua.db_id_menu, menusFromDb[i][Menu.db_id])
+                        .query(`SELECT ${Lingua.db_table_name}.* FROM ${MenuLingua.db_table_name}
+                            INNER JOIN ${Lingua.db_table_name} ON ${Lingua.db_table_name}.${Lingua.db_id} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_lingua}
+                            WHERE ${MenuLingua.db_id_menu} = @${MenuLingua.db_id_menu};`)).recordset
+
+                    for (let j = 0; j < languagesFromDb.length; j++) {
+                        languages.push({
+                            id: languagesFromDb[j][Lingua.db_id],
+                            name: languagesFromDb[j][Lingua.db_nome],
+                            sign: languagesFromDb[j][Lingua.db_cod_lingua]
+                        })
+                    }
+
+                    console.log(languages);
+
+                    let restaurant = (await transaction.request()
+                        .input(Ristorante.db_id, menusFromDb[i][Menu.db_id_ristorante])
+                        .query(`SELECT ${Ristorante.db_table_name}.*, ${Citta.db_table_name}.${Citta.db_nome} as Citta, ${Provincia.db_table_name}.${Provincia.db_nome} as Provincia FROM ${Ristorante.db_table_name}
+                                INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
+                                INNER JOIN ${Provincia.db_table_name} ON ${Provincia.db_table_name}.${Provincia.db_id} = ${Citta.db_table_name}.${Citta.db_id_provincia}
+                                WHERE ${Ristorante.db_table_name}.${Ristorante.db_id} = @${Ristorante.db_id};`)).recordset[0]
+
+                    console.log(restaurant);
+
+                    menus.push({
+                        id: menusFromDb[i][Menu.db_id],
+                        title: menusFromDb[i]["titolo"],
+                        subtitle: menusFromDb[i]["sottotitolo"],
+                        languages: languages,
+                        sections: sections,
+                        restaurant: {
+                            id: restaurant[Ristorante.db_id],
+                            civico: restaurant[Ristorante.db_civico],
+                            id_citta: restaurant[Ristorante.db_id_citta],
+                            id_provincia: restaurant[Ristorante.db_id_ristoratore],
+                            id_ristoratore: restaurant[Ristorante.db_id_ristoratore],
+                            indirizzo: restaurant[Ristorante.db_indirizzo],
+                            nome: restaurant[Ristorante.db_nome],
+                            citta: restaurant["Citta"],
+                            provincia: restaurant["Provincia"]
+                        }
+                    })
+                }
+
+                await transaction.commit();
+                resolve(menus)
+            } catch (err) {
+                console.log(err);
+                await transaction.rollback();
+                reject(err);
+            }
+
+        });
     }
 
 }
