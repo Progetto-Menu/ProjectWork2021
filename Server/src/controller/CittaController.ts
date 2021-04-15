@@ -1,7 +1,7 @@
 import { Citta } from "../model/Citta";
 import { BasePresenter } from "./BaseController";
 
-export class LinguaController implements BasePresenter<Citta>{
+export class CittaController implements BasePresenter<Citta>{
     async create(obj: Citta): Promise<Citta> {
         throw new Error("Method not implemented.");
     }
@@ -16,6 +16,10 @@ export class LinguaController implements BasePresenter<Citta>{
     }
     async getAll(): Promise<Citta[]> {
         throw new Error("Method not implemented.");
+    }
+
+    async getCitiesByProvinceId(id_provincia: number){
+        return await Citta.getCitiesByProvinceId(id_provincia);
     }
 
 }

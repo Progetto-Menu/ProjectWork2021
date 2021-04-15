@@ -5,6 +5,7 @@ export class StringaTradotta {
     readonly id_lingua: number;
 
 
+    static readonly db_table_name = "stringhe_tradotte"
     static readonly db_id = "Id";
     static readonly db_testo = "Testo";
     static readonly db_id_stringa = "IdStringa";

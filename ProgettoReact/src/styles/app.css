@@ -1,33 +1,6 @@
-body{
-    padding-top: 61px;
-}
-
-.box{
-    margin: 20px;
-    background: #efefef;
-    border: 2px solid #Ccc;
-    border-radius: 5px;
-    width: 200px;
-    height: 200px;
-    position: absolute;
-}
-
-.contenuto{
-    margin: 20px;
-    background: black;
-    color: white;
-    border: 1px solid #Ccc;
-    border-radius: 5px;
-}
-
-.header{
-    line-height: 61px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 61px;
-    background: rgb(22, 26, 41);
-    color: white;
-    padding: 0 25px;
+.inputStyle {
+    width: 3rem !important;
+    height: 3rem !important;
+    margin: 0 1rem !important;
+    font-size: 2rem !important;
 }

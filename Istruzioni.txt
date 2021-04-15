@@ -1,0 +1,82 @@
+1) Scaricare e installare SQLSERVER MANAGEMENT STUDIO
+2) Aprire SQLSERVER MANAGEMENT STUDIO
+3) Appena aperto comparirà una scheramata tramite la quale verrà chiesto di Connettersi al Server
+4) Cliccare su Connetti
+
+Importare il database
+
+1) Copiare i file "Database/db_traduzioni.mdf" e "Database/db_traduzioni_log.ldf" nella cartella "C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA"
+2) Dal menu a sinistra, click col pulsante destro del mouse su "Database"
+3) Cliccare su "Collega..."
+4) Cliccare su "Aggiungi..." dalla scheramata che si è aperta
+5) Selezionare il file "db_traduzioni.mdf"
+6) Fare click su "OK"
+7) Fare click su "OK"
+
+
+Creazione di un nuovo utente
+
+1) Dal menu a sinistra: Sicurezza -> Account di Accesso
+2) Fare click col pulsante destro del mouse su Account di Accesso
+3) Dal menu a tendina selezionare "Nuovo account di accesso..."
+4) Si aprirà una scheramata per creare un nuovo utente
+5) Inserire come nome utente "traduzioni"
+6) Come modalità di autenticazione selezionare "Autenticazione di SQL Server"
+7) Inserire come password "12345678"
+8) In fondo Selezionare come database predefinito "db_traduzioni"
+9) Dal menu a sinistra selezionare "Stato" e abilitare "Account di accesso"
+10) Cliccare su "OK" per creare un nuovo utente
+11) Dal menu a sinistra: Database -> db_traduzioni
+12) Cliccare col pulsante destro su "db_traduzioni" e dal menu a tendina selezionare "Proprietà"
+13) Dal menu a sinistra selezionare "File"
+14) Cliccare su "..." per selezionare il proprietario del database
+15) Dalla finistra che si è aperta immettere "[traduzioni]" e cliccare su "OK"
+16) Cliccare su "OK"
+17) Chiudere SQLSERVER MANAGEMENT STUDIO e riaprirlo
+18) Quando compare la scheramata per Connettersi al server dal menu a tendina "Autenticazione:" selezionare "Autenticazione di SQL Server"
+19) Inserire come nome utente "traduzioni" e come password "12345678" e fare click su connetti (se dovessero verificarsi degli errori bisogna risoverli perché altrimenti nodejs non riuscirà a connettersi)
+
+
+Far partire il server nodejs:
+
+1) Creare un nuova cartella in questo percorso "C:\Users\<UTENTE>" e chiamarla ssh
+2) Spostare le chiavi "Database/rsa.private" e "Database/rsa.public" nella cartella C:\Users\<UTENTE>\ssh
+3) Creare un file "start.bat" nella cartella "Server" e inserire:
+
+set ENV=development
+set MSSQL_USER=traduzioni
+set MSSQL_PASSWORD=12345678
+set MSSQL_SERVER=localhost
+set MSSQL_PORT=1730
+set MSSQL_DATABASE=db_traduzioni
+set MSSQL_INSTANCE_NAME=SQLEXPRESS
+set JWT_PRIV_KEY=C:\Users\UTENTE\ssh\rsa.private
+set JWT_PUBLIC_KEY=C:\Users\UTENTE\ssh\rsa.public
+set TOKEN_EXP_SEC=3600
+set EMAIL=progettomenu@gmail.com
+set PASSWORD=P4ssw0rd!
+
+npm run start
+
+4) Sostituire il valore di JWT_PRIV_KEY con il path del file rsa.private
+5) Sostituire il valore di JWT_PUBLIC_KEY con il path del file rsa.public
+6) Salvare il file
+7) Dal prompt dei comandi spostarsi sulla directory "Server" -> cd Server
+8) Digitare il comando "npm install"
+9) Terminata l'installazione delle librerie digitare il comando "start.bat" e premere invio, il server dovrebbe partire
+10) Se si verificano degli errori durante l'avvio del server bisogna risolverli altrimenti l'applicazione react non riuscirà ad autenticarsi
+
+
+
+Query per aggiungere tabella menu_lingue:
+
+DROP TABLE IF EXISTS menu_lingue;
+
+CREATE TABLE menu_lingue (
+	IdMenu int,
+	IdLingua int,
+	PRIMARY KEY(IdMenu, IdLingua),
+	CONSTRAINT fk_menu_lingue_menu FOREIGN KEY (IdMenu) REFERENCES menu(Id),
+	CONSTRAINT fk_lingue_menu_ligune FOREIGN KEY (IdLingua) REFERENCES lingue(Id)
+	)
+

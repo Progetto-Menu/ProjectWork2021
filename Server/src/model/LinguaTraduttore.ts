@@ -2,6 +2,7 @@ export class LinguaTraduttore {
     readonly id_lingua: number;
     readonly id_traduttore: number;
 
+    static readonly db_table_name = "lingue_traduttori"
     static readonly db_id_lingua = "IdLingua";
     static readonly db_id_traduttore = "IdTraduttore";
 
