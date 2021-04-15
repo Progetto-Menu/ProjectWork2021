@@ -107,7 +107,7 @@ export const strings = new LocalizedStrings({
         save: "Salva",
         your_translations: "Le tue traduzioni",
         your_translations_status_column: "Stato",
-        status_approved: "Arrovata",
+        status_approved: "Approvata",
         status_discarded: "Scartata",
         status_validation: "In fase di convalida",
         status_in_progress: "In corso",
