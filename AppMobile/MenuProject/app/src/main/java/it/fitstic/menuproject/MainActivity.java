@@ -48,9 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                noConnection.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
+                WebAction();
             }
 
             @Override
