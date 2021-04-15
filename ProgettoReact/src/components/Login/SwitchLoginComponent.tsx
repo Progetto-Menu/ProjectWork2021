@@ -34,7 +34,7 @@ export const SwitchLoginComponent: React.FunctionComponent<SwitchLoginProps> = (
                     <Link to={RoutesUtente.HOME} className="btn btn-outline-primary w-100 btn-lg" onClick={() => props.selectedUserCallback(Users.CLIENTE)}>{strings.client}</Link>
                 </div>
                 <div className="col-12 col-md-6 col-lg-3 mb-3 mb-sm-0">
-                    <Link to={RoutesAmministratore.HOME} className="btn btn-outline-primary w-100 btn-lg" onClick={() => props.selectedUserCallback(Users.AMMINISTRATORE)}>{strings.administrator}</Link>
+                    <Link to={RoutesAmministratore.LOGIN} className="btn btn-outline-primary w-100 btn-lg" onClick={() => props.selectedUserCallback(Users.AMMINISTRATORE)}>{strings.administrator}</Link>
                 </div>
             </div>
         </div>
