@@ -20,7 +20,7 @@ export const MenuComponent: React.FunctionComponent<MenuComponentProps> = (props
                 <div>
                     <Card.Title>{props.menu.restaurant.nome}, {props.menu.restaurant.indirizzo} {props.menu.restaurant.civico}, {props.menu.restaurant.citta} ({props.menu.restaurant.provincia})</Card.Title>
                     <Card.Title>{props.menu.title}</Card.Title>
-                    <Card.Subtitle>{props.menu.title}</Card.Subtitle>
+                    <Card.Subtitle>{props.menu.subtitle}</Card.Subtitle>
                 </div>
                 <div><Button variant="danger" onClick={() => props.onClickRemove(props.menu)}>{strings.remove}</Button></div>
             </div>
