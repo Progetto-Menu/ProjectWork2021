@@ -129,8 +129,10 @@ export class Menu {
                                 INNER JOIN stringhe ON piatti.IdDescrizione = stringhe.Id) as T1
                                 INNER JOIN menu ON menu.Id = T1.IdMenu
                                 INNER JOIN menu_lingue ON menu_lingue.IdMenu = menu.Id
+                                INNER JOIN ristoranti on menu.IdRistorante = ristoranti.Id
+                                INNER JOIN citta ON citta.Id = ristoranti.Id_Citta
                                 LEFT JOIN stringhe_tradotte ON stringhe_tradotte.IdStringa = T1.IdStringa AND stringhe_tradotte.IdLingua = menu_lingue.IdLingua
-                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL
+                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL AND ${Citta.db_table_name}.${Citta.db_id_provincia} = @${Citta.db_id_provincia}
                         ) AS T3 ON T3.IdMenu = ${Menu.db_table_name}.${Menu.db_id}
                         INNER JOIN lingue ON lingue.Id = T3.IdLingua
                         WHERE T3.${MenuLingua.db_id_lingua} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})`,
@@ -195,8 +197,9 @@ export class Menu {
                                 INNER JOIN stringhe ON piatti.IdDescrizione = stringhe.Id) as T1
                                 INNER JOIN menu ON menu.Id = T1.IdMenu
                                 INNER JOIN menu_lingue ON menu_lingue.IdMenu = menu.Id
+                                INNER JOIN ristoranti on menu.IdRistorante = ristoranti.Id
                                 LEFT JOIN stringhe_tradotte ON stringhe_tradotte.IdStringa = T1.IdStringa AND stringhe_tradotte.IdLingua = menu_lingue.IdLingua
-                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL
+                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL AND ${Ristorante.db_table_name}.${Ristorante.db_id_citta} = @${Ristorante.db_id_citta}
                         ) AS T3 ON T3.IdMenu = ${Menu.db_table_name}.${Menu.db_id}
                         INNER JOIN lingue ON lingue.Id = T3.IdLingua
                         WHERE T3.${MenuLingua.db_id_lingua} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})`,
@@ -262,7 +265,7 @@ export class Menu {
                                 INNER JOIN menu ON menu.Id = T1.IdMenu
                                 INNER JOIN menu_lingue ON menu_lingue.IdMenu = menu.Id
                                 LEFT JOIN stringhe_tradotte ON stringhe_tradotte.IdStringa = T1.IdStringa AND stringhe_tradotte.IdLingua = menu_lingue.IdLingua
-                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL
+                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL AND ${Menu.db_table_name}.${Menu.db_id_ristorante} = @${Menu.db_id_ristorante}
                         ) AS T3 ON T3.IdMenu = ${Menu.db_table_name}.${Menu.db_id}
                         INNER JOIN lingue ON lingue.Id = T3.IdLingua
                         WHERE T3.${MenuLingua.db_id_lingua} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})`,
