@@ -407,6 +407,14 @@ export class AjaxUtils {
         })
     }
 
+    static async removeMenu(menu: Menu) {
+        let url = API_SERVER + "/ristoratori/menus/delete";
+        return axios.post(url, {
+            id_menu: menu.id,
+            token: StorageUtils.get(StorageUtils.token_key)
+        })
+    }
+
     static async getMenusRestaurateur() {
         let url = API_SERVER + "/ristoratori/menus/all";
         return axios.post(url, {

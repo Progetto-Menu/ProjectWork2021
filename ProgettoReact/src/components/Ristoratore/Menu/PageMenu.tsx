@@ -9,42 +9,57 @@ import { MenuComponent } from "./MenuComponent";
 import { AjaxUtils } from "../../../utils/AjaxUtils";
 import { JSONUtils } from "../../../utils/JSONUtils";
 
-interface PageMenuProps{
+interface PageMenuProps {
     route: RoutesRistoratore
 }
 
-export const PageMenu: React.FunctionComponent<PageMenuProps> = (props)=>{
+export const PageMenu: React.FunctionComponent<PageMenuProps> = (props) => {
 
     const history = useHistory();
     const [menus, setMenus] = useState<Menu[]>([]);
 
-    const getMenus = ()=>{
-        AjaxUtils.getMenusRestaurateur().then((result)=>{
+    const getMenus = () => {
+        AjaxUtils.getMenusRestaurateur().then((result) => {
             const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
-            if(ajaxResult !== "error"){
+            if (ajaxResult !== "error") {
                 //console.log(ajaxResult);
                 setMenus(ajaxResult);
             }
-        }).catch(()=>{
+        }).catch(() => {
 
         })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getMenus();
-    },[])
+    }, [])
 
-    if(props.route === RoutesRistoratore.MENUS){
+    if (props.route === RoutesRistoratore.MENUS) {
         return <>
-        {menus.map((value, index)=>{
-            return <MenuComponent menu={value} key={index} />
-        })}
-        <FabActionButton icon={Plus} onClick={()=>{history.replace(RoutesRistoratore.ADD_MENU)}}/> 
+            {menus.map((value, index) => {
+                return <MenuComponent menu={value} key={index} onClickRemove={(menu) => {
+                    AjaxUtils.removeMenu(menu).then((result) => {
+                        const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+                        if (ajaxResult === "OK") {
+                            getMenus();
+                        }
+                    })
+                }} />
+            })}
+            <FabActionButton icon={Plus} onClick={() => { history.replace(RoutesRistoratore.ADD_MENU) }} />
         </>
     }
-    else{
-       return  <AddMenuComponent />
+    else {
+        return <AddMenuComponent onClickSave={(menu) => {
+            AjaxUtils.createMenu(menu).then((result) => {
+                const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
+                if (ajaxResult === "OK") {
+                    history.push(RoutesRistoratore.MENUS)
+                    getMenus();
+                }
+            })
+        }} />
     }
 
-    
+
 }

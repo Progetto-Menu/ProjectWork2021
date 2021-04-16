@@ -60,4 +60,8 @@ export class MenuController implements BasePresenter<Menu>{
         return await Menu.getMenusByRestaurantId(id_ristorante, cod_lingua);
     }
 
+    async deleteById(id_menu: number){
+        return await Menu.deleteById(id_menu)
+    }
+
 }

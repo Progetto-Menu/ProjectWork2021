@@ -11,7 +11,15 @@ import { JSONUtils } from "../../../utils/JSONUtils";
 import { strings } from "../../../utils/Strings";
 import { SectionComponent } from "./SectionComponent";
 
-export const AddMenuComponent: React.FunctionComponent = () => {
+interface AddMenuComponentProps{
+    onClickSave: OnClickSave
+}
+
+interface OnClickSave{
+    (menu: Menu): void
+}
+
+export const AddMenuComponent: React.FunctionComponent<AddMenuComponentProps> = (props) => {
 
     const [titolo, setTitolo] = useState<string>("");
     const [sottotitolo, setSottotitolo] = useState<string>("");
@@ -191,12 +199,8 @@ export const AddMenuComponent: React.FunctionComponent = () => {
                                 title: titolo,
                                 subtitle: sottotitolo
                             }
-                            AjaxUtils.createMenu(menu).then((result)=>{
-                                const ajaxResult = JSONUtils.getProperty(result.data, "result", "error");
-                                if(ajaxResult === "OK"){
-                                    history.push(RoutesRistoratore.MENUS)
-                                }
-                            })
+                            props.onClickSave(menu);
+                            
                         }
                     }
                 }>{strings.save_menu}</Button>
