@@ -1,17 +1,30 @@
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { Menu } from "../../../model/Menu";
+import { AjaxUtils } from "../../../utils/AjaxUtils";
+import { JSONUtils } from "../../../utils/JSONUtils";
 import { strings } from "../../../utils/Strings";
 
 interface MenuComponentProps {
-    menu: Menu
+    menu: Menu,
+    onClickRemove: OnClickRemove
+}
+
+interface OnClickRemove{
+    (menu: Menu): void
 }
 
 export const MenuComponent: React.FunctionComponent<MenuComponentProps> = (props) => {
     return <Card className="my-3">
         <Card.Header>
-            <Card.Title>{props.menu.restaurant.nome}, {props.menu.restaurant.indirizzo} {props.menu.restaurant.civico}, {props.menu.restaurant.citta} ({props.menu.restaurant.provincia})</Card.Title>
-            <Card.Title>{props.menu.title}</Card.Title>
-            <Card.Subtitle>{props.menu.title}</Card.Subtitle>
+            <div className="d-flex flex-row justify-content-between align-items-center">
+                <div>
+                    <Card.Title>{props.menu.restaurant.nome}, {props.menu.restaurant.indirizzo} {props.menu.restaurant.civico}, {props.menu.restaurant.citta} ({props.menu.restaurant.provincia})</Card.Title>
+                    <Card.Title>{props.menu.title}</Card.Title>
+                    <Card.Subtitle>{props.menu.title}</Card.Subtitle>
+                </div>
+                <div><Button variant="danger" onClick={() => props.onClickRemove(props.menu)}>{strings.remove}</Button></div>
+            </div>
+
         </Card.Header>
         <Card.Body>
             {props.menu.sections.map((value, index) => {

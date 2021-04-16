@@ -104,40 +104,33 @@ export class Menu {
                         INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
                         INNER JOIN ${Provincia.db_table_name} ON ${Provincia.db_table_name}.${Provincia.db_id} = ${Citta.db_table_name}.${Citta.db_id_provincia}
                         INNER JOIN (
-                            SELECT menu_lingue.IdMenu, menu_lingue.IdLingua FROM (SELECT * FROM(SELECT ${Menu.db_table_name}.${Menu.db_id} as IdMenu, ${Menu.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Menu.db_id_sottotitolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id_sottotitolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Sezione.db_table_name}.${Sezione.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Sezione.db_table_name}.${Sezione.db_id_sottotitolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_sottotitolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id},${Piatto.db_table_name}.${Piatto.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Piatto.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_sezione} = ${Sezione.db_table_name}.${Sezione.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Piatto.db_table_name}.${Piatto.db_id_descrizione} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Piatto.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_sezione} = ${Sezione.db_table_name}.${Sezione.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_descrizione} = ${Stringa.db_table_name}.${Stringa.db_id}) AS T1
-                            WHERE T1.IdMenu IN (SELECT ${Menu.db_table_name}.${Menu.db_id} FROM ${Menu.db_table_name} 
-                            INNER JOIN ${MenuLingua.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_menu} 
-                            INNER JOIN ${LinguaTraduttore.db_table_name} ON ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_lingua} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_lingua}
-                            INNER JOIN ${Lingua.db_table_name} ON ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_lingua} = ${Lingua.db_table_name}.${Lingua.db_id}
-                            INNER JOIN ${Ristorante.db_table_name} ON ${Ristorante.db_table_name}.${Ristorante.db_id} = ${Menu.db_table_name}.${Menu.db_id_ristorante}
-                            INNER JOIN ${Citta.db_table_name} ON ${Ristorante.db_table_name}.${Ristorante.db_id_citta} = ${Citta.db_table_name}.${Citta.db_id}
-                            WHERE ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore} AND ${Citta.db_table_name}.${Citta.db_id_provincia} = @${Citta.db_id_provincia})
-                            ) AS IdStringheMenu
-                            LEFT JOIN ${StringaTradotta.db_table_name} ON ${StringaTradotta.db_table_name}.${StringaTradotta.db_id_stringa} = IdStringheMenu.IdStringa
-                            RIGHT JOIN menu_lingue ON menu_lingue.IdLingua = stringhe_tradotte.IdLingua
-                            WHERE ${StringaTradotta.db_table_name}.${StringaTradotta.db_id} IS NULL
+                            SELECT DISTINCT menu.Id as IdMenu, menu_lingue.IdLingua FROM (SELECT menu.Id as IdMenu, IdTitolo as IdStringa FROM menu
+                                INNER JOIN stringhe ON menu.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, IdSottotitolo as IdStringa FROM menu
+                                INNER JOIN stringhe ON menu.IdSottotitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, sezioni.IdTitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN stringhe ON sezioni.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, sezioni.IdSottotitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN stringhe ON sezioni.IdSottotitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id,piatti.IdTitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN piatti ON piatti.IdSezione = sezioni.Id
+                                INNER JOIN stringhe ON piatti.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, piatti.IdDescrizione as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN piatti ON piatti.IdSezione = sezioni.Id
+                                INNER JOIN stringhe ON piatti.IdDescrizione = stringhe.Id) as T1
+                                INNER JOIN menu ON menu.Id = T1.IdMenu
+                                INNER JOIN menu_lingue ON menu_lingue.IdMenu = menu.Id
+                                LEFT JOIN stringhe_tradotte ON stringhe_tradotte.IdStringa = T1.IdStringa AND stringhe_tradotte.IdLingua = menu_lingue.IdLingua
+                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL
                         ) AS T3 ON T3.IdMenu = ${Menu.db_table_name}.${Menu.db_id}
                         INNER JOIN lingue ON lingue.Id = T3.IdLingua
                         WHERE T3.${MenuLingua.db_id_lingua} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})`,
@@ -177,39 +170,33 @@ export class Menu {
                         INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
                         INNER JOIN ${Provincia.db_table_name} ON ${Provincia.db_table_name}.${Provincia.db_id} = ${Citta.db_table_name}.${Citta.db_id_provincia}
                         INNER JOIN (
-                            SELECT menu_lingue.IdMenu, menu_lingue.IdLingua FROM (SELECT * FROM(SELECT ${Menu.db_table_name}.${Menu.db_id} as IdMenu, ${Menu.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Menu.db_id_sottotitolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id_sottotitolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Sezione.db_table_name}.${Sezione.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Sezione.db_table_name}.${Sezione.db_id_sottotitolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_sottotitolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id},${Piatto.db_table_name}.${Piatto.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Piatto.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_sezione} = ${Sezione.db_table_name}.${Sezione.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Piatto.db_table_name}.${Piatto.db_id_descrizione} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Piatto.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_sezione} = ${Sezione.db_table_name}.${Sezione.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_descrizione} = ${Stringa.db_table_name}.${Stringa.db_id}) AS T1
-                            WHERE T1.IdMenu IN (SELECT ${Menu.db_table_name}.${Menu.db_id} FROM ${Menu.db_table_name} 
-                            INNER JOIN ${MenuLingua.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_menu} 
-                            INNER JOIN ${LinguaTraduttore.db_table_name} ON ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_lingua} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_lingua}
-                            INNER JOIN ${Lingua.db_table_name} ON ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_lingua} = ${Lingua.db_table_name}.${Lingua.db_id}
-                            INNER JOIN ${Ristorante.db_table_name} ON ${Ristorante.db_table_name}.${Ristorante.db_id} = ${Menu.db_table_name}.${Menu.db_id_ristorante}
-                            WHERE ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore} AND ${Ristorante.db_table_name}.${Ristorante.db_id_citta} = @${Ristorante.db_id_citta})
-                            ) AS IdStringheMenu
-                            LEFT JOIN ${StringaTradotta.db_table_name} ON ${StringaTradotta.db_table_name}.${StringaTradotta.db_id_stringa} = IdStringheMenu.IdStringa
-                            RIGHT JOIN menu_lingue ON menu_lingue.IdLingua = stringhe_tradotte.IdLingua
-                            WHERE ${StringaTradotta.db_table_name}.${StringaTradotta.db_id} IS NULL
+                            SELECT DISTINCT menu.Id as IdMenu, menu_lingue.IdLingua FROM (SELECT menu.Id as IdMenu, IdTitolo as IdStringa FROM menu
+                                INNER JOIN stringhe ON menu.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, IdSottotitolo as IdStringa FROM menu
+                                INNER JOIN stringhe ON menu.IdSottotitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, sezioni.IdTitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN stringhe ON sezioni.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, sezioni.IdSottotitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN stringhe ON sezioni.IdSottotitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id,piatti.IdTitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN piatti ON piatti.IdSezione = sezioni.Id
+                                INNER JOIN stringhe ON piatti.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, piatti.IdDescrizione as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN piatti ON piatti.IdSezione = sezioni.Id
+                                INNER JOIN stringhe ON piatti.IdDescrizione = stringhe.Id) as T1
+                                INNER JOIN menu ON menu.Id = T1.IdMenu
+                                INNER JOIN menu_lingue ON menu_lingue.IdMenu = menu.Id
+                                LEFT JOIN stringhe_tradotte ON stringhe_tradotte.IdStringa = T1.IdStringa AND stringhe_tradotte.IdLingua = menu_lingue.IdLingua
+                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL
                         ) AS T3 ON T3.IdMenu = ${Menu.db_table_name}.${Menu.db_id}
                         INNER JOIN lingue ON lingue.Id = T3.IdLingua
                         WHERE T3.${MenuLingua.db_id_lingua} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})`,
@@ -249,38 +236,33 @@ export class Menu {
                         INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
                         INNER JOIN ${Provincia.db_table_name} ON ${Provincia.db_table_name}.${Provincia.db_id} = ${Citta.db_table_name}.${Citta.db_id_provincia}
                         INNER JOIN (
-                            SELECT menu_lingue.IdMenu, menu_lingue.IdLingua FROM (SELECT * FROM(SELECT ${Menu.db_table_name}.${Menu.db_id} as IdMenu, ${Menu.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Menu.db_id_sottotitolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id_sottotitolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Sezione.db_table_name}.${Sezione.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Sezione.db_table_name}.${Sezione.db_id_sottotitolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_sottotitolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id},${Piatto.db_table_name}.${Piatto.db_id_titolo} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Piatto.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_sezione} = ${Sezione.db_table_name}.${Sezione.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_titolo} = ${Stringa.db_table_name}.${Stringa.db_id}
-                            UNION
-                            SELECT ${Menu.db_table_name}.${Menu.db_id}, ${Piatto.db_table_name}.${Piatto.db_id_descrizione} as IdStringa FROM ${Menu.db_table_name}
-                            INNER JOIN ${Sezione.db_table_name} ON ${Sezione.db_table_name}.${Sezione.db_id_menu} = ${Menu.db_table_name}.${Menu.db_id}
-                            INNER JOIN ${Piatto.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_sezione} = ${Sezione.db_table_name}.${Sezione.db_id}
-                            INNER JOIN ${Stringa.db_table_name} ON ${Piatto.db_table_name}.${Piatto.db_id_descrizione} = ${Stringa.db_table_name}.${Stringa.db_id}) AS T1
-                            WHERE T1.IdMenu IN (SELECT ${Menu.db_table_name}.${Menu.db_id} FROM ${Menu.db_table_name} 
-                            INNER JOIN ${MenuLingua.db_table_name} ON ${Menu.db_table_name}.${Menu.db_id} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_menu} 
-                            INNER JOIN ${LinguaTraduttore.db_table_name} ON ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_lingua} = ${MenuLingua.db_table_name}.${MenuLingua.db_id_lingua}
-                            INNER JOIN ${Lingua.db_table_name} ON ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_lingua} = ${Lingua.db_table_name}.${Lingua.db_id}
-                            WHERE ${LinguaTraduttore.db_table_name}.${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore} AND ${Menu.db_table_name}.${Menu.db_id_ristorante} = @${Menu.db_id_ristorante})
-                            ) AS IdStringheMenu
-                            LEFT JOIN ${StringaTradotta.db_table_name} ON ${StringaTradotta.db_table_name}.${StringaTradotta.db_id_stringa} = IdStringheMenu.IdStringa
-                            RIGHT JOIN menu_lingue ON menu_lingue.IdLingua = stringhe_tradotte.IdLingua
-                            WHERE ${StringaTradotta.db_table_name}.${StringaTradotta.db_id} IS NULL
+                            SELECT DISTINCT menu.Id as IdMenu, menu_lingue.IdLingua FROM (SELECT menu.Id as IdMenu, IdTitolo as IdStringa FROM menu
+                                INNER JOIN stringhe ON menu.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, IdSottotitolo as IdStringa FROM menu
+                                INNER JOIN stringhe ON menu.IdSottotitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, sezioni.IdTitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN stringhe ON sezioni.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, sezioni.IdSottotitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN stringhe ON sezioni.IdSottotitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id,piatti.IdTitolo as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN piatti ON piatti.IdSezione = sezioni.Id
+                                INNER JOIN stringhe ON piatti.IdTitolo = stringhe.Id
+                                UNION
+                                SELECT menu.Id, piatti.IdDescrizione as IdStringa FROM menu
+                                INNER JOIN sezioni ON sezioni.IdMenu = menu.Id
+                                INNER JOIN piatti ON piatti.IdSezione = sezioni.Id
+                                INNER JOIN stringhe ON piatti.IdDescrizione = stringhe.Id) as T1
+                                INNER JOIN menu ON menu.Id = T1.IdMenu
+                                INNER JOIN menu_lingue ON menu_lingue.IdMenu = menu.Id
+                                LEFT JOIN stringhe_tradotte ON stringhe_tradotte.IdStringa = T1.IdStringa AND stringhe_tradotte.IdLingua = menu_lingue.IdLingua
+                                WHERE stringhe_tradotte.Id IS NULL AND menu.CancellatoIl IS NULL
                         ) AS T3 ON T3.IdMenu = ${Menu.db_table_name}.${Menu.db_id}
                         INNER JOIN lingue ON lingue.Id = T3.IdLingua
                         WHERE T3.${MenuLingua.db_id_lingua} IN (SELECT ${LinguaTraduttore.db_id_lingua} FROM ${LinguaTraduttore.db_table_name} WHERE ${LinguaTraduttore.db_id_traduttore} = @${LinguaTraduttore.db_id_traduttore})`,
@@ -528,7 +510,7 @@ export class Menu {
                     INNER JOIN ${Ristorante.db_table_name} ON ${Ristorante.db_table_name}.${Ristorante.db_id} = ${Menu.db_table_name}.${Menu.db_id_ristorante}
                     INNER JOIN ${Stringa.db_table_name} AS t ON ${Menu.db_id_titolo} = t.${Stringa.db_id}
                     INNER JOIN ${Stringa.db_table_name} AS s ON ${Menu.db_id_sottotitolo} = s.${Stringa.db_id}
-                    WHERE ${Ristorante.db_id_ristoratore} = @${Ristorante.db_id_ristoratore};`)).recordset;
+                    WHERE ${Ristorante.db_id_ristoratore} = @${Ristorante.db_id_ristoratore} AND ${Menu.db_table_name}.${Menu.db_cancellato_il} IS NULL;`)).recordset;
 
                 console.log("MENU FROM DB", menusFromDb);
 
@@ -656,7 +638,7 @@ export class Menu {
                     INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Menu.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
                     LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
                     INNER JOIN ${Citta.db_table_name} ON ${Citta.db_table_name}.${Citta.db_id} = ${Ristorante.db_table_name}.${Ristorante.db_id_citta}
-                    WHERE ${Citta.db_id_provincia} = @${Citta.db_id_provincia};`)).recordset;
+                    WHERE ${Citta.db_id_provincia} = @${Citta.db_id_provincia} AND ${Menu.db_table_name}.${Menu.db_cancellato_il} IS NULL;`)).recordset;
 
                 console.log("MENU FROM DB", menusFromDb);
 
@@ -789,7 +771,7 @@ export class Menu {
                     LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
                     INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Menu.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
                     LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
-                    WHERE ${Ristorante.db_id_citta} = @${Ristorante.db_id_citta};`)).recordset;
+                    WHERE ${Ristorante.db_id_citta} = @${Ristorante.db_id_citta} AND ${Menu.db_table_name}.${Menu.db_cancellato_il} IS NULL;`)).recordset;
 
                 console.log("MENU FROM DB", menusFromDb);
 
@@ -921,7 +903,7 @@ export class Menu {
                     LEFT JOIN ${StringaTradotta.db_table_name} as titoloTradotto ON titolo.Id = titoloTradotto.IdStringa AND titoloTradotto.IdLingua = @id_lingua
                     INNER JOIN ${Stringa.db_table_name} AS sottotitolo ON ${Menu.db_id_sottotitolo} = sottotitolo.${Stringa.db_id}
                     LEFT JOIN ${StringaTradotta.db_table_name} as sottotitoloTradotto ON sottotitolo.Id = sottotitoloTradotto.IdStringa AND sottotitoloTradotto.IdLingua = @id_lingua
-                    WHERE ${Menu.db_id_ristorante} = @${Menu.db_id_ristorante};`)).recordset;
+                    WHERE ${Menu.db_id_ristorante} = @${Menu.db_id_ristorante} AND ${Menu.db_table_name}.${Menu.db_cancellato_il} IS NULL;`)).recordset;
 
                 console.log("MENU FROM DB", menusFromDb);
 
@@ -1029,5 +1011,22 @@ export class Menu {
 
         });
     }
+
+    static async deleteById(id_menu: number){
+        const pool = await sql.connect(config);
+        const transaction = await pool.transaction();
+        return new Promise<any>(async (resolve, reject) => {
+            try{
+                await transaction.begin();
+                await transaction.request().input(Menu.db_id, id_menu).query(`UPDATE ${Menu.db_table_name} SET ${Menu.db_cancellato_il} = GETDATE() WHERE ${Menu.db_id} = @${Menu.db_id}`);
+                await transaction.commit();
+                resolve(true);
+            }catch(err){
+                await transaction.rollback();
+                reject(err);
+            }
+        });
+    }
+
 
 }

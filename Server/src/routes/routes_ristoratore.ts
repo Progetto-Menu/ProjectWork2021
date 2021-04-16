@@ -542,6 +542,32 @@ router.post("/menus/add", async (req: any, res: any) => {
     });
 })
 
+router.post("/menus/delete", async (req: any, res: any) => {
+    const json = req.body;
+
+    const clientToken = JSONUtils.getProperty(json, "token", "");
+    const id_menu = JSONUtils.getProperty(json, "id_menu", null);
+
+    if(id_menu == null || !Number.isInteger(id_menu)) return res.send({ "result": "error" });
+
+    JwtUtils.JWT.verify(clientToken, JwtUtils.PUBLIC_KEY, function (err: any, decoded: any) {
+        if (err) return res.send({ "result": "error" });
+        if (decoded.exp - Math.floor(Date.now() / 1000) < 0) return res.send({ "result": "error" });
+
+        return Promise.resolve(ristoratoreController.get(decoded.sub))
+            .then((result) => {
+                return Promise.resolve(menuController.deleteById(id_menu)).then((result)=>{
+                    console.log(result);
+                    return res.send({ "result": "OK" });
+                }).catch(()=>{
+                    return res.send({ "result": "error" });
+                })
+            }).catch((error) => {
+                return res.send({ "result": "error" });
+            });
+    });
+})
+
 router.post("/menus/all", async (req: any, res: any) => {
     const json = req.body;
 
