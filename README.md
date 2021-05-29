@@ -46,6 +46,7 @@ I componenti utilizzati per l'autenticazione sono: LoginComponent, RegisterCompo
 - Il server espone delle API tramite cui eseguire l'autenticazione
 - Il client per eseguire l'autenticazione chiama la route /&lt;utente&gt;/login del server e, questo, se le credenziali sono corrette, restituisce un token JWT che viene poi inviato ad ogni richiesta che l'utente autenticato farà. Il client memorizza questo token in localStorage.
 - Il client per eseguire la registrazione chiama /&lt;utente&gt;/register, il server inserirà i dati ricevuti nel Database e imposta quel nuovo utente inserito come "Non validato" tramite un campo booleano nel Database.
+- Il server verifica, per ogni richiesta che richiede autenticazione, la validità del token e ritorna i dati solo se l'utente è autenticato.
 
 
 # Traduttore
@@ -88,4 +89,4 @@ Permette di fare logout
 
 
 # Localizzazione
-L'app è disponibile in italiano e inglese tutte le stringhe dell'app sono memorizza in ProgettoReact/src/utils/Strings.tsx.
+L'app è disponibile in italiano e inglese, tutte le stringhe dell'app sono memorizza in ProgettoReact/src/utils/Strings.tsx.
